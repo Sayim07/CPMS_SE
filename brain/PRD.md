@@ -6,13 +6,17 @@
 
 | # | Assumption | Impact if wrong |
 |---|---|---|
-| A1 | Time available is not given. Plan assumes **4 weeks, 1–3 developers**, sized in TRD/ImplementationPlan. | Re-scope using ImplementationPlan.md §4 (de-scope order). |
+| A1 | Time available is not given. Plan assumes **4 weeks, 1–3 developers**, sized in TRD/ImplementationPlan using an **Iterative Development Model**. | Re-scope using ImplementationPlan.md §4 (de-scope order). |
 | A2 | **Single institution** (one college). "Multi-tenant" in the SRS is read as multiple roles/organizations (companies) in one deployment, not multiple colleges. | Adding college tenancy would change every table; log in Tracker.md §3 first. |
 | A3 | Student, Company, TPO and Admin are the only actors. TPO and Admin accounts are created by an Admin, never by self-registration. | See Schema.md §5.1. |
 | A4 | Account-activation email is **not** built in v1 (accounts are active at registration; companies still need TPO approval). | Add as P2 if the evaluator requires it. |
 | A5 | "Total Registered Eligible Students" = verified students (`is_verified = TRUE`) of the selected batch year, not soft-deleted. | Changes the placement-rate formula in Schema.md §1. |
 | A6 | Single Offer Policy threshold is a configurable setting, default **8 LPA**. | Changeable via Admin settings, no code change. |
 | A7 | SMS notifications and "Super Dream" tier rules are open (SRS TBD-1, TBD-2) and **out of scope**. | See §3. |
+
+## 0.1 Software Development Life Cycle (SDLC) Model
+
+The **Iterative Development Model** was selected for the College Placement Management System. Unlike the linear Waterfall model, the Iterative approach breaks system complexity into manageable feature releases—progressing from core role authorization to automated eligibility filtering, drive lifecycle management, and final institutional analytics. This ensures early detection of integration issues, allows verification of business rules at each increment, and delivers a stable working system well before final deployment.
 
 ## 1. Problem Statement
 

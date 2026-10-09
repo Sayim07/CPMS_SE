@@ -6,7 +6,7 @@ Items marked **VERIFY** must be checked against the vendor's current docs/pricin
 
 ## 1. Technology Stack (all free / free-tier)
 
-**Day-1 decisions (lock and log in Tracker.md §3):** D1 backend language = Node.js/TypeScript (not Java); D2 ORM = Prisma; D3 storage = S3-compatible API; D4 single deployable (Express serves the built SPA).
+**Day-1 decisions (lock and log in Tracker.md §3):** D1 backend language = Node.js/TypeScript (not Java); D2 ORM = Prisma; D3 storage = S3-compatible API; D4 single deployable (Express serves the built SPA); D5 SDLC = Iterative Development Model (PRD.md §0.1).
 
 ### 1.1 Frontend
 

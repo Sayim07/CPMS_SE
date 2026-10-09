@@ -4,6 +4,12 @@ Assumes ~4 weeks and 1–3 developers (PRD.md §0 A1). Task IDs here are mirrore
 
 Owner roles: **BE** backend, **FE** frontend, **QA** testing, **OPS** infra/deploy. With a solo developer, one person holds all roles.
 
+## 0. Development Methodology
+
+The project follows the **Iterative Development Model** (PRD.md §0.1). Unlike the linear Waterfall model, the Iterative approach breaks system complexity into manageable feature releases—progressing from core role authorization to automated eligibility filtering, drive lifecycle management, and final institutional analytics. This ensures early detection of integration issues, allows verification of business rules at each increment, and delivers a stable working system well before final deployment.
+
+Each phase below corresponds to an iteration cycle with discrete exit criteria and verification gates.
+
 ## 1. Phases
 
 ### Phase 0 — Setup and decisions (Days 1–2)

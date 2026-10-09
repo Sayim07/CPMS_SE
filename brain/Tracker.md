@@ -7,7 +7,7 @@ Status values: **Not Started**, **In Progress**, **Blocked**, **Done**. Tasks mi
 ### Phase 0 — Setup and decisions
 | Task | Owner | Status | Notes |
 |---|---|---|---|
-| 0.1 Lock decisions D1–D4 | BE | Not Started | Log in §3 |
+| 0.1 Lock decisions D1–D5 | BE | Not Started | Log in §3 |
 | 0.2 Repo scaffold + docker-compose | OPS | Not Started | |
 | 0.3 Prisma schema + migration | BE | Not Started | Must mirror Schema.md §3 |
 | 0.4 Env config (zod) | BE | Not Started | |
@@ -98,4 +98,5 @@ Status values: **Not Started**, **In Progress**, **Blocked**, **Done**. Tasks mi
 | (Day 1) | D2: ORM = Prisma | Typed migrations and composite unique constraint | TRD.md §1 |
 | (Day 1) | D3: Resume storage = S3-compatible API (MinIO dev, R2 prod) | Free-tier hosts have ephemeral disks; supports pre-signed URLs | TRD.md §1.3 |
 | (Day 1) | D4: Express serves built SPA (one deployable) | Simplest free deployment | TRD.md §1.4 |
+| (Day 1) | D5: SDLC Model = Iterative Development Model | Selected over Waterfall to break system complexity into manageable feature releases (auth → eligibility → drive lifecycle → analytics), enabling early integration testing and business rule verification per increment. | PRD.md §0.1, ImplementationPlan.md §0 |
 | (Day 1) | Single institution, no email activation (A2, A4) | Scope control | PRD.md §0 |

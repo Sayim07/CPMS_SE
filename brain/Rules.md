@@ -61,6 +61,7 @@ Do not rename fields, enum values, endpoints, or files for convenience. API JSON
 | How do you meet 500 ms at 500 users? | Indexed, paginated reads; k6 test on local Docker stack; free-tier hosts are documented as not representative (TRD.md §5). |
 | What is the placement rate formula? | Unique placed students ÷ verified students of the batch × 100 (Schema.md §1). |
 | How are passwords protected? | bcrypt cost 10, lockout after 5 failures for 15 minutes, JWT 8 h. |
+| What SDLC model is used? | Iterative Development Model. Unlike Waterfall, it breaks system complexity into manageable feature releases (auth → eligibility → drive lifecycle → analytics) to verify business rules early and ensure system stability before final release (PRD.md §0.1). |
 | What is not included? | SMS, Super Dream tiers, ERP sync (open SRS TBDs; PRD.md §3). |
 
 ## 8. Code Conventions
