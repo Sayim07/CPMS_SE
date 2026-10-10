@@ -372,3 +372,79 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
     created_at: "2026-10-07T09:00:00Z",
   },
 ];
+
+export interface AuditLog {
+  id: string;
+  actor_id: string;
+  actor_email: string;
+  actor_role: "STUDENT" | "COMPANY" | "TPO" | "ADMIN";
+  action: string;
+  entity_type: string;
+  entity_id: string;
+  ip_address: string;
+  details: Record<string, unknown>;
+  created_at: string;
+}
+
+export const MOCK_AUDIT_LOGS: AuditLog[] = [
+  {
+    id: "aud-001",
+    actor_id: "usr-tpo",
+    actor_email: "arvind.tpo@college.edu",
+    actor_role: "TPO",
+    action: "STUDENT_VERIFIED",
+    entity_type: "STUDENT",
+    entity_id: "std-001",
+    ip_address: "172.16.24.12",
+    details: { roll_no: "21CSE042", verified_cgpa: 8.12, remark: "Original 6th sem marksheet verified" },
+    created_at: "2026-10-10T14:22:10Z",
+  },
+  {
+    id: "aud-002",
+    actor_id: "usr-comp-1",
+    actor_email: "recruiter@acme.com",
+    actor_role: "COMPANY",
+    action: "APPLICANT_STAGE_TRANSITIONED",
+    entity_type: "APPLICATION",
+    entity_id: "app-201",
+    ip_address: "49.207.18.91",
+    details: { previous_stage: "APPLIED", new_stage: "SHORTLISTED", candidate_roll: "21CSE042" },
+    created_at: "2026-10-09T16:04:44Z",
+  },
+  {
+    id: "aud-003",
+    actor_id: "usr-tpo",
+    actor_email: "arvind.tpo@college.edu",
+    actor_role: "TPO",
+    action: "JOB_DRIVE_APPROVED",
+    entity_type: "JOB",
+    entity_id: "job-101",
+    ip_address: "172.16.24.12",
+    details: { job_title: "Software Development Engineer", company: "Acme Technologies", ctc_lpa: 12.0 },
+    created_at: "2026-10-08T11:15:32Z",
+  },
+  {
+    id: "aud-004",
+    actor_id: "usr-admin",
+    actor_email: "admin@college.edu",
+    actor_role: "ADMIN",
+    action: "SINGLE_OFFER_POLICY_UPDATED",
+    entity_type: "SYSTEM_SETTING",
+    entity_id: "setting-single-offer",
+    ip_address: "172.16.1.5",
+    details: { previous_threshold_lpa: 7.0, new_threshold_lpa: 8.0, updated_by: "Registrar IT Office" },
+    created_at: "2026-10-05T09:00:00Z",
+  },
+  {
+    id: "aud-005",
+    actor_id: "usr-std-004",
+    actor_email: "vikram.singh@college.edu",
+    actor_role: "STUDENT",
+    action: "ACADEMIC_RECORD_EDITED",
+    entity_type: "STUDENT",
+    entity_id: "std-004",
+    ip_address: "192.168.10.45",
+    details: { updated_fields: ["cgpa", "active_backlogs"], reset_verification: true },
+    created_at: "2026-10-04T18:40:12Z",
+  },
+];

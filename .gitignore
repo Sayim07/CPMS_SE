@@ -1,0 +1,28 @@
+# Secrets and sensitive credentials
+private.txt
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+
+# Production builds
+dist/
+build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local custom prompts
+ui_global.md
+

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   Briefcase,
   UserCheck,
@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useAuth, type Role } from "../../context/AuthContext";
 import { cn } from "../../lib/utils";
+import { CommandMenu } from "../navigation/CommandMenu";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -28,6 +29,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [roleSwitcherOpen, setRoleSwitcherOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const getNavLinks = () => {
     switch (user.role) {
@@ -88,8 +90,11 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
             </Link>
           </div>
 
-          {/* Right Header Utilities: Role Switcher Demo, Notification Bell, User Avatar */}
+          {/* Right Header Utilities: Command Menu, Role Switcher Demo, Notification Bell, User Avatar */}
           <div className="flex items-center gap-3">
+            {/* Global Command Palette Trigger */}
+            <CommandMenu />
+
             {/* Prototype Role Switcher */}
             <div className="relative">
               <button
@@ -114,6 +119,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
                       onClick={() => {
                         setRole(r);
                         setRoleSwitcherOpen(false);
+                        navigate(`/${r.toLowerCase()}`);
                       }}
                       className={cn(
                         "w-full text-left px-3 py-1.5 text-xs flex items-center justify-between hover:bg-slate-50",
