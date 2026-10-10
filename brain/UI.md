@@ -44,28 +44,29 @@ Building the full UI first ensures:
 
 | Component | Purpose & Description | Tokens & Style Rules | Status |
 |---|---|---|---|
-| `AppShell` | Header + Collapsible Left Sidebar + Mobile Drawer | `bg-white border-b border-slate-200`, max-w 1280px, role-based nav items | Not Started |
-| `Badge` | Verdict badge (`Eligible` / `Criteria Mismatch`) | `bg-emerald-50 text-emerald-700` / `bg-red-50 text-red-700`, with Lucide icons | Not Started |
-| `StageChip` | Funnel stage chip (`APPLIED`, `SHORTLISTED`, etc.) | Semantic colors per `Design.md §3`, rounded-md, text-xs font-medium | Not Started |
-| `StatCard` | KPI summary card for dashboards & reports | Clean 1px border, uppercase micro-header, high-contrast metric value | Not Started |
-| `DataTable` | High-density administrative table | Sticky header (`bg-slate-50/95`), zebra/hover rows, sortable headers, pagination | Not Started |
+| `AppShell` | Header + Collapsible Left Sidebar + Mobile Drawer | `bg-white border-b border-slate-200`, max-w 1280px, role-based nav items | Done |
+| `Button` | High-craft button with micro-interactions | `bg-indigo-600 hover:bg-indigo-700`, active:scale-[0.99], clean focus rings | Done |
+| `Badge` | Verdict badge (`Eligible` / `Criteria Mismatch`) | `bg-emerald-50 text-emerald-700` / `bg-red-50 text-red-700`, with Lucide icons | Done |
+| `StageChip` | Funnel stage chip (`APPLIED`, `SHORTLISTED`, etc.) | Semantic colors per `Design.md §3`, rounded-md, text-xs font-medium | Done |
+| `StatCard` | KPI summary card for dashboards & reports | Clean 1px border, uppercase micro-header, high-contrast metric value | Done |
+| `DataTable` | High-density administrative table | Sticky header (`bg-slate-50/95`), zebra/hover rows, sortable headers, pagination | Done |
 | `KanbanBoard` | 5-column recruiter workflow pipeline | Columns with count badges, candidate cards with stage transition actions | Not Started |
 | `FileDropzone` | Drag-and-drop PDF resume uploader | Magic byte & 2MB client validation warning, upload progress, file preview link | Not Started |
-| `VerificationBanner` | Top alert for unverified students | `bg-amber-50 border-l-4 border-amber-500`, visible until TPO approves | Not Started |
-| `NotificationBell` | Header alert bell with unread badge | Lucide `Bell` icon with red indicator, dropdown popover with recent alerts | Not Started |
+| `VerificationBanner` | Top alert for unverified students | `bg-amber-50 border-l-4 border-amber-500`, visible until TPO approves | Done |
+| `NotificationBell` | Header alert bell with unread badge | Lucide `Bell` icon with red indicator, dropdown popover with recent alerts | Done |
 | `ConfirmDialog` | Modal dialog for irreversible actions | Clean backdrop blur, explicit confirm/cancel buttons, accessible trap focus | Not Started |
-| `EmptyState` | Fallback container when data is empty | Muted Lucide icon, explanatory copy, optional call-to-action button | Not Started |
+| `EmptyState` | Fallback container when data is empty | Muted Lucide icon, explanatory copy, optional call-to-action button | Done |
 
 ---
 
 ## 4. UI Implementation Progress Tracker
 
 ### Wave 1: Foundation & Primitives
-- [ ] Initialize `client/` Vite 5 + React 18 + TypeScript + Tailwind CSS
-- [ ] Setup Tailwind tokens matching `Design.md §3` and font hierarchy
-- [ ] Install `lucide-react`, `react-router-dom`, `clsx`, `tailwind-merge`
-- [ ] Implement `AppShell` with responsive topbar, sidebar, and breadcrumbs
-- [ ] Implement foundational UI primitives (`Button`, `Input`, `Badge`, `StageChip`, `StatCard`, `EmptyState`)
+- [x] Initialize `client/` Vite 5 + React 18 + TypeScript + Tailwind CSS
+- [x] Setup Tailwind tokens matching `Design.md §3` and font hierarchy
+- [x] Install `lucide-react`, `react-router-dom`, `clsx`, `tailwind-merge`
+- [x] Implement `AppShell` with responsive topbar, sidebar, and breadcrumbs
+- [x] Implement foundational UI primitives (`Button`, `Badge`, `StageChip`, `StatCard`, `EmptyState`, `DataTable`)
 
 ### Wave 2: Public & Student UI
 - [ ] Build `/login`, `/register/student`, `/register/company` with Zod validation
