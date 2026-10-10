@@ -26,6 +26,8 @@ document.title = `${pageName} | College Placement Management System (CPMS)`;
 
 A calm, data-dense, trustworthy administrative tool. The main value claim is **automated, transparent eligibility**: every user must see at a glance *why* they can or cannot apply.
 
+Frontend components must adhere to the anti-slop craft rules in `.agents/skills/cpms-design-taste/SKILL.md` (crisp 1px borders, subtle hover transitions, compact table spacing, and strict token adherence).
+
 ## 2. Layout Principles
 
 - App shell: top bar (brand, notification bell, user menu) + left nav (collapsible to drawer under 768 px).

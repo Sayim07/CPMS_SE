@@ -4,7 +4,7 @@
 
 ## 1. Source-of-Truth Hierarchy
 
-When documents conflict, the earlier one wins: **Rules.md → Schema.md → TRD.md → PRD.md → AppFlow.md → Design.md → ImplementationPlan.md → Tracker.md**. Report the conflict and propose a fix to the lower-ranked document; do not silently pick.
+When documents conflict, the earlier one wins: **Rules.md → Schema.md → TRD.md → PRD.md → AppFlow.md → Design.md → UI.md → ImplementationPlan.md → Tracker.md**. Report the conflict and propose a fix to the lower-ranked document; do not silently pick.
 
 ## 2. App Naming Rule
 

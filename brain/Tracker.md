@@ -1,6 +1,6 @@
 # Tracker — College Placement Management System (CPMS)
 
-Status values: **Not Started**, **In Progress**, **Blocked**, **Done**. Tasks mirror ImplementationPlan.md §1 exactly. Rows marked **BLOCKING** gate their phase's exit criteria.
+Status values: **Not Started**, **In Progress**, **Blocked**, **Done**. Tasks mirror ImplementationPlan.md §1 exactly. Frontend-first prototype progress is tracked in detail in UI.md. Rows marked **BLOCKING** gate their phase's exit criteria.
 
 ## 1. Phase Tables
 
