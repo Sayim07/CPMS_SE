@@ -208,7 +208,7 @@ Seeded key: `single_offer_ctc_threshold_lpa` = `8`.
 
 ## 4. API Conventions
 
-- Base path `/api/v1`; JSON UTF-8; auth header `Authorization: Bearer <jwt>` (except where marked **public**).
+- Base path `/api/v1`; JSON UTF-8; auth header `Authorization: Bearer <jwt>` (except where marked **public**); client persists JWT in `localStorage` (`cpms_token`); database hosted on PostgreSQL 15+ (Supabase via `DATABASE_URL`).
 - Success: `{ "data": <object|array>, "meta": { "page": 1, "page_size": 20, "total": 57 } }` (`meta` only on lists).
 - Error: `{ "error": { "code": "NOT_ELIGIBLE", "message": "…", "details": [ … ] } }`.
 - Pagination query: `page` (≥1), `page_size` (1–100).

@@ -87,7 +87,7 @@ Owner: QA + OPS
 - [ ] 7.1 Add DB indexes from Schema.md §3; check with `EXPLAIN` on `GET /jobs`
 - [ ] 7.2 k6 test: 500 VUs, p95 ≤ 500 ms (TRD.md §5); record result
 - [ ] 7.3 Rate limits, CORS allow-list, helmet; password never logged
-- [ ] 7.4 Deploy: Neon + R2 + Brevo + Render (VERIFY free limits)
+- [ ] 7.4 Deploy: Supabase PostgreSQL + R2 + Brevo + Render (VERIFY free limits)
 - [ ] 7.5 README, demo credentials, seed on deploy
 - [ ] 7.6 Final traceability table (REQ → code → test) and polish
 **Exit criteria:** deployed URL passes a smoke test of one full flow (register → verify → post → approve → apply → shortlist → select); k6 result recorded.

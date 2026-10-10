@@ -6,7 +6,7 @@ Items marked **VERIFY** must be checked against the vendor's current docs/pricin
 
 ## 1. Technology Stack (all free / free-tier)
 
-**Day-1 decisions (lock and log in Tracker.md §3):** D1 backend language = Node.js/TypeScript (not Java); D2 ORM = Prisma; D3 storage = S3-compatible API; D4 single deployable (Express serves the built SPA); D5 SDLC = Iterative Development Model (PRD.md §0.1).
+**Day-1 decisions (lock and log in Tracker.md §3):** D1 backend language = Node.js/TypeScript (not Java); D2 ORM = Prisma; D3 storage = S3-compatible API; D4 single deployable (Express serves the built SPA); D5 SDLC = Iterative Development Model (PRD.md §0.1); D6 database = Supabase PostgreSQL (cloud Postgres via DATABASE_URL).
 
 ### 1.1 Frontend
 
@@ -44,7 +44,7 @@ Items marked **VERIFY** must be checked against the vendor's current docs/pricin
 
 | Layer | Choice | Notes |
 |---|---|---|
-| Database | PostgreSQL 15+ | Only DB. Dev: Docker `postgres:15`. Prod: Neon free tier (**VERIFY** limits) |
+| Database | PostgreSQL 15+ (Supabase) | Only DB. Dev: Docker `postgres:15` or Supabase. Prod: Supabase PostgreSQL free tier via `DATABASE_URL`. |
 | Object storage | S3-compatible API via `@aws-sdk/client-s3` + `@aws-sdk/s3-request-presigner` | Dev: MinIO (Docker). Prod: Cloudflare R2 free tier (**VERIFY** 10 GB free, no egress fee) |
 | Resume access | Pre-signed GET URL, TTL 300 s | SE-3 |
 
@@ -64,7 +64,7 @@ Items marked **VERIFY** must be checked against the vendor's current docs/pricin
 
 | Source | Access method | Cost | Auth needed |
 |---|---|---|---|
-| PostgreSQL (Neon) | Connection string `DATABASE_URL` | Free tier (**VERIFY**) | Username/password in URL |
+| PostgreSQL (Supabase) | Connection string `DATABASE_URL` | Free tier | Standard PostgreSQL connection string with password |
 | Cloudflare R2 (S3 API) | `S3_ENDPOINT`, access key pair | Free tier (**VERIFY**) | Access key + secret |
 | Brevo SMTP | SMTP 587 | Free plan (**VERIFY**) | SMTP login + key |
 | MinIO / Mailpit (dev only) | Docker | Free | Local defaults |
@@ -80,7 +80,7 @@ No other external API is permitted. No ERP, SMS, or payment service.
 | Resume type / max size | PDF only / 2 MB (2,097,152 bytes) |
 | bcrypt cost | 10 |
 | Login lockout | 5 consecutive failures → 15 min lock |
-| JWT lifetime | 8 h access token, no refresh token |
+| JWT lifetime & storage | 8 h access token, no refresh token; stored in client `localStorage` under `cpms_token` |
 | Pre-signed URL TTL | 300 s |
 | Default page size / max | 20 / 100 |
 | Single Offer threshold default | 8 LPA (setting key `single_offer_ctc_threshold_lpa`) |
