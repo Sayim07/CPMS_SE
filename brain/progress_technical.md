@@ -24,15 +24,15 @@ This table explicitly maps every phase from [`ImplementationPlan.md`](Implementa
 
 | SDLC Phase | Phase Title & Core Deliverables | Primary Phase Owner | Contributing & Supervision | Complexity & Key Constraints |
 |---|---|---|---|---|
-| **Phase UI** | **Frontend Prototype (18 Screens)**<br>All roles (`STUDENT`, `COMPANY`, `TPO`, `ADMIN`), GSAP physics, shadcn/ui, `Ctrl+K`. | **Sayim** *(Project Lead)* | **Sayim** *(Project Lead — Full Prototype & Architecture)* | **Completed (100%)** — Zero TS errors, verified production build. |
-| **Phase 0** | **Setup, Database & Supabase**<br>Prisma 11 tables, migrations, seed script, pooler config, `/health`. | **Joyeeta** | Aakriti (`/health`), **Sayim** *(Project Lead — Docker, DB Schema & Supervision)* | **Moderate** — Foundation for all persistent data. |
-| **Phase 1** | **Auth & RBAC Security**<br>Bcrypt hashing, JWT 8h token, 5-attempt lockout (REQ-2), RBAC middleware (`authenticate`, `requireRole`). | **Aditya** | Aakriti (`/departments`), **Sayim** *(Project Lead — Client Auth Flow & Supervision)* | **Moderate** — Critical security gate. |
-| **Phase 2** | **Student Profile & Verification**<br>Student profile CRUD (`GET/PUT /students/me`), resume storage, verification reset on edit (REQ-5). | **Aditya** | **Sayim** *(Project Lead — TPO Verification Grid UI Review & Supervision)* | **Moderate** — Manages student data integrity. |
-| **Phase 3** | **Companies & Job Postings**<br>Company approval decision, Job creation/editing (`POST/PATCH /jobs`), deadline auto-close (REQ-9). | **Joyeeta** | **Sayim** *(Project Lead — Company Portal Integration & Supervision)* | **Moderate** — Placement drive intake. |
-| **Phase 4** | **Eligibility Engine & Applications (BLOCKING)**<br>Deterministic `evaluateEligibility()` rule engine, single-offer lock (`BR-1`), 30-case matrix test. | **Sayim** *(Project Lead)* | Joyeeta (Transactional isolation & Application records), **Sayim** *(Project Lead — Rule Engine & Supervision)* | **High / Critical** — Core mathematical heart of CPMS. |
-| **Phase 5** | **Funnel, Rounds & Notifications**<br>Applicant stage transitions, notification service (`GET/PATCH /notifications`), interview rounds. | **Aakriti** | Aditya (Resume zip packaging), **Sayim** *(Project Lead — Kanban UI & Supervision)* | **Moderate** — Beginner-friendly API endpoints & alerts. |
-| **Phase 6** | **Reports, Analytics & Administration**<br>Placement summaries (REQ-17), unplaced student reports, CSV export, audit logs. | **Joyeeta** | Aakriti (Audit log APIs), **Sayim** *(Project Lead — Analytics Dashboard & Supervision)* | **Moderate** — Institutional governance. |
-| **Phase 7** | **Hardening, Performance & Deployment**<br>Docker/Cloud deploy, database indexing/EXPLAIN, security hardening, final SE presentation. | **Sayim** *(Project Lead)* | Aditya (Security headers & rate limits), Joyeeta (DB indexes), **Sayim** *(Project Lead — Deployment & Supervision)* | **High** — Production readiness & SE evaluation defense. |
+| **Phase UI** | **Frontend Prototype (18 Screens)**<br>All roles (`STUDENT`, `COMPANY`, `TPO`, `ADMIN`), GSAP physics, shadcn/ui, `Ctrl+K`. | **Sayim** *(Project Lead)* | **Sayim** *(Full Prototype & Architecture)* | **Completed (100%)** — Zero TS errors, verified production build. |
+| **Phase 0** | **Setup, Database & Supabase**<br>Prisma 11 tables, migrations, seed script, pooler config, `/health`. | **Joyeeta** | Aakriti (`/health`), **Sayim** *(Docker, DB Schema & Supervision)* | **Moderate** — Foundation for all persistent data. |
+| **Phase 1** | **Auth & RBAC Security**<br>Bcrypt hashing, JWT 8h token, 5-attempt lockout (REQ-2), RBAC middleware (`authenticate`, `requireRole`). | **Aditya** | Aakriti (`/departments`), **Sayim** *(Client Auth Flow & Supervision)* | **Moderate** — Critical security gate. |
+| **Phase 2** | **Student Profile & Verification**<br>Student profile CRUD (`GET/PUT /students/me`), resume storage, verification reset on edit (REQ-5). | **Aditya** | **Sayim** *(TPO Verification Grid UI Review & Supervision)* | **Moderate** — Manages student data integrity. |
+| **Phase 3** | **Companies & Job Postings**<br>Company approval decision, Job creation/editing (`POST/PATCH /jobs`), deadline auto-close (REQ-9). | **Joyeeta** | **Sayim** *(Company Portal Integration & Supervision)* | **Moderate** — Placement drive intake. |
+| **Phase 4** | **Eligibility Engine & Applications (BLOCKING)**<br>Deterministic `evaluateEligibility()` rule engine, single-offer lock (`BR-1`), 30-case matrix test. | **Sayim** *(Project Lead)* | Joyeeta (Transactional isolation & Application records), **Sayim** *(Rule Engine & Supervision)* | **High / Critical** — Core mathematical heart of CPMS. |
+| **Phase 5** | **Funnel, Rounds & Notifications**<br>Applicant stage transitions, notification service (`GET/PATCH /notifications`), interview rounds. | **Aakriti** | Aditya (Resume zip packaging), **Sayim** *(Kanban UI & Supervision)* | **Moderate** — Beginner-friendly API endpoints & alerts. |
+| **Phase 6** | **Reports, Analytics & Administration**<br>Placement summaries (REQ-17), unplaced student reports, CSV export, audit logs. | **Joyeeta** | Aakriti (Audit log APIs), **Sayim** *(Analytics Dashboard & Supervision)* | **Moderate** — Institutional governance. |
+| **Phase 7** | **Hardening, Performance & Deployment**<br>Docker/Cloud deploy, database indexing/EXPLAIN, security hardening, final SE presentation. | **Sayim** *(Project Lead)* | Aditya (Security headers & rate limits), Joyeeta (DB indexes), **Sayim** *(Deployment & Supervision)* | **High** — Production readiness & SE evaluation defense. |
 
 ---
 
@@ -60,7 +60,7 @@ As of October 11, 2026, the `main` branch contains **7 commits**, all authored a
 
 ## 3. Phase Breakdown & Detailed Member Responsibilities
 
-### 👑 Sayim (Project Lead)
+### Sayim (Project Lead)
 - **Assigned Phase:** **Phase UI (Delivered) + Cross-Phase Engineering Oversight (Phases 0 → 7)**
 - **Scope:** Complete System Architecture & Governance.
 - **Contributions Delivered Till Now:**
@@ -72,7 +72,7 @@ As of October 11, 2026, the `main` branch contains **7 commits**, all authored a
 
 ---
 
-### 🥈 Joyeeta (Database Engineer)
+### Joyeeta (Database Engineer)
 - **Assigned Phase:** **Phase 0 — Setup, Database & Supabase Integration**
 - **Prerequisites:** Supabase credentials provided in `private.txt`.
 - **Detailed Tasks:**
@@ -88,7 +88,7 @@ As of October 11, 2026, the `main` branch contains **7 commits**, all authored a
 
 ---
 
-### 🥉 Aditya (Auth & Security Engineer)
+### Aditya (Auth & Security Engineer)
 - **Assigned Phase:** **Phase 1 — Authentication & RBAC Security**
 - **Prerequisites:** Joyeeta's `prisma.user` schema migration complete.
 - **Detailed Tasks:**
@@ -106,7 +106,7 @@ As of October 11, 2026, the `main` branch contains **7 commits**, all authored a
 
 ---
 
-### 🏅 Aakriti (Backend API & Notification Engineer)
+### Aakriti (Backend API & Notification Engineer)
 - **Assigned Phase:** **Phase 0/1/5 Micro-Services (Reference Data & Notifications)**
 - **Why this is the easiest & beginner-friendly module:**
   - Simple read (`findMany`) and update (`updateMany`) queries.

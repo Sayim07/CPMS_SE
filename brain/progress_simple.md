@@ -7,7 +7,7 @@
 
 ---
 
-## 🌟 What is this Project About?
+## Project Overview
 
 Imagine your college is hosting a huge job fair where big companies come to hire students. 
 
@@ -20,26 +20,26 @@ Usually, this means hundreds of paper forms, confusing bulletin boards, long wai
 
 ---
 
-## 👥 Meet the Team & What Everyone Does
+## Team Roles & Structure
 
 Think of building this website like building a modern high-tech building. Everyone has a specific, important job:
 
 ```
                   ┌──────────────────────────────────────────────┐
-                  │           👑 SAYIM (Team Captain)            │
+                  │            SAYIM (Project Lead)              │
                   │ Overall Blueprint, All 18 Screens & Lead     │
                   └──────────────────────┬───────────────────────┘
                                          │
         ┌────────────────────────────────┼────────────────────────────────┐
         ▼                                ▼                                ▼
- 🥈 JOYEETA (Phase 0)             🥉 ADITYA (Phase 1)             🏅 AAKRITI (Phase 0/1/5)
- The Digital Filing Cabinet       The Front Door Security         The Fast Helper & Messenger
- (Cloud Database & Tables)        (Login, Passwords & Locks)      (System Status & Bell Alerts)
+    JOYEETA (Phase 0)              ADITYA (Phase 1)              AAKRITI (Phase 0/1/5)
+    The Digital Filing Cabinet     The Front Door Security       The Fast Helper & Messenger
+    (Cloud Database & Tables)      (Login, Passwords & Locks)    (System Status & Bell Alerts)
 ```
 
 ---
 
-### 👑 1. Sayim — The Team Captain & Master Architect
+### 1. Sayim — Project Lead & Master Architect
 - **Role:** Project Lead & Frontend Architect
 - **Real-World Metaphor:** The Chief Architect who designs the whole building blueprint, builds the full physical model with furniture and lights, and coordinates all the builders.
 - **What He Does:**
@@ -51,7 +51,7 @@ Think of building this website like building a modern high-tech building. Everyo
 
 ---
 
-### 🥈 2. Joyeeta — The Digital Filing Cabinet Builder
+### 2. Joyeeta — Database Engineer (Filing Cabinet Builder)
 - **Role:** Database Engineer (**Phase 0**)
 - **Real-World Metaphor:** The Vault Organizer who sets up a giant, secure electronic filing cabinet in the cloud and creates neatly labeled drawers for everything.
 - **What She Needs to Do:**
@@ -68,7 +68,7 @@ Think of building this website like building a modern high-tech building. Everyo
 
 ---
 
-### 🥉 3. Aditya — The Digital Security Guard & Door Keeper
+### 3. Aditya — Authentication & Security Engineer (Door Keeper)
 - **Role:** Authentication & Security Engineer (**Phase 1**)
 - **Real-World Metaphor:** The Security Officer at the front gate who checks ID badges, issues keycards, and locks the door if an intruder tries guessing passwords.
 - **What He Needs to Do:**
@@ -81,7 +81,7 @@ Think of building this website like building a modern high-tech building. Everyo
 
 ---
 
-### 🏅 4. Aakriti — The Fast Helper & Messenger
+### 4. Aakriti — Reference Data & Notification Helper
 - **Role:** Reference Data & Notification Helper (**Phase 0, 1 & 5**)
 - **Real-World Metaphor:** The friendly front-desk assistant who answers "Yes, we are open!", hands out the college department list, and slips paper notes into people's mailboxes.
 - **Why this is the easiest & most beginner-friendly job:**
@@ -98,7 +98,7 @@ Think of building this website like building a modern high-tech building. Everyo
 
 ---
 
-## 📊 Quick Summary Table
+## Team Summary Table
 
 | Person | Team Role | Real-World Job | Difficulty | Current Status |
 |---|---|---|---|---|
@@ -109,25 +109,25 @@ Think of building this website like building a modern high-tech building. Everyo
 
 ---
 
-## 🗺️ Step-by-Step Project Map (All Project Phases)
+## Step-by-Step Project Map (All Project Phases)
 
-Here is how the whole website is being built step-by-step from start to finish, with **👑 Sayim (Project Lead)** supervising and actively contributing to every stage:
+Here is how the whole website is being built step-by-step from start to finish, with **Sayim (Project Lead)** supervising and actively contributing to every stage:
 
 | Stage | What We Are Building | Primary Builder | Contributing & Supervision | What Happens |
 |---|---|---|---|---|
-| **Phase UI** | **The Visual Experience (18 Screens)** | **👑 Sayim** *(Project Lead)* | **👑 Sayim** *(Project Lead)* | **Finished!** Every button, card, and page is ready to look and feel amazing. |
-| **Phase 0** | **The Cloud Filing Cabinet** | **🥈 Joyeeta** | Aakriti & **👑 Sayim** *(Project Lead)* | Connecting Supabase and setting up the 11 data drawers. |
-| **Phase 1** | **The Front Door & Keys** | **🥉 Aditya** | Aakriti & **👑 Sayim** *(Project Lead)* | Setting up Sign Up, Login, and the 5-wrong-passwords lockout door. |
-| **Phase 2** | **Student Profiles & Resumes** | **🥉 Aditya** | **👑 Sayim** *(Project Lead)* | Letting students update their grades, upload resumes, and teacher approvals. |
-| **Phase 3** | **Company Accounts & Job Posts** | **🥈 Joyeeta** | **👑 Sayim** *(Project Lead)* | Companies posting jobs with salaries and requirements. |
-| **Phase 4** | **The Matchmaker & Single Offer Rule** | **👑 Sayim** *(Project Lead)* | Joyeeta & **👑 Sayim** *(Project Lead)* | The brain of the site: automatically checking who is eligible and ensuring fair play. |
-| **Phase 5** | **Interviews & Message Bells** | **🏅 Aakriti** | Aditya & **👑 Sayim** *(Project Lead)* | Sending alerts to students and moving candidates through interview stages. |
-| **Phase 6** | **Reports & College Analytics** | **🥈 Joyeeta** | Aakriti & **👑 Sayim** *(Project Lead)* | Generating placement statistics, charts, and downloadable reports for teachers. |
-| **Phase 7** | **Final Polish, Launch & Evaluation** | **👑 Sayim** *(Project Lead)* | Aditya, Joyeeta & **👑 Sayim** *(Project Lead)* | Putting the website online, final safety checks, and presenting to professors. |
+| **Phase UI** | **The Visual Experience (18 Screens)** | **Sayim** *(Project Lead)* | **Sayim** *(Architecture & Supervision)* | **Finished!** Every button, card, and page is ready to look and feel amazing. |
+| **Phase 0** | **The Cloud Filing Cabinet** | **Joyeeta** | Aakriti & **Sayim** *(Supervision)* | Connecting Supabase and setting up the 11 data drawers. |
+| **Phase 1** | **The Front Door & Keys** | **Aditya** | Aakriti & **Sayim** *(Supervision)* | Setting up Sign Up, Login, and the 5-wrong-passwords lockout door. |
+| **Phase 2** | **Student Profiles & Resumes** | **Aditya** | **Sayim** *(Supervision)* | Letting students update their grades, upload resumes, and teacher approvals. |
+| **Phase 3** | **Company Accounts & Job Posts** | **Joyeeta** | **Sayim** *(Supervision)* | Companies posting jobs with salaries and requirements. |
+| **Phase 4** | **The Matchmaker & Single Offer Rule** | **Sayim** *(Project Lead)* | Joyeeta & **Sayim** *(Supervision)* | The brain of the site: automatically checking who is eligible and ensuring fair play. |
+| **Phase 5** | **Interviews & Message Bells** | **Aakriti** | Aditya & **Sayim** *(Supervision)* | Sending alerts to students and moving candidates through interview stages. |
+| **Phase 6** | **Reports & College Analytics** | **Joyeeta** | Aakriti & **Sayim** *(Supervision)* | Generating placement statistics, charts, and downloadable reports for teachers. |
+| **Phase 7** | **Final Polish, Launch & Evaluation** | **Sayim** *(Project Lead)* | Aditya, Joyeeta & **Sayim** *(Supervision)* | Putting the website online, final safety checks, and presenting to professors. |
 
 ---
 
-## 🚀 How Everything Comes Together
+## How Everything Comes Together
 
 1. **Sayim** already built the entire visual website so the team can see exactly what the final product will look like.
 2. **Joyeeta** builds the filing cabinet where all data will live safely in the cloud.
