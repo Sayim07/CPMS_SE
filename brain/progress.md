@@ -6,6 +6,7 @@
 > **SDLC Model:** Iterative Development Model  
 > **Audit Date:** October 11, 2026  
 > **Git Repository:** `Sayim07/CPMS_SE` (Branch: `main`)  
+> **Non-Technical Edition:** [`progress_simple.md`](progress_simple.md) (Plain-English role guide with real-world analogies)  
 
 ---
 

@@ -2,7 +2,8 @@
 
 > **Project:** College Placement Management System (CPMS)  
 > **Team:** Sayim (Project Lead), Joyeeta, Aditya, Aakriti  
-> **Purpose:** A friendly, easy-to-read guide explaining what CPMS is, who is building what, and what has been completed so far.
+> **Purpose:** A friendly, easy-to-read guide explaining what CPMS is, who is building what, and what has been completed so far.  
+> **Technical Edition:** [`progress.md`](progress.md) (Complete schemas, REST endpoints, JWT & code templates)  
 
 ---
 
