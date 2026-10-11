@@ -3,7 +3,7 @@
 > **Project:** College Placement Management System (CPMS)  
 > **Team:** Sayim (Project Lead), Joyeeta, Aditya, Aakriti  
 > **Purpose:** A friendly, easy-to-read guide explaining what CPMS is, who is building what, and what has been completed so far.  
-> **Technical Edition:** [`progress.md`](progress.md) (Complete schemas, REST endpoints, JWT & code templates)  
+> **Technical Edition:** [`progress_technical.md`](progress_technical.md) (Complete schemas, REST endpoints, JWT & code templates)  
 
 ---
 
@@ -111,19 +111,19 @@ Think of building this website like building a modern high-tech building. Everyo
 
 ## 🗺️ Step-by-Step Project Map (All Project Phases)
 
-Here is how the whole website is being built step-by-step from start to finish:
+Here is how the whole website is being built step-by-step from start to finish, with **👑 Sayim (Project Lead)** supervising and actively contributing to every stage:
 
-| Stage | What We Are Building | Who Leads It | What Happens |
-|---|---|---|---|
-| **Phase UI** | **The Visual Experience (18 Screens)** | **👑 Sayim** | **Finished!** Every button, card, and page is ready to look and feel amazing. |
-| **Phase 0** | **The Cloud Filing Cabinet** | **🥈 Joyeeta** | Connecting Supabase and setting up the 11 data drawers. |
-| **Phase 1** | **The Front Door & Keys** | **🥉 Aditya** | Setting up Sign Up, Login, and the 5-wrong-passwords lockout door. |
-| **Phase 2** | **Student Profiles & Resumes** | **🥉 Aditya** | Letting students update their grades, upload resumes, and teacher approvals. |
-| **Phase 3** | **Company Accounts & Job Posts** | **🥈 Joyeeta** | Companies posting jobs with salaries and requirements. |
-| **Phase 4** | **The Matchmaker & Single Offer Rule** | **👑 Sayim** | The brain of the site: automatically checking who is eligible and ensuring fair play. |
-| **Phase 5** | **Interviews & Message Bells** | **🏅 Aakriti** | Sending alerts to students and moving candidates through interview stages. |
-| **Phase 6** | **Reports & College Analytics** | **🥈 Joyeeta** | Generating placement statistics, charts, and downloadable reports for teachers. |
-| **Phase 7** | **Final Polish, Launch & Evaluation** | **👑 Sayim** | Putting the website online, final safety checks, and presenting to professors. |
+| Stage | What We Are Building | Primary Builder | Contributing & Supervision | What Happens |
+|---|---|---|---|---|
+| **Phase UI** | **The Visual Experience (18 Screens)** | **👑 Sayim** *(Project Lead)* | **👑 Sayim** *(Project Lead)* | **Finished!** Every button, card, and page is ready to look and feel amazing. |
+| **Phase 0** | **The Cloud Filing Cabinet** | **🥈 Joyeeta** | Aakriti & **👑 Sayim** *(Project Lead)* | Connecting Supabase and setting up the 11 data drawers. |
+| **Phase 1** | **The Front Door & Keys** | **🥉 Aditya** | Aakriti & **👑 Sayim** *(Project Lead)* | Setting up Sign Up, Login, and the 5-wrong-passwords lockout door. |
+| **Phase 2** | **Student Profiles & Resumes** | **🥉 Aditya** | **👑 Sayim** *(Project Lead)* | Letting students update their grades, upload resumes, and teacher approvals. |
+| **Phase 3** | **Company Accounts & Job Posts** | **🥈 Joyeeta** | **👑 Sayim** *(Project Lead)* | Companies posting jobs with salaries and requirements. |
+| **Phase 4** | **The Matchmaker & Single Offer Rule** | **👑 Sayim** *(Project Lead)* | Joyeeta & **👑 Sayim** *(Project Lead)* | The brain of the site: automatically checking who is eligible and ensuring fair play. |
+| **Phase 5** | **Interviews & Message Bells** | **🏅 Aakriti** | Aditya & **👑 Sayim** *(Project Lead)* | Sending alerts to students and moving candidates through interview stages. |
+| **Phase 6** | **Reports & College Analytics** | **🥈 Joyeeta** | Aakriti & **👑 Sayim** *(Project Lead)* | Generating placement statistics, charts, and downloadable reports for teachers. |
+| **Phase 7** | **Final Polish, Launch & Evaluation** | **👑 Sayim** *(Project Lead)* | Aditya, Joyeeta & **👑 Sayim** *(Project Lead)* | Putting the website online, final safety checks, and presenting to professors. |
 
 ---
 
