@@ -25,7 +25,7 @@
                │                                 │                                 │
                ▼                                 ▼                                 ▼
 ┌─────────────────────────────┐   ┌─────────────────────────────┐   ┌─────────────────────────────┐
-│ JOYEETA (Database Engineer) │   │ ADITYA (Security Engineer)  │   │ AAKRITI (Backend Engineer)  │
+│ JOYEETA (Database Engineer) │   │ ADITYA (Security Engineer)  │   │ AAKRITI (API Services Eng.) │
 │       Phases: 0, 3, 6       │   │        Phases: 1, 2         │   │      Phases: 5 & 0, 1       │
 │ Supabase & Prisma 11 Tables │   │ Express Auth, Bcrypt & JWT  │   │ Health Check & Dept Catalog │
 │Job Posts & Placement Reports│   │ Profiles, Resumes & Lockout │   │  Interview Rounds & Alerts  │
@@ -95,55 +95,70 @@ As of October 11, 2026, the `main` branch contains **7 commits**, all authored a
 ---
 
 ### Joyeeta (Database Engineer)
-- **Assigned Phase:** **Phase 0 — Setup, Database & Supabase Integration**
+- **Assigned Phases:** **Phase 0 (Database & Supabase) | Phase 3 (Companies & Jobs) | Phase 6 (Reports & Admin)**
 - **Prerequisites:** Supabase credentials provided in `private.txt`.
-- **Detailed Tasks:**
-  1. **Task 0.3 (Prisma Schema):** Create `server/prisma/schema.prisma` with all 11 tables matching [`Schema.md §3`](Schema.md):
-     - `users`, `departments`, `students`, `companies`, `jobs`, `applications`, `interview_rounds`, `round_results`, `notifications`, `audit_logs`, `system_settings`.
-  2. **Task 0.3 (Database Migration):** Run migration against Supabase cloud PostgreSQL:
-     ```bash
-     npx prisma migrate dev --name init
-     ```
-  3. **Task 0.4 (Environment Configuration):** Configure `server/.env` with `DATABASE_URL` (pooler) and `DIRECT_URL` (direct).
-  4. **Task 0.6 (Database Seeding):** Create `server/prisma/seed.ts` to populate default departments (`CSE`, `IT`, `ECE`, `MECH`), initial system admin account, and default policy settings (8.0 LPA threshold).
-- **Exit Criteria:** Database tables visible in Supabase dashboard with initial seed records populated.
+- **Detailed Tasks Across Sprints:**
+  - **Phase 0 — Database Foundation (Current Sprint 1):**
+    1. **Task 0.3 (Prisma Schema):** Create `server/prisma/schema.prisma` with all 11 tables matching [`Schema.md §3`](Schema.md):
+       - `users`, `departments`, `students`, `companies`, `jobs`, `applications`, `interview_rounds`, `round_results`, `notifications`, `audit_logs`, `system_settings`.
+    2. **Task 0.3 (Database Migration):** Run migration against Supabase cloud PostgreSQL:
+       ```bash
+       npx prisma migrate dev --name init
+       ```
+    3. **Task 0.4 (Environment Configuration):** Configure `server/.env` with `DATABASE_URL` (pooler) and `DIRECT_URL` (direct).
+    4. **Task 0.6 (Database Seeding):** Create `server/prisma/seed.ts` to populate default departments (`CSE`, `IT`, `ECE`, `MECH`), initial system admin account, and default policy settings (8.0 LPA threshold).
+  - **Phase 3 — Company Drives & Job Postings (Upcoming Sprint):**
+    1. **Task 3.1 & 3.2 (Company Verification & Job CRUD):** Manage company approval status (`PENDING` → `VERIFIED`) and implement `POST /jobs` & `PATCH /jobs/:id`.
+    2. **Task 3.4 (Deadline Automation):** Auto-close job applications when deadline passes (`REQ-9`).
+  - **Phase 6 — Reports & Institutional Analytics (Upcoming Sprint):**
+    1. **Task 6.1 & 6.2 (Placement Summaries & Exports):** Aggregate placement stats (`REQ-17`) and generate CSV export streams.
+    2. **Task 6.3 (Unplaced Student Directory):** Generate filtered list of students seeking placement (`REQ-18`).
+- **Exit Criteria (Phase 0):** Database tables visible in Supabase dashboard with initial seed records populated.
 
 ---
 
 ### Aditya (Auth & Security Engineer)
-- **Assigned Phase:** **Phase 1 — Authentication & RBAC Security**
+- **Assigned Phases:** **Phase 1 (Authentication & RBAC Security) | Phase 2 (Student Profiles & Verification)**
 - **Prerequisites:** Joyeeta's `prisma.user` schema migration complete.
-- **Detailed Tasks:**
-  1. **Task 1.1 (Registration Endpoints):**
-     - `POST /auth/register/student`: Validates roll number format, creates `User` and `Student` records with `is_verified: false`.
-     - `POST /auth/register/company`: Validates GST/Tax ID, creates `User` and `Company` records with `status: PENDING`.
-  2. **Task 1.2 (Login & 5-Attempt Lockout - REQ-2):**
-     - `POST /auth/login`: Verifies email and password using `bcrypt.compare()`.
-     - Generates signed JWT with 8-hour expiration (`cpms_token`).
-     - Tracks failed attempts: if `failed_login_attempts >= 5`, lock account for 15 minutes (`HTTP 423 Locked`).
-  3. **Task 1.3 (RBAC Middleware):**
-     - `authenticate`: Extracts Bearer token, verifies JWT, and attaches user payload to `req.user`.
-     - `requireRole(["STUDENT", "COMPANY", "TPO", "ADMIN"])`: Rejects unauthorized role access with `HTTP 403 Forbidden`.
-- **Exit Criteria:** Postman tests confirm student registration, company registration, login token generation, and account lockout after 5 consecutive failures.
+- **Detailed Tasks Across Sprints:**
+  - **Phase 1 — Authentication & Security (Current Sprint 1):**
+    1. **Task 1.1 (Registration Endpoints):**
+       - `POST /auth/register/student`: Validates roll number format, creates `User` and `Student` records with `is_verified: false`.
+       - `POST /auth/register/company`: Validates GST/Tax ID, creates `User` and `Company` records with `status: PENDING`.
+    2. **Task 1.2 (Login & 5-Attempt Lockout - REQ-2):**
+       - `POST /auth/login`: Verifies email and password using `bcrypt.compare()`.
+       - Generates signed JWT with 8-hour expiration (`cpms_token`).
+       - Tracks failed attempts: if `failed_login_attempts >= 5`, lock account for 15 minutes (`HTTP 423 Locked`).
+    3. **Task 1.3 (RBAC Middleware):**
+       - `authenticate`: Extracts Bearer token, verifies JWT, and attaches user payload to `req.user`.
+       - `requireRole(["STUDENT", "COMPANY", "TPO", "ADMIN"])`: Rejects unauthorized role access with `HTTP 403 Forbidden`.
+  - **Phase 2 — Student Profile & Resume Vault (Upcoming Sprint):**
+    1. **Task 2.1 (Profile Management):** `GET /students/me` and `PUT /students/me` for updating profile data.
+    2. **Task 2.2 & 2.3 (Resume Storage):** Pre-signed upload URLs for PDF resumes (`REQ-4`).
+    3. **Task 2.4 (Verification Reset Trigger):** Automatically reset `is_verified = false` when sensitive fields (CGPA, backlogs) are modified (`REQ-5`).
+- **Exit Criteria (Phase 1):** Postman tests confirm student registration, company registration, login token generation, and account lockout after 5 consecutive failures.
 
 ---
 
-### Aakriti (Backend API & Notification Engineer)
-- **Assigned Phase:** **Phase 0/1/5 Micro-Services (Reference Data & Notifications)**
+### Aakriti (API & Services Engineer)
+- **Assigned Phases:** **Phase 0/1 (Reference APIs) | Phase 5 (Funnel, Rounds & Notifications)**
 - **Why this is the easiest & beginner-friendly module:**
   - Simple read (`findMany`) and update (`updateMany`) queries.
   - Zero complex business math or multi-stage locks.
   - Independent endpoints that do not block other team members.
-- **Detailed Tasks:**
-  1. **Task 0.5 (System Health Check):**
-     - `GET /health`: Returns server status, timestamp, and process uptime.
-  2. **Task 1.4 (Department Reference Catalog):**
-     - `GET /departments`: Returns active departments (`where: { is_active: true }`) for registration dropdowns.
-  3. **Task 5.3 (Notification Alerts Service):**
-     - `GET /notifications`: Fetches alert feed for the logged-in user.
-     - `PATCH /notifications/:id/read`: Marks a single notification as read.
-     - `PATCH /notifications/read-all`: Marks all notifications as read.
-- **Exit Criteria:** Endpoints tested via Postman returning status 200 with JSON payloads.
+- **Detailed Tasks Across Sprints:**
+  - **Phase 0 & 1 — Reference Endpoints (Current Sprint 1):**
+    1. **Task 0.5 (System Health Check):**
+       - `GET /health`: Returns server status, timestamp, and process uptime.
+    2. **Task 1.4 (Department Reference Catalog):**
+       - `GET /departments`: Returns active departments (`where: { is_active: true }`) for registration dropdowns.
+  - **Phase 5 — Notifications & Stage Alerts (Upcoming Sprint):**
+    1. **Task 5.3 (Notification Alerts Service):**
+       - `GET /notifications`: Fetches alert feed for the logged-in user.
+       - `PATCH /notifications/:id/read`: Marks a single notification as read.
+       - `PATCH /notifications/read-all`: Marks all notifications as read.
+    2. **Task 5.1 & 5.2 (Interview Stage Feed):** Provide candidate stage progression endpoints (`APPLIED` → `SHORTLISTED` → `OFFERED`).
+- **Exit Criteria (Current Sprint):** Endpoints tested via Postman returning status 200 with JSON payloads.
 
 ---
 
@@ -236,6 +251,25 @@ notificationRouter.patch("/notifications/read-all", authenticate, async (req: Au
     res.status(500).json({ error: "Failed to mark all as read" });
   }
 });
+```
+
+### Template 4: Central Router Mounting (`server/src/app.ts`)
+```ts
+import express from "express";
+import cors from "cors";
+import { healthRouter } from "./routes/health.routes";
+import { departmentRouter } from "./routes/department.routes";
+import { notificationRouter } from "./routes/notification.routes";
+
+export const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+// Mount micro-service routers
+app.use("/api", healthRouter);
+app.use("/api", departmentRouter);
+app.use("/api", notificationRouter);
 ```
 
 ---

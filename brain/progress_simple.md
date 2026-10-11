@@ -56,49 +56,37 @@ Think of building this website like building a modern high-tech building. Everyo
 ---
 
 ### 2. Joyeeta — Database Engineer (Filing Cabinet Builder)
-- **Role:** Database Engineer (**Phase 0**)
+- **Role:** Database Engineer (**Phases 0, 3, 6**)
 - **Real-World Metaphor:** The Vault Organizer who sets up a giant, secure electronic filing cabinet in the cloud and creates neatly labeled drawers for everything.
 - **What She Needs to Do:**
-  - **Connect to the Cloud:** Connect our project to Supabase (an online cloud warehouse for storing information).
-  - **Create the 11 Drawers (Tables):** Set up neatly organized sections so information doesn't get mixed up:
-    1. A drawer for *Students* (name, roll number, grades, branch).
-    2. A drawer for *Companies* (company name, website, approval status).
-    3. A drawer for *Job Posts* (salary, job title, requirements).
-    4. A drawer for *Applications* (who applied to what).
-    5. A drawer for *Interview Rounds* (round 1 test, round 2 interview).
-    6. Drawers for *Notifications, Logs, and College Settings*.
-  - **Starter Data:** Put in initial college branch names (Computer Science, IT, Mechanical, etc.) and the admin account so the website isn't empty on day one.
-- **Current Progress:** Assigned and ready to start.
+  - **Phase 0 (Cloud Database Setup):** Connect our project to Supabase and create the 11 neatly organized tables (Students, Companies, Jobs, Applications, Interview Rounds, Notifications, Settings). Populate starter departments (CSE, IT, ECE, MECH) and admin accounts.
+  - **Phase 3 (Company Drives & Job Posts):** Manage company verification status and create job posting forms with automatic application deadline cutoffs.
+  - **Phase 6 (Placement Reports):** Generate placement statistics, charts, and downloadable reports for teachers and institutional audits.
+- **Current Progress:** Assigned and ready to start Phase 0.
 
 ---
 
 ### 3. Aditya — Authentication & Security Engineer (Door Keeper)
-- **Role:** Authentication & Security Engineer (**Phase 1**)
+- **Role:** Authentication & Security Engineer (**Phases 1, 2**)
 - **Real-World Metaphor:** The Security Officer at the front gate who checks ID badges, issues keycards, and locks the door if an intruder tries guessing passwords.
 - **What He Needs to Do:**
-  - **Front Gate Sign-Up:** Create the entry forms so new students and companies can register their accounts.
-  - **Secret Password Scrambler:** Make sure passwords are never stored as plain text. He turns them into scrambled secret codes so even if someone sneaks a look, they can't read them.
-  - **Digital Wristbands (Login Tokens):** When a student or company types the correct email and password, give them a digital wristband that proves who they are for the rest of the day.
-  - **The 5-Attempt Lockout Rule:** If someone types the wrong password 5 times in a row, the door automatically locks them out for 15 minutes to stop hackers from guessing passwords.
-  - **Hallway Permissions:** Make sure students can only enter student rooms, companies can only enter company rooms, and teachers can enter the teacher control center.
-- **Current Progress:** Assigned and ready to start once Joyeeta's user drawer is ready.
+  - **Phase 1 (Front Door Security & Login):** Create registration for students and companies, hash passwords into unreadable codes, issue 8-hour digital login wristbands (JWT), enforce the 5-wrong-passwords lockout rule (15-minute freeze), and restrict hallway permissions (RBAC).
+  - **Phase 2 (Student Profiles & Resume Vault):** Build student profile update pages, set up secure resume upload links, and automatically flag profiles for teacher re-verification if grades or marks are edited.
+- **Current Progress:** Assigned and ready to start Phase 1.
 
 ---
 
 ### 4. Aakriti — Reference Data & Notification Helper
-- **Role:** Reference Data & Notification Helper (**Phase 0, 1 & 5**)
+- **Role:** Reference Data & Notification Helper (**Phases 5 & 0, 1**)
 - **Real-World Metaphor:** The friendly front-desk assistant who answers "Yes, we are open!", hands out the college department list, and slips paper notes into people's mailboxes.
 - **Why this is the easiest & most beginner-friendly job:**
   - No complicated math, no tricky security locks, and no heavy setups.
   - Just asking the database for simple lists and showing them on screen.
   - She already has ready-to-use starter code templates to copy and plug in.
 - **What She Needs to Do:**
-  - **Task 1: The Heartbeat Check (`/health`):** A super simple button that answers: *"Yes! The server is awake and healthy."* This takes just 10 lines of code.
-  - **Task 2: The Department List (`/departments`):** Whenever a student signs up and clicks the "Choose Department" dropdown, this helper fetches the clean list of branches (CSE, IT, ECE, MECH).
-  - **Task 3: The Notification Bell (`/notifications`):**
-    - Show students their messages (e.g., *"Google scheduled your interview for tomorrow!"*).
-    - Add a button so students can click *"Mark as Read"* when they finish reading a message.
-- **Current Progress:** Assigned and ready to start right now.
+  - **Phase 0 & 1 (Reference Helpers):** Build the pulse check (`/health` — answering "Yes, server is alive!") and the department catalog (`/departments` — listing CSE, IT, ECE, MECH for registration dropdowns).
+  - **Phase 5 (Notifications & Candidate Alerts):** Show students their messages (e.g., *"Interview scheduled for tomorrow"*), add the "Mark as Read" button, and handle interview round updates.
+- **Current Progress:** Assigned and ready to start Phase 0/1 reference endpoints.
 
 ---
 
@@ -106,10 +94,10 @@ Think of building this website like building a modern high-tech building. Everyo
 
 | Person | Team Role | Real-World Job | Difficulty | Current Status |
 |---|---|---|---|---|
-| **Sayim** | Project Lead | Master Architect & Screen Builder | Comprehensive | **100% Done** (All 18 screens ready, 7 GitHub pushes) |
-| **Joyeeta** | Phase 0 | Electronic Filing Cabinet (Database) | Medium | Ready to set up Supabase & drawers |
-| **Aditya** | Phase 1 | Front Door Security (Login & Locks) | Medium | Ready to build login & lockout rules |
-| **Aakriti** | Phase 0/1/5 | Front Desk Messenger (Health & Alerts) | **Easiest / Friendly** | Ready to copy & plug in starter templates |
+| **Sayim** | Phases UI, 4, 7 (Project Lead) | Master Architect & Screen Builder | Comprehensive | **100% Done** (All 18 screens ready, 7 GitHub pushes) |
+| **Joyeeta** | Phases 0, 3, 6 | Electronic Filing Cabinet (Database & Reports) | Medium | Ready to set up Supabase & drawers |
+| **Aditya** | Phases 1, 2 | Front Door Security (Login, Locks & Profiles) | Medium | Ready to build login & lockout rules |
+| **Aakriti** | Phases 5 & 0, 1 | Front Desk Messenger (Health, Catalog & Alerts) | **Easiest / Friendly** | Ready to copy & plug in starter templates |
 
 ---
 
