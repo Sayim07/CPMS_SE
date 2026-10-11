@@ -16,7 +16,7 @@
 
 ```
                       ┌─────────────────────────────────────────────────────┐
-                      │     SAYIM (Project Lead & Principal Architect)      │
+                      │     SAYIM (Project Lead & Full Stack Architect)     │
                       │Phases: UI, 4, 7 + Cross-Phase Technical Supervision │
                       │18 Client Views, Eligibility Engine, Deploy & Defense│
                       └──────────────────────────┬──────────────────────────┘
@@ -82,8 +82,9 @@ As of October 11, 2026, the `main` branch contains **7 commits**, all authored a
 
 ## 3. Phase Breakdown & Detailed Member Responsibilities
 
-### Sayim (Project Lead)
-- **Assigned Phase:** **Phase UI (Delivered) + Cross-Phase Engineering Oversight (Phases 0 → 7)**
+### Sayim (Project Lead & Full Stack Architect)
+- **Role:** **Project Lead & Full Stack Architect**
+- **Assigned Phases:** **Phases UI, 4, 7 (Delivered & Core Engine) + Cross-Phase Technical Oversight**
 - **Scope:** Complete System Architecture & Governance.
 - **Contributions Delivered Till Now:**
   1. **System Blueprint Delivery:** Architected all 9 formal specifications in `brain/`, establishing deterministic eligibility rules, single-offer policy constraints, and relational database schemas.

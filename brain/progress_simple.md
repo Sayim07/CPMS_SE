@@ -43,8 +43,8 @@ Think of building this website like building a modern high-tech building. Everyo
 
 ---
 
-### 1. Sayim — Project Lead & Master Architect
-- **Role:** Project Lead & Frontend Architect
+### 1. Sayim — Project Lead & Full Stack Architect
+- **Role:** Project Lead & Full Stack Architect
 - **Real-World Metaphor:** The Chief Architect who designs the whole building blueprint, builds the full physical model with furniture and lights, and coordinates all the builders.
 - **What He Does:**
   - **The Master Blueprint:** Planned how the entire system works from start to finish across 9 detailed planning guides.
@@ -94,7 +94,7 @@ Think of building this website like building a modern high-tech building. Everyo
 
 | Person | Team Role | Real-World Job | Difficulty | Current Status |
 |---|---|---|---|---|
-| **Sayim** | Phases UI, 4, 7 (Project Lead) | Master Architect & Screen Builder | Comprehensive | **100% Done** (All 18 screens ready, 7 GitHub pushes) |
+| **Sayim** | Phases UI, 4, 7 (Project Lead) | Full Stack Architect & Screen Builder | Comprehensive | **100% Done** (All 18 screens ready, 7 GitHub pushes) |
 | **Joyeeta** | Phases 0, 3, 6 | Electronic Filing Cabinet (Database & Reports) | Medium | Ready to set up Supabase & drawers |
 | **Aditya** | Phases 1, 2 | Front Door Security (Login, Locks & Profiles) | Medium | Ready to build login & lockout rules |
 | **Aakriti** | Phases 5 & 0, 1 | Front Desk Messenger (Health, Catalog & Alerts) | **Easiest / Friendly** | Ready to copy & plug in starter templates |
