@@ -109,6 +109,24 @@ Think of building this website like building a modern high-tech building. Everyo
 
 ---
 
+## 🗺️ Step-by-Step Project Map (All Project Phases)
+
+Here is how the whole website is being built step-by-step from start to finish:
+
+| Stage | What We Are Building | Who Leads It | What Happens |
+|---|---|---|---|
+| **Phase UI** | **The Visual Experience (18 Screens)** | **👑 Sayim** | **Finished!** Every button, card, and page is ready to look and feel amazing. |
+| **Phase 0** | **The Cloud Filing Cabinet** | **🥈 Joyeeta** | Connecting Supabase and setting up the 11 data drawers. |
+| **Phase 1** | **The Front Door & Keys** | **🥉 Aditya** | Setting up Sign Up, Login, and the 5-wrong-passwords lockout door. |
+| **Phase 2** | **Student Profiles & Resumes** | **🥉 Aditya** | Letting students update their grades, upload resumes, and teacher approvals. |
+| **Phase 3** | **Company Accounts & Job Posts** | **🥈 Joyeeta** | Companies posting jobs with salaries and requirements. |
+| **Phase 4** | **The Matchmaker & Single Offer Rule** | **👑 Sayim** | The brain of the site: automatically checking who is eligible and ensuring fair play. |
+| **Phase 5** | **Interviews & Message Bells** | **🏅 Aakriti** | Sending alerts to students and moving candidates through interview stages. |
+| **Phase 6** | **Reports & College Analytics** | **🥈 Joyeeta** | Generating placement statistics, charts, and downloadable reports for teachers. |
+| **Phase 7** | **Final Polish, Launch & Evaluation** | **👑 Sayim** | Putting the website online, final safety checks, and presenting to professors. |
+
+---
+
 ## 🚀 How Everything Comes Together
 
 1. **Sayim** already built the entire visual website so the team can see exactly what the final product will look like.
