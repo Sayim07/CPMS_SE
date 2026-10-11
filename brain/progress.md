@@ -36,7 +36,7 @@ As of October 11, 2026, the `main` branch contains **7 commits**, all authored a
 | `88cf5b6` | Sayim (`sks628353@gmail.com`) | 2026-10-09 | `brain: initial directory setup` |
 
 ### B. Current Codebase State
-- **`brain/` (Complete):** Contains all 9 foundational SDLC engineering specifications authored by Sayim (`PRD.md`, `TRD.md`, `AppFlow.md`, `Design.md`, `Schema.md`, `Rules.md`, `ImplementationPlan.md`, `Tracker.md`, `UI.md`).
+- **`brain/` (Complete):** Contains all foundational SDLC engineering specifications authored by Sayim ([`PRD.md`](PRD.md), [`TRD.md`](TRD.md), [`AppFlow.md`](AppFlow.md), [`Design.md`](Design.md), [`Schema.md`](Schema.md), [`Rules.md`](Rules.md), [`ImplementationPlan.md`](ImplementationPlan.md), [`Tracker.md`](Tracker.md), [`UI.md`](UI.md), and this [`progress.md`](progress.md)).
 - **`client/` (Complete):** Contains the fully functional 18-screen React 19 / Vite 8 client with typed mock data, shadcn/ui Radix components, GSAP 3D perspective cards, magnetic buttons, Lenis smooth scrolling, and `Ctrl+K` command menu.
 - **`server/` (Pending Scaffolding):** The backend directory is ready to be initialized as Joyeeta begins Phase 0, Aditya begins Phase 1, and Aakriti builds reference APIs.
 
@@ -60,7 +60,7 @@ As of October 11, 2026, the `main` branch contains **7 commits**, all authored a
 - **Assigned Phase:** **Phase 0 — Setup, Database & Supabase Integration**
 - **Prerequisites:** Supabase credentials provided in `private.txt`.
 - **Detailed Tasks:**
-  1. **Task 0.3 (Prisma Schema):** Create `server/prisma/schema.prisma` with all 11 tables matching [`brain/Schema.md §3`](brain/Schema.md):
+  1. **Task 0.3 (Prisma Schema):** Create `server/prisma/schema.prisma` with all 11 tables matching [`Schema.md §3`](Schema.md):
      - `users`, `departments`, `students`, `companies`, `jobs`, `applications`, `interview_rounds`, `round_results`, `notifications`, `audit_logs`, `system_settings`.
   2. **Task 0.3 (Database Migration):** Run migration against Supabase cloud PostgreSQL:
      ```bash
