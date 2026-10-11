@@ -115,15 +115,15 @@ Here is how the whole website is being built step-by-step from start to finish, 
 
 | Stage | What We Are Building | Primary Builder | Contributing & Supervision | What Happens |
 |---|---|---|---|---|
-| **Phase UI** | **The Visual Experience (18 Screens)** | **Sayim** *(Project Lead)* | **Sayim** *(Architecture & Supervision)* | **Finished!** Every button, card, and page is ready to look and feel amazing. |
-| **Phase 0** | **The Cloud Filing Cabinet** | **Joyeeta** | Aakriti & **Sayim** *(Supervision)* | Connecting Supabase and setting up the 11 data drawers. |
-| **Phase 1** | **The Front Door & Keys** | **Aditya** | Aakriti & **Sayim** *(Supervision)* | Setting up Sign Up, Login, and the 5-wrong-passwords lockout door. |
-| **Phase 2** | **Student Profiles & Resumes** | **Aditya** | **Sayim** *(Supervision)* | Letting students update their grades, upload resumes, and teacher approvals. |
-| **Phase 3** | **Company Accounts & Job Posts** | **Joyeeta** | **Sayim** *(Supervision)* | Companies posting jobs with salaries and requirements. |
-| **Phase 4** | **The Matchmaker & Single Offer Rule** | **Sayim** *(Project Lead)* | Joyeeta & **Sayim** *(Supervision)* | The brain of the site: automatically checking who is eligible and ensuring fair play. |
-| **Phase 5** | **Interviews & Message Bells** | **Aakriti** | Aditya & **Sayim** *(Supervision)* | Sending alerts to students and moving candidates through interview stages. |
-| **Phase 6** | **Reports & College Analytics** | **Joyeeta** | Aakriti & **Sayim** *(Supervision)* | Generating placement statistics, charts, and downloadable reports for teachers. |
-| **Phase 7** | **Final Polish, Launch & Evaluation** | **Sayim** *(Project Lead)* | Aditya, Joyeeta & **Sayim** *(Supervision)* | Putting the website online, final safety checks, and presenting to professors. |
+| **Phase UI** | **The Visual Experience (18 Screens)** | **Sayim** *(Project Lead)* | **Sayim** | **Finished!** Every button, card, and page is ready to look and feel amazing. |
+| **Phase 0** | **The Cloud Filing Cabinet** | **Joyeeta** | Aakriti, **Sayim** | Connecting Supabase and setting up the 11 data drawers. |
+| **Phase 1** | **The Front Door & Keys** | **Aditya** | Aakriti, **Sayim** | Setting up Sign Up, Login, and the 5-wrong-passwords lockout door. |
+| **Phase 2** | **Student Profiles & Resumes** | **Aditya** | **Sayim** | Letting students update their grades, upload resumes, and teacher approvals. |
+| **Phase 3** | **Company Accounts & Job Posts** | **Joyeeta** | **Sayim** | Companies posting jobs with salaries and requirements. |
+| **Phase 4** | **The Matchmaker & Single Offer Rule** | **Sayim** *(Project Lead)* | Joyeeta, **Sayim** | The brain of the site: automatically checking who is eligible and ensuring fair play. |
+| **Phase 5** | **Interviews & Message Bells** | **Aakriti** | Aditya, **Sayim** | Sending alerts to students and moving candidates through interview stages. |
+| **Phase 6** | **Reports & College Analytics** | **Joyeeta** | Aakriti, **Sayim** | Generating placement statistics, charts, and downloadable reports for teachers. |
+| **Phase 7** | **Final Polish, Launch & Evaluation** | **Sayim** *(Project Lead)* | Aditya, Joyeeta, **Sayim** | Putting the website online, final safety checks, and presenting to professors. |
 
 ---
 
