@@ -25,16 +25,20 @@ Usually, this means hundreds of paper forms, confusing bulletin boards, long wai
 Think of building this website like building a modern high-tech building. Everyone has a specific, important job:
 
 ```
-                  ┌──────────────────────────────────────────────┐
-                  │            SAYIM (Project Lead)              │
-                  │ Overall Blueprint, All 18 Screens & Lead     │
-                  └──────────────────────┬───────────────────────┘
-                                         │
-        ┌────────────────────────────────┼────────────────────────────────┐
-        ▼                                ▼                                ▼
-    JOYEETA (Phase 0)              ADITYA (Phase 1)              AAKRITI (Phase 0/1/5)
-    The Digital Filing Cabinet     The Front Door Security       The Fast Helper & Messenger
-    (Cloud Database & Tables)      (Login, Passwords & Locks)    (System Status & Bell Alerts)
+                      ┌─────────────────────────────────────────────────────┐
+                      │                SAYIM (Project Lead)                 │
+                      │   Phases: UI, 4, 7 + Overall Project Supervision    │
+                      │    18 Screens, Eligibility Rules & SE Evaluation    │
+                      └──────────────────────────┬──────────────────────────┘
+                                                 │
+               ┌─────────────────────────────────┼─────────────────────────────────┐
+               │                                 │                                 │
+               ▼                                 ▼                                 ▼
+┌─────────────────────────────┐   ┌─────────────────────────────┐   ┌─────────────────────────────┐
+│  JOYEETA (Phases 0, 3, 6)   │   │    ADITYA (Phases 1, 2)     │   │  AAKRITI (Phases 5, 0, 1)   │
+│  The Filing Cabinet & Jobs  │   │ The Front Door & Passports  │   │The Helper & Alert Messenger │
+│  (Database, Jobs, Reports)  │   │(Login, Profiles & Security) │   │(Pulse Check, Lists, Alerts) │
+└─────────────────────────────┘   └─────────────────────────────┘   └─────────────────────────────┘
 ```
 
 ---

@@ -12,6 +12,28 @@
 
 ## 1. Phased Team Categorization Matrix
 
+### A. System Architecture & Engineering Hierarchy Tree
+
+```
+                      ┌─────────────────────────────────────────────────────┐
+                      │     SAYIM (Project Lead & Principal Architect)      │
+                      │Phases: UI, 4, 7 + Cross-Phase Technical Supervision │
+                      │18 Client Views, Eligibility Engine, Deploy & Defense│
+                      └──────────────────────────┬──────────────────────────┘
+                                                 │
+               ┌─────────────────────────────────┼─────────────────────────────────┐
+               │                                 │                                 │
+               ▼                                 ▼                                 ▼
+┌─────────────────────────────┐   ┌─────────────────────────────┐   ┌─────────────────────────────┐
+│ JOYEETA (Database Engineer) │   │ ADITYA (Security Engineer)  │   │ AAKRITI (Backend Engineer)  │
+│       Phases: 0, 3, 6       │   │        Phases: 1, 2         │   │      Phases: 5 & 0, 1       │
+│ Supabase & Prisma 11 Tables │   │ Express Auth, Bcrypt & JWT  │   │ Health Check & Dept Catalog │
+│Job Posts & Placement Reports│   │ Profiles, Resumes & Lockout │   │  Interview Rounds & Alerts  │
+└─────────────────────────────┘   └─────────────────────────────┘   └─────────────────────────────┘
+```
+
+### B. Immediate Sprint Module Allocation Matrix
+
 | Team Member | SDLC Phase Assigned | Primary Module & Responsibilities | Complexity | Commit Status | Current Progress |
 |---|---|---|---|---|---|
 | **Sayim** | **Phase UI + Overall Cross-Phase Leadership** | **End-to-End System Architecture, Complete 18-Screen Interactive Client Prototype, Anti-Slop Design System (`cpms-design-taste`), Motion Physics (GSAP + shadcn + Lenis), PR Code Reviews, and Semester SE Evaluation Governance** | Comprehensive | **7 Commits (100% of pushes)** | **100% Complete** (Prototype & Specs) |
@@ -19,7 +41,7 @@
 | **Aditya** | **Phase 1 — Auth & RBAC Security** | **Express Authentication (`POST /auth/register/*`, `POST /auth/login`), Password Hashing (bcrypt), JWT Token Generation, 5-Attempt Lockout Mechanism (REQ-2), and RBAC Middleware (`authenticate`, `requireRole`)** | Moderate | **0 Commits** | **Assigned / In Progress** |
 | **Aakriti** | **Phase 0/1/5 — Reference APIs & Notifications** | **System Health Endpoint (`GET /health`), Active Departments Reference Catalog (`GET /departments`), and Notification Alerts Service (`GET /notifications`, `PATCH /notifications/:id/read`)** | **Beginner-Friendly / Easiest** | **0 Commits** | **Assigned (Ready to Start)** |
 
-### B. Complete Project Lifecycle Phase Allocation (Phases 0 → 7)
+### C. Complete Project Lifecycle Phase Allocation (Phases 0 → 7)
 This table explicitly maps every phase from [`ImplementationPlan.md`](ImplementationPlan.md) and [`Tracker.md`](Tracker.md) to team members across the entire project lifecycle, with **Sayim** providing continuous technical supervision and active contributions across all phases:
 
 | SDLC Phase | Phase Title & Core Deliverables | Primary Phase Owner | Contributing & Supervision | Complexity & Key Constraints |
