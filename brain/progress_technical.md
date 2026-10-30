@@ -36,10 +36,10 @@
 
 | Team Member | SDLC Phase Assigned | Primary Module & Responsibilities | Complexity | Commit Status | Current Progress |
 |---|---|---|---|---|---|
-| **Sayim** | **Phase UI + Overall Cross-Phase Leadership** | **End-to-End System Architecture, Complete 18-Screen Interactive Client Prototype, Anti-Slop Design System (`cpms-design-taste`), Motion Physics (GSAP + shadcn + Lenis), PR Code Reviews, and Semester SE Evaluation Governance** | Comprehensive | **7 Commits (100% of pushes)** | **100% Complete** (Prototype & Specs) |
-| **Joyeeta** | **Phase 0 — Database & Supabase Setup** | **Supabase Cloud PostgreSQL integration, Prisma ORM schema (`schema.prisma` with 11 relational tables), Database Migrations, Environment Pooler Config, and Database Seed script** | Moderate | **0 Commits** | **Assigned / In Progress** |
-| **Aditya** | **Phase 1 — Auth & RBAC Security** | **Express Authentication (`POST /auth/register/*`, `POST /auth/login`), Password Hashing (bcrypt), JWT Token Generation, 5-Attempt Lockout Mechanism (REQ-2), and RBAC Middleware (`authenticate`, `requireRole`)** | Moderate | **0 Commits** | **Assigned / In Progress** |
-| **Aakriti** | **Phase 0/1/5 — Reference APIs & Notifications** | **System Health Endpoint (`GET /health`), Active Departments Reference Catalog (`GET /departments`), and Notification Alerts Service (`GET /notifications`, `PATCH /notifications/:id/read`)** | **Beginner-Friendly / Easiest** | **0 Commits** | **Assigned (Ready to Start)** |
+| **Sayim** | **Phase UI + Overall Cross-Phase Leadership** | **End-to-End System Architecture, Complete 18-Screen Interactive Client Prototype, Anti-Slop Design System (`cpms-design-taste`), Motion Physics (GSAP + shadcn + Lenis), PR Code Reviews, and Semester SE Evaluation Governance** | Comprehensive | **20 Commits (Lead & Merges)** | **100% Complete** (Prototype & Specs) |
+| **Joyeeta** | **Phase 0, 3, 6 — Database, Jobs & Reports** | **Supabase Cloud PostgreSQL & Prisma ORM (11 tables), Migrations & Seed script, Jobs API (POST/PATCH), Deadline Auto-close Cron Scheduler, Placement Reports & CSV Export, Audit Logging, System Settings, Test Suites** | Moderate | **2 Commits (PR #1 Merged)** | **100% Complete** (Phases 0, 3, 6 Done) |
+| **Aditya** | **Phase 1 — Auth & RBAC Security** | **Express Authentication (`POST /auth/register/*`, `POST /auth/login`), Password Hashing (bcrypt), JWT Token Generation, 5-Attempt Lockout Mechanism (REQ-2), and RBAC Middleware (`authenticate`, `requireRole`)** | Moderate | **0 Commits** | **Pending Implementation** |
+| **Aakriti** | **Phase 0/1/5 — Reference APIs & Notifications** | **Active Departments Catalog (`GET /departments`), Notification Alerts Service (`GET /notifications`, `PATCH /notifications/:id/read`, `PATCH /notifications/read-all`), Interview Stage Progression Endpoints** | **Beginner-Friendly / Easiest** | **0 Commits** | **Pending Implementation** |
 
 ### C. Complete Project Lifecycle Phase Allocation (Phases 0 → 7)
 This table explicitly maps every phase from [`ImplementationPlan.md`](ImplementationPlan.md) and [`Tracker.md`](Tracker.md) to team members across the entire project lifecycle, with **Sayim** providing continuous technical supervision and active contributions across all phases:
@@ -61,10 +61,13 @@ This table explicitly maps every phase from [`ImplementationPlan.md`](Implementa
 ## 2. Live Git Commit History & Codebase Audit
 
 ### A. Commit Log Audit (`git log --pretty=format`)
-As of October 11, 2026, the `main` branch contains **7 commits**, all authored and pushed by **Sayim**:
+As of October 30, 2026, the `main` branch contains **22 commits** across **Sayim** and **Joyeeta Roy**:
 
 | Commit Hash | Author | Date | Message / Deliverable Summary |
 |---|---|---|---|
+| `580c3c6` | Sayim Mullick (`sks628353@gmail.com`) | 2026-10-30 | `Merge pull request #1 from Sayim07/Joyeeta` |
+| `e14bae5` | Joyeeta Roy (`joyeetaroy4040@gmail.com`) | 2026-10-30 | `feat(server): initialize cron scheduler and add manual test suite` |
+| `b13c8b0` | Joyeeta Roy (`joyeetaroy4040@gmail.com`) | 2026-10-29 | `feat(backend): implement Phase 0 (Prisma & Supabase), Phase 3 (Jobs API), and Phase 6 (Placement Reports)` |
 | `10c2627` | Sayim (`sks628353@gmail.com`) | 2026-10-11 | `docs: add comprehensive project README file` |
 | `906034c` | Sayim (`sks628353@gmail.com`) | 2026-10-11 | `feat: implement command menu navigation, complete workspace views, and luxury motion physics` |
 | `71ad2a7` | Sayim (`sks628353@gmail.com`) | 2026-10-11 | `docs: add initial project architecture, schema, TRD, implementation plan, and rules documentation` |
@@ -76,7 +79,7 @@ As of October 11, 2026, the `main` branch contains **7 commits**, all authored a
 ### B. Current Codebase State
 - **`brain/` (Complete):** Contains all foundational SDLC engineering specifications authored by Sayim ([`PRD.md`](PRD.md), [`TRD.md`](TRD.md), [`AppFlow.md`](AppFlow.md), [`Design.md`](Design.md), [`Schema.md`](Schema.md), [`Rules.md`](Rules.md), [`ImplementationPlan.md`](ImplementationPlan.md), [`Tracker.md`](Tracker.md), [`UI.md`](UI.md), [`progress_simple.md`](progress_simple.md), and this [`progress_technical.md`](progress_technical.md)).
 - **`client/` (Complete):** Contains the fully functional 18-screen React 19 / Vite 8 client with typed mock data, shadcn/ui Radix components, GSAP 3D perspective cards, magnetic buttons, Lenis smooth scrolling, and `Ctrl+K` command menu.
-- **`server/` (Pending Scaffolding):** The backend directory is ready to be initialized as Joyeeta begins Phase 0, Aditya begins Phase 1, and Aakriti builds reference APIs.
+- **`server/` (Phases 0, 3, 6 Complete):** Fully scaffolded by Joyeeta Roy with Supabase PostgreSQL integration, Prisma schema with 11 relational tables, seed script, Express app architecture, Jobs API, auto-close cron scheduler, placement analytics & CSV export, and Jest test suites. Auth routes (Aditya) and Notification routes (Aakriti) are pending implementation.
 
 ---
 
