@@ -1,0 +1,243 @@
+// Prisma Schema for College Placement Management System (CPMS)
+// Conforming strictly to Schema.md §3 specifications.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  STUDENT
+  COMPANY
+  TPO
+  ADMIN
+}
+
+enum PlacementStatus {
+  PLACED
+  UNPLACED
+}
+
+enum CompanyStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum JobStatus {
+  PENDING_APPROVAL
+  ACTIVE
+  CLOSED
+  REJECTED
+}
+
+enum ApplicationStage {
+  APPLIED
+  SHORTLISTED
+  IN_INTERVIEW
+  SELECTED
+  REJECTED
+}
+
+model User {
+  id                 String    @id @default(uuid()) @db.Uuid
+  email              String    @unique @db.VarChar(255)
+  password_hash      String    @db.VarChar(100)
+  role               Role
+  full_name          String    @db.VarChar(120)
+  is_active          Boolean   @default(true)
+  failed_login_count Int       @default(0)
+  locked_until       DateTime? @db.Timestamptz
+  created_at         DateTime  @default(now()) @db.Timestamptz
+  updated_at         DateTime  @updatedAt @db.Timestamptz
+  deleted_at         DateTime? @db.Timestamptz
+
+  student            Student?
+  company            Company?
+  verified_students  Student[]         @relation("VerifiedByTPO")
+  decided_companies  Company[]         @relation("CompanyDecidedBy")
+  decided_jobs       Job[]             @relation("JobDecidedBy")
+  created_rounds     InterviewRound[]  @relation("RoundCreatedBy")
+  notifications      Notification[]
+  audit_logs         AuditLog[]
+  updated_settings   SystemSetting[]
+
+  @@map("users")
+}
+
+model Department {
+  id        String   @id @default(uuid()) @db.Uuid
+  code      String   @unique @db.VarChar(10)
+  name      String   @db.VarChar(100)
+  is_active Boolean  @default(true)
+
+  students        Student[]
+  job_departments JobDepartment[]
+
+  @@map("departments")
+}
+
+model Student {
+  id                  String          @id @default(uuid()) @db.Uuid
+  user_id             String          @unique @db.Uuid
+  user                User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  roll_no             String          @unique @db.VarChar(30)
+  phone               String          @db.VarChar(20)
+  department_id       String          @db.Uuid
+  department          Department      @relation(fields: [department_id], references: [id])
+  batch_year          Int
+  cgpa                Decimal         @db.Decimal(4, 2)
+  tenth_pct           Decimal         @db.Decimal(5, 2)
+  twelfth_pct         Decimal         @db.Decimal(5, 2)
+  active_backlogs     Int             @default(0)
+  resume_key          String?         @db.VarChar(200)
+  resume_uploaded_at  DateTime?       @db.Timestamptz
+  is_verified         Boolean         @default(false)
+  verified_by         String?         @db.Uuid
+  verifier            User?           @relation("VerifiedByTPO", fields: [verified_by], references: [id])
+  verified_at         DateTime?       @db.Timestamptz
+  placement_status    PlacementStatus @default(UNPLACED)
+  single_offer_locked Boolean         @default(false)
+  created_at          DateTime        @default(now()) @db.Timestamptz
+  updated_at          DateTime        @updatedAt @db.Timestamptz
+  deleted_at          DateTime?       @db.Timestamptz
+
+  applications        Application[]
+
+  @@index([batch_year, is_verified])
+  @@index([department_id])
+  @@map("students")
+}
+
+model Company {
+  id            String        @id @default(uuid()) @db.Uuid
+  user_id       String        @unique @db.Uuid
+  user          User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  company_name  String        @db.VarChar(150)
+  website       String        @db.VarChar(200)
+  gst_tax_id    String        @db.VarChar(30)
+  contact_phone String        @db.VarChar(20)
+  status        CompanyStatus @default(PENDING)
+  decided_by    String?       @db.Uuid
+  decider       User?         @relation("CompanyDecidedBy", fields: [decided_by], references: [id])
+  decided_at    DateTime?     @db.Timestamptz
+  created_at    DateTime      @default(now()) @db.Timestamptz
+  updated_at    DateTime      @updatedAt @db.Timestamptz
+  deleted_at    DateTime?     @db.Timestamptz
+
+  jobs          Job[]
+
+  @@map("companies")
+}
+
+model Job {
+  id                   String        @id @default(uuid()) @db.Uuid
+  company_id           String        @db.Uuid
+  company              Company       @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  title                String        @db.VarChar(150)
+  description          String        @db.Text
+  ctc_lpa              Decimal       @db.Decimal(6, 2)
+  min_cgpa             Decimal       @db.Decimal(4, 2)
+  max_backlogs         Int
+  application_deadline DateTime      @db.Timestamptz
+  status               JobStatus     @default(PENDING_APPROVAL)
+  decided_by           String?       @db.Uuid
+  decider              User?         @relation("JobDecidedBy", fields: [decided_by], references: [id])
+  decided_at           DateTime?     @db.Timestamptz
+  created_at           DateTime      @default(now()) @db.Timestamptz
+  updated_at           DateTime      @updatedAt @db.Timestamptz
+  deleted_at           DateTime?     @db.Timestamptz
+
+  job_departments      JobDepartment[]
+  applications         Application[]
+  interview_rounds     InterviewRound[]
+
+  @@index([company_id])
+  @@index([status, application_deadline])
+  @@map("jobs")
+}
+
+model JobDepartment {
+  job_id        String     @db.Uuid
+  job           Job        @relation(fields: [job_id], references: [id], onDelete: Cascade)
+  department_id String     @db.Uuid
+  department    Department @relation(fields: [department_id], references: [id], onDelete: Cascade)
+
+  @@id([job_id, department_id])
+  @@map("job_departments")
+}
+
+model Application {
+  id         String           @id @default(uuid()) @db.Uuid
+  job_id     String           @db.Uuid
+  job        Job              @relation(fields: [job_id], references: [id], onDelete: Cascade)
+  student_id String           @db.Uuid
+  student    Student          @relation(fields: [student_id], references: [id], onDelete: Cascade)
+  stage      ApplicationStage @default(APPLIED)
+  applied_at DateTime         @default(now()) @db.Timestamptz
+  updated_at DateTime         @updatedAt @db.Timestamptz
+  deleted_at DateTime?        @db.Timestamptz
+
+  @@unique([job_id, student_id])
+  @@index([job_id, stage])
+  @@index([student_id])
+  @@map("applications")
+}
+
+model InterviewRound {
+  id            String   @id @default(uuid()) @db.Uuid
+  job_id        String   @db.Uuid
+  job           Job      @relation(fields: [job_id], references: [id], onDelete: Cascade)
+  round_name    String   @db.VarChar(100)
+  scheduled_at  DateTime @db.Timestamptz
+  venue_or_link String   @db.VarChar(300)
+  created_by    String   @db.Uuid
+  creator       User     @relation("RoundCreatedBy", fields: [created_by], references: [id])
+  created_at    DateTime @default(now()) @db.Timestamptz
+
+  @@index([job_id])
+  @@map("interview_rounds")
+}
+
+model Notification {
+  id         String    @id @default(uuid()) @db.Uuid
+  user_id    String    @db.Uuid
+  user       User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  type       String    @db.VarChar(50)
+  message    String    @db.VarChar(300)
+  link_path  String?   @db.VarChar(200)
+  read_at    DateTime? @db.Timestamptz
+  created_at DateTime  @default(now()) @db.Timestamptz
+
+  @@index([user_id, read_at])
+  @@map("notifications")
+}
+
+model AuditLog {
+  id            String   @id @default(uuid()) @db.Uuid
+  actor_user_id String   @db.Uuid
+  actor         User     @relation(fields: [actor_user_id], references: [id])
+  action        String   @db.VarChar(50)
+  entity_type   String   @db.VarChar(30)
+  entity_id     String?  @db.Uuid
+  metadata      Json
+  created_at    DateTime @default(now()) @db.Timestamptz
+
+  @@map("audit_logs")
+}
+
+model SystemSetting {
+  key        String   @id @db.VarChar(80)
+  value      String   @db.VarChar(200)
+  updated_by String?  @db.Uuid
+  updater    User?    @relation(fields: [updated_by], references: [id])
+  updated_at DateTime @updatedAt @db.Timestamptz
+
+  @@map("system_settings")
+}
+
