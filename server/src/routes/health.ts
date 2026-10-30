@@ -6,10 +6,10 @@ export const healthRouter = Router();
 healthRouter.get("/health", async (req: Request, res: Response) => {
   let dbStatus = "down";
   try {
-    // Timeout the DB ping after 500ms so the endpoint remains fast even if DB is offline
+    // 2 second timeout for cloud database ping handshake
     const pingPromise = prisma.$queryRaw`SELECT 1`.then(() => "up").catch(() => "down");
     const timeoutPromise = new Promise<string>((resolve) =>
-      setTimeout(() => resolve("down"), 500)
+      setTimeout(() => resolve("down"), 2000)
     );
     dbStatus = await Promise.race([pingPromise, timeoutPromise]);
   } catch {

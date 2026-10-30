@@ -1,6 +1,10 @@
 import { app } from "./app";
 import { env } from "./config/env";
 import { logger } from "./lib/logger";
+import { initJobScheduler } from "./jobs/closeExpiredJobs";
+
+// Initialize deadline auto-close cron scheduler
+initJobScheduler();
 
 const server = app.listen(env.PORT, () => {
   logger.info(`🚀 CPMS Server running on http://localhost:${env.PORT}`);
@@ -13,4 +17,3 @@ process.on("SIGTERM", () => {
     logger.info("Process terminated.");
   });
 });
-
