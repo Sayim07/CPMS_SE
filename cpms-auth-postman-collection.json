@@ -1,0 +1,480 @@
+{
+  "info": {
+    "name": "CPMS - Aditya Auth & RBAC Security Suite",
+    "_postman_id": "7b52c0f2-23c8-477f-a698-aditya000001",
+    "description": "Postman collection covering Phase 1 (Auth & RBAC Security) and Phase 2 (Student Profiles & Verification) for College Placement Management System (CPMS) as assigned to Aditya.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Service status is ok', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.status).to.eql('ok');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phase 1 - Task 1.1: Register Student",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"aditya.pm@college.edu\",\n  \"password\": \"SecretPass123!\",\n  \"name\": \"Aditya Verma\",\n  \"roll_number\": \"2022BCSE888\",\n  \"department\": \"CSE\",\n  \"cgpa\": 8.8,\n  \"backlogs\": 0\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/register/student",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "register", "student"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201 Created', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test('Student is_verified defaults to false', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.data.student.is_verified).to.eql(false);",
+              "    pm.expect(jsonData.data.role).to.eql('STUDENT');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phase 1 - Task 1.1: Register Company",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"hr@innovatecorp.com\",\n  \"password\": \"CompanySecret123!\",\n  \"company_name\": \"InnovateCorp Global\",\n  \"gst_tax_id\": \"29ABCDE1234F1Z5\",\n  \"website\": \"https://innovatecorp.com\",\n  \"contact_person\": \"Rahul Mehta\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/register/company",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "register", "company"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201 Created', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "pm.test('Company status defaults to PENDING', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.data.company.status).to.eql('PENDING');",
+              "    pm.expect(jsonData.data.role).to.eql('COMPANY');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phase 1 - Task 1.2: Login (Success - Signed JWT 8h)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"aditya.pm@college.edu\",\n  \"password\": \"SecretPass123!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "login"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Returns signed 8h JWT token and cpms_token cookie', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.token).to.be.a('string');",
+              "    pm.expect(jsonData.token_name).to.eql('cpms_token');",
+              "    pm.expect(jsonData.expires_in).to.eql('8h');",
+              "    pm.collectionVariables.set('authToken', jsonData.token);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phase 1 - Task 1.3: RBAC - Authenticated User (/auth/me)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/me",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "me"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Authenticated as STUDENT', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.user.role).to.eql('STUDENT');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phase 1 - Task 1.3: RBAC - Forbidden Route (HTTP 403)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/admin-only",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "admin-only"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 403 Forbidden for unauthorized role', function () {",
+              "    pm.response.to.have.status(403);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phase 1 - Task 1.2: 5-Attempt Lockout - Failure #1",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"aditya.pm@college.edu\",\n  \"password\": \"WrongPass1\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "login"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Attempt 1: Status 401 with 4 attempts remaining', function () {",
+              "    pm.response.to.have.status(401);",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.failed_login_attempts).to.eql(1);",
+              "    pm.expect(jsonData.remaining_attempts).to.eql(4);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phase 1 - Task 1.2: 5-Attempt Lockout - Failure #2",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"email\": \"aditya.pm@college.edu\", \"password\": \"WrongPass2\"}" },
+        "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Attempt 2: Status 401 with 3 attempts remaining', function () {",
+              "    pm.response.to.have.status(401);",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.failed_login_attempts).to.eql(2);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phase 1 - Task 1.2: 5-Attempt Lockout - Failure #3",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"email\": \"aditya.pm@college.edu\", \"password\": \"WrongPass3\"}" },
+        "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Attempt 3: Status 401 with 2 attempts remaining', function () {",
+              "    pm.response.to.have.status(401);",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.failed_login_attempts).to.eql(3);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phase 1 - Task 1.2: 5-Attempt Lockout - Failure #4",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"email\": \"aditya.pm@college.edu\", \"password\": \"WrongPass4\"}" },
+        "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Attempt 4: Status 401 with 1 attempt remaining', function () {",
+              "    pm.response.to.have.status(401);",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.failed_login_attempts).to.eql(4);",
+              "    pm.expect(jsonData.remaining_attempts).to.eql(1);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phase 1 - Task 1.2: 5-Attempt Lockout - Failure #5 (Trigger HTTP 423 Locked)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"email\": \"aditya.pm@college.edu\", \"password\": \"WrongPass5\"}" },
+        "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Attempt 5: Account is Locked with HTTP 423 Locked', function () {",
+              "    pm.response.to.have.status(423);",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.failed_login_attempts).to.eql(5);",
+              "    pm.expect(jsonData.locked_until).to.be.a('string');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phase 1 - Task 1.2: 5-Attempt Lockout - Verify Account Locked (HTTP 423)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\"email\": \"aditya.pm@college.edu\", \"password\": \"SecretPass123!\"}" },
+        "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Account remains locked for 15 minutes (HTTP 423)', function () {",
+              "    pm.response.to.have.status(423);",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.message).to.include('temporarily locked');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phase 2 - Task 2.1: Get Student Profile (GET /students/me)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/students/me",
+          "host": ["{{baseUrl}}"],
+          "path": ["students", "me"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Returns student profile with roll number', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.data.roll_number).to.eql('2022BCSE888');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phase 2 - Task 2.2: Resume Pre-signed URL (REQ-4)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"filename\": \"Aditya_Verma_Resume.pdf\",\n  \"file_type\": \"application/pdf\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/students/me/resume/presigned-url",
+          "host": ["{{baseUrl}}"],
+          "path": ["students", "me", "resume", "presigned-url"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Returns upload_url for PDF resume', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.upload_url).to.be.a('string');",
+              "    pm.expect(jsonData.file_url).to.include('.pdf');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phase 2 - Task 2.4: Verification Reset Trigger (REQ-5)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{authToken}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"cgpa\": 9.2\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/students/me",
+          "host": ["{{baseUrl}}"],
+          "path": ["students", "me"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Verification reset triggered: is_verified is false', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.verification_reset).to.eql(true);",
+              "    pm.expect(jsonData.data.is_verified).to.eql(false);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ]
+}
