@@ -24,22 +24,22 @@ Owner: BE + OPS (Completed by Joyeeta & Sayim)
 
 ### Phase 1 — Auth and RBAC (Days 3–5)
 Owner: BE (+FE for forms) (BE: Aditya & Aakriti | FE: Sayim)
-- [ ] 1.1 Register student/company endpoints (Schema.md §5.1), bcrypt cost 10
-- [ ] 1.2 Login with 5-failure/15-min lockout (REQ-2)
-- [ ] 1.3 `authenticate` + `requireRole` middleware; 403 on wrong role (REQ-3) (JWT helper in `auth.ts`)
-- [ ] 1.4 `GET /departments`, `GET /auth/me`
-- [x] 1.5 FE: login/register pages, token storage, role redirect, route guards
-- [ ] 1.6 Tests: RBAC matrix (role × endpoint), lockout
+- [x] 1.1 Register student/company endpoints (Schema.md §5.1), bcrypt cost 10 (Aditya PR #3)
+- [x] 1.2 Login with 5-failure/15-min lockout (REQ-2) (Aditya PR #3)
+- [x] 1.3 `authenticate` + `requireRole` middleware; 403 on wrong role (REQ-3) (Aditya PR #3)
+- [ ] 1.4 `GET /departments` (Aakriti pending), `GET /auth/me` (Aditya PR #3 done)
+- [x] 1.5 FE: login/register pages, token storage, role redirect, route guards (Sayim)
+- [x] 1.6 Tests: RBAC matrix (role × endpoint), lockout (Aditya `auth.test.ts`)
 **Exit criteria:** every protected route rejects missing token (401) and wrong role (403); lockout test passes.
 
 ### Phase 2 — Student profile and TPO verification (Days 6–8)
 Owner: BE + FE (BE: Aditya | FE: Sayim)
-- [ ] 2.1 `GET/PUT /students/me` with validation ranges
-- [ ] 2.2 Resume upload: multer 2 MB limit, `file-type` magic-byte check, store to S3 API (`services/storage.ts`)
-- [ ] 2.3 Pre-signed resume link (TTL 300 s)
-- [ ] 2.4 Verification reset on CGPA/backlog change + TPO notification + audit (REQ-5)
-- [ ] 2.5 TPO student grid + verify endpoint (Schema.md §5.3) (FE Done, BE pending)
-- [ ] 2.6 Tests: upload rules, reset logic
+- [x] 2.1 `GET/PUT /students/me` with validation ranges (Aditya PR #3)
+- [x] 2.2 Resume upload: multer 2 MB limit, `file-type` magic-byte check, store to S3 API (Aditya PR #3)
+- [x] 2.3 Pre-signed resume link (TTL 300 s) (Aditya PR #3)
+- [x] 2.4 Verification reset on CGPA/backlog change + TPO notification + audit (REQ-5) (Aditya PR #3)
+- [x] 2.5 TPO student grid (FE Done by Sayim) + verify endpoint (Aditya PR #3)
+- [x] 2.6 Tests: upload rules, reset logic (Aditya `student.test.ts`)
 **Exit criteria:** a `.png` renamed `.pdf` and a 2.1 MB PDF are both rejected; editing CGPA flips `is_verified` to false.
 
 ### Phase 3 — Companies and jobs (Days 9–11)

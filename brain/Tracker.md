@@ -20,22 +20,22 @@ Status values: **Not Started**, **In Progress**, **Blocked**, **Done**. Tasks mi
 ### Phase 1 — Auth and RBAC
 | Task | Owner | Status | Notes |
 |---|---|---|---|
-| 1.1 Register endpoints | BE | Not Started | Assigned to Aditya (student & company intake) |
-| 1.2 Login + lockout | BE | Not Started | Assigned to Aditya (REQ-2, 5-attempt lockout) |
-| 1.3 authenticate + requireRole | BE | In Progress | **BLOCKING** (REQ-3) — JWT verification helper in `auth.ts`; auth endpoints pending |
-| 1.4 `/departments`, `/auth/me` | BE | Not Started | Assigned to Aakriti (`/departments`) & Aditya (`/auth/me`) |
+| 1.1 Register endpoints | BE | Done | Aditya (PR #3): `registerStudent` & `registerCompany` in `auth.controller.ts` (Needs server/ wiring) |
+| 1.2 Login + lockout | BE | Done | Aditya (PR #3): `login` + 5-attempt lockout (REQ-2) in `auth.controller.ts` |
+| 1.3 authenticate + requireRole | BE | Done | **BLOCKING** (REQ-3) — `auth.middleware.ts` & `validation.middleware.ts` |
+| 1.4 `/departments`, `/auth/me` | BE | In Progress | `GET /auth/me` written by Aditya; `GET /departments` pending by Aakriti |
 | 1.5 FE login/register/guards | FE | Done | Sayim: All login/register screens, role redirection & route guards |
-| 1.6 RBAC + lockout tests | QA | Not Started | |
+| 1.6 RBAC + lockout tests | QA | Done | Aditya (PR #3): `auth.test.ts` (9 unit tests passing) |
 
 ### Phase 2 — Student profile and verification
 | Task | Owner | Status | Notes |
 |---|---|---|---|
-| 2.1 `/students/me` GET/PUT | BE | Not Started | Assigned to Aditya |
-| 2.2 Resume upload | BE | Not Started | **BLOCKING** (REQ-4) — Assigned to Aditya |
-| 2.3 Pre-signed link | BE | Not Started | Assigned to Aditya |
-| 2.4 Verification reset | BE | Not Started | Assigned to Aditya (REQ-5) |
-| 2.5 TPO grid + verify | BE/FE | In Progress | Sayim: FE Grid Done; BE verify endpoint pending |
-| 2.6 Upload/reset tests | QA | Not Started | |
+| 2.1 `/students/me` GET/PUT | BE | Done | Aditya (PR #3): `getMyStudentProfile` & `updateMyStudentProfile` in `student.controller.ts` |
+| 2.2 Resume upload | BE | Done | **BLOCKING** (REQ-4) — Aditya (PR #3): `generateResumeUploadUrl` pre-signed upload |
+| 2.3 Pre-signed link | BE | Done | Aditya (PR #3): S3 pre-signed upload URL generator |
+| 2.4 Verification reset | BE | Done | Aditya (PR #3): Auto-reset `is_verified = false` on sensitive edits (REQ-5) |
+| 2.5 TPO grid + verify | BE/FE | In Progress | Sayim: FE Grid Done; BE verify endpoint integration pending |
+| 2.6 Upload/reset tests | QA | Done | Aditya (PR #3): `student.test.ts` (8 unit tests passing) |
 
 ### Phase 3 — Companies and jobs
 | Task | Owner | Status | Notes |
