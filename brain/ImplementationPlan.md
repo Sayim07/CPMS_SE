@@ -13,73 +13,73 @@ Each phase below corresponds to an iteration cycle with discrete exit criteria a
 ## 1. Phases
 
 ### Phase 0 — Setup and decisions (Days 1–2)
-Owner: BE + OPS
-- [ ] 0.1 Lock Day-1 decisions D1–D4 (TRD.md §1) in Tracker.md §3
-- [ ] 0.2 Repo scaffold per Schema.md §2; `docker-compose.yml` (postgres:15, minio, mailpit)
-- [ ] 0.3 `prisma/schema.prisma` mirroring Schema.md §3; first migration
-- [ ] 0.4 `config/env.ts` (zod) from TRD.md §6; `.env.example`
-- [ ] 0.5 Express app skeleton: helmet, cors, JSON parser, pino, error handler, `GET /health`
-- [ ] 0.6 Seed script: admin, TPO, 3 departments, setting `single_offer_ctc_threshold_lpa=8`
+Owner: BE + OPS (Completed by Joyeeta & Sayim)
+- [x] 0.1 Lock Day-1 decisions D1–D4 (TRD.md §1) in Tracker.md §3
+- [x] 0.2 Repo scaffold per Schema.md §2; `docker-compose.yml` (postgres:15, minio, mailpit)
+- [x] 0.3 `prisma/schema.prisma` mirroring Schema.md §3; first migration
+- [x] 0.4 `config/env.ts` (zod) from TRD.md §6; `.env.example`
+- [x] 0.5 Express app skeleton: helmet, cors, JSON parser, pino, error handler, `GET /health`
+- [x] 0.6 Seed script: admin, TPO, 3 departments, setting `single_offer_ctc_threshold_lpa=8`
 **Exit criteria:** `docker compose up` + `npm run dev` serves `/api/v1/health` = ok with DB up; seed runs twice without error.
 
 ### Phase 1 — Auth and RBAC (Days 3–5)
-Owner: BE (+FE for forms)
+Owner: BE (+FE for forms) (BE: Aditya & Aakriti | FE: Sayim)
 - [ ] 1.1 Register student/company endpoints (Schema.md §5.1), bcrypt cost 10
 - [ ] 1.2 Login with 5-failure/15-min lockout (REQ-2)
-- [ ] 1.3 `authenticate` + `requireRole` middleware; 403 on wrong role (REQ-3)
+- [ ] 1.3 `authenticate` + `requireRole` middleware; 403 on wrong role (REQ-3) (JWT helper in `auth.ts`)
 - [ ] 1.4 `GET /departments`, `GET /auth/me`
-- [ ] 1.5 FE: login/register pages, token storage, role redirect, route guards
+- [x] 1.5 FE: login/register pages, token storage, role redirect, route guards
 - [ ] 1.6 Tests: RBAC matrix (role × endpoint), lockout
 **Exit criteria:** every protected route rejects missing token (401) and wrong role (403); lockout test passes.
 
 ### Phase 2 — Student profile and TPO verification (Days 6–8)
-Owner: BE + FE
+Owner: BE + FE (BE: Aditya | FE: Sayim)
 - [ ] 2.1 `GET/PUT /students/me` with validation ranges
 - [ ] 2.2 Resume upload: multer 2 MB limit, `file-type` magic-byte check, store to S3 API (`services/storage.ts`)
 - [ ] 2.3 Pre-signed resume link (TTL 300 s)
 - [ ] 2.4 Verification reset on CGPA/backlog change + TPO notification + audit (REQ-5)
-- [ ] 2.5 TPO student grid + verify endpoint (Schema.md §5.3)
+- [ ] 2.5 TPO student grid + verify endpoint (Schema.md §5.3) (FE Done, BE pending)
 - [ ] 2.6 Tests: upload rules, reset logic
 **Exit criteria:** a `.png` renamed `.pdf` and a 2.1 MB PDF are both rejected; editing CGPA flips `is_verified` to false.
 
 ### Phase 3 — Companies and jobs (Days 9–11)
-Owner: BE + FE
-- [ ] 3.1 Company decision endpoints; `COMPANY_NOT_APPROVED` guard
-- [ ] 3.2 `POST/PATCH /jobs` with required fields (REQ-7), `JOB_PENDING` notification
-- [ ] 3.3 TPO job approval (REQ-8) with state machine (AppFlow.md §5)
-- [ ] 3.4 Cron `closeExpiredJobs` + lazy check (REQ-9)
-- [ ] 3.5 FE: company job form/list; TPO approval screens
-- [ ] 3.6 Tests: students never see non-`ACTIVE` jobs
+Owner: BE + FE (Completed by Joyeeta & Sayim)
+- [x] 3.1 Company decision endpoints; `COMPANY_NOT_APPROVED` guard
+- [x] 3.2 `POST/PATCH /jobs` with required fields (REQ-7), `JOB_PENDING` notification
+- [x] 3.3 TPO job approval (REQ-8) with state machine (AppFlow.md §5)
+- [x] 3.4 Cron `closeExpiredJobs` + lazy check (REQ-9)
+- [x] 3.5 FE: company job form/list; TPO approval screens
+- [x] 3.6 Tests: students never see non-`ACTIVE` jobs
 **Exit criteria:** job created by a company is invisible to students until TPO approves; expired job auto-closes within 1 minute.
 
 ### Phase 4 — Eligibility and application (Days 12–15) — **BLOCKING PHASE**
-Owner: BE + FE + QA
+Owner: BE + FE + QA (Lead: Sayim)
 - [ ] 4.1 `services/eligibility.ts` implementing all reason codes (Schema.md §1)
 - [ ] 4.2 `GET /jobs`, `GET /jobs/:id` with `eligibility`
 - [ ] 4.3 `POST /jobs/:id/apply` in a transaction; 422/409 handling (REQ-10..13)
-- [ ] 4.4 FE: job cards with badges, reason list, Apply Now
+- [x] 4.4 FE: job cards with badges, reason list, Apply Now
 - [ ] 4.5 30-case eligibility matrix test + 10-parallel-apply test
 - [ ] 4.6 Single Offer Policy lock check (BR-1) inside eligibility
 **Exit criteria (BLOCKING):** matrix passes 30/30; parallel test yields exactly 1 application; API apply and UI verdict never disagree.
 
 ### Phase 5 — Funnel, rounds, notifications (Days 16–19)
-Owner: BE + FE
+Owner: BE + FE (BE: Aakriti & Aditya | FE: Sayim)
 - [ ] 5.1 Applicant list with contact masking (Schema.md §1)
 - [ ] 5.2 Stage patch + bulk stage with transition rules (REQ-14); `SELECTED` → `PLACED` (REQ-16) + single-offer lock
 - [ ] 5.3 Resume link and zip stream (REQ-15)
 - [ ] 5.4 Rounds create/list + notifications + email via Nodemailer
-- [ ] 5.5 Notification bell with 30 s polling
-- [ ] 5.6 FE Kanban + student application tracker
+- [x] 5.5 Notification bell with 30 s polling
+- [x] 5.6 FE Kanban + student application tracker
 **Exit criteria:** Company cannot see email/phone for `APPLIED`; round creation produces a notification and a Mailpit email for every shortlisted applicant.
 
 ### Phase 6 — Reports and admin (Days 20–22)
-Owner: BE + FE
-- [ ] 6.1 `placement-summary` aggregation (REQ-17)
-- [ ] 6.2 CSV export (csv-stringify) and PDF export (pdfkit)
-- [ ] 6.3 Unplaced list JSON/CSV (REQ-18)
-- [ ] 6.4 Admin: users, departments, settings
-- [ ] 6.5 Audit log writer wired to all actions in Schema.md §1; admin viewer
-- [ ] 6.6 FE: reports page, admin pages
+Owner: BE + FE (Completed by Joyeeta & Sayim)
+- [x] 6.1 `placement-summary` aggregation (REQ-17)
+- [x] 6.2 CSV export (csv-stringify) and PDF export (pdfkit)
+- [x] 6.3 Unplaced list JSON/CSV (REQ-18)
+- [x] 6.4 Admin: users, departments, settings
+- [x] 6.5 Audit log writer wired to all actions in Schema.md §1; admin viewer
+- [x] 6.6 FE: reports page, admin pages
 **Exit criteria:** placement rate on seed data equals hand-calculated value; every audit action constant is emitted at least once in tests.
 
 ### Phase 7 — Hardening, performance, deploy (Days 23–28)
