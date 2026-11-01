@@ -36,9 +36,9 @@
 
 | Team Member | SDLC Phase Assigned | Primary Module & Responsibilities | Complexity | Commit Status | Current Progress |
 |---|---|---|---|---|---|
-| **Sayim** | **Phase UI + Overall Cross-Phase Leadership** | **End-to-End System Architecture, Complete 18-Screen Interactive Client Prototype, Anti-Slop Design System (`cpms-design-taste`), Motion Physics (GSAP + shadcn + Lenis), PR Code Reviews, and Semester SE Evaluation Governance** | Comprehensive | **20 Commits (Lead & Merges)** | **100% Complete** (Prototype & Specs) |
+| **Sayim** | **Phase UI + Overall Cross-Phase Leadership** | **End-to-End System Architecture, Complete 18-Screen Interactive Client Prototype, Anti-Slop Design System (`cpms-design-taste`), Motion Physics (GSAP + shadcn + Lenis), PR Code Reviews, and Semester SE Evaluation Governance** | Comprehensive | **23 Commits (Lead & Merges)** | **100% Complete** (Prototype & Specs) |
 | **Joyeeta** | **Phase 0, 3, 6 — Database, Jobs & Reports** | **Supabase Cloud PostgreSQL & Prisma ORM (11 tables), Migrations & Seed script, Jobs API (POST/PATCH), Deadline Auto-close Cron Scheduler, Placement Reports & CSV Export, Audit Logging, System Settings, Test Suites** | Moderate | **2 Commits (PR #1 Merged)** | **100% Complete** (Phases 0, 3, 6 Done) |
-| **Aditya** | **Phase 1 — Auth & RBAC Security** | **Express Authentication (`POST /auth/register/*`, `POST /auth/login`), Password Hashing (bcrypt), JWT Token Generation, 5-Attempt Lockout Mechanism (REQ-2), and RBAC Middleware (`authenticate`, `requireRole`)** | Moderate | **0 Commits** | **Pending Implementation** |
+| **Aditya** | **Phase 1 & 2 — Auth, Security & Profiles** | **Express Auth (`POST /auth/register/*`, `POST /auth/login`), Bcrypt Hashing, 5-Attempt Lockout (REQ-2), Student Profile CRUD (`GET/PUT /students/me`), Resume Storage (REQ-4), Verification Reset on Edit (REQ-5), Postman Collection & Tests** | Moderate | **1 Commit (PR #3 Merged)** | **100% Code Written** (Needs Integration into `server/`) |
 | **Aakriti** | **Phase 0/1/5 — Reference APIs & Notifications** | **Active Departments Catalog (`GET /departments`), Notification Alerts Service (`GET /notifications`, `PATCH /notifications/:id/read`, `PATCH /notifications/read-all`), Interview Stage Progression Endpoints** | **Beginner-Friendly / Easiest** | **0 Commits** | **Pending Implementation** |
 
 ### C. Complete Project Lifecycle Phase Allocation (Phases 0 → 7)
@@ -61,10 +61,13 @@ This table explicitly maps every phase from [`ImplementationPlan.md`](Implementa
 ## 2. Live Git Commit History & Codebase Audit
 
 ### A. Commit Log Audit (`git log --pretty=format`)
-As of October 30, 2026, the `main` branch contains **22 commits** across **Sayim** and **Joyeeta Roy**:
+As of November 1, 2026, the `main` branch contains **26 commits** across **Sayim**, **Joyeeta Roy**, and **Aditya** (`prajapatiaditya102005-bot`):
 
 | Commit Hash | Author | Date | Message / Deliverable Summary |
 |---|---|---|---|
+| `62e6c5e` | Sayim Mullick (`sks628353@gmail.com`) | 2026-11-01 | `Merge pull request #3 from Sayim07/audit` |
+| `215bc03` | Sayim (`sks628353@gmail.com`) | 2026-11-01 | `docs: add implementation plan and task tracker for CPMS` |
+| `71065b4` | prajapatiaditya102005-bot (`prajapatiaditya102005@gmail.com`) | 2026-10-31 | `Add files via upload: Phase 1 (Auth, Bcrypt, Lockout) & Phase 2 (Student Profiles, Reset Trigger)` |
 | `580c3c6` | Sayim Mullick (`sks628353@gmail.com`) | 2026-10-30 | `Merge pull request #1 from Sayim07/Joyeeta` |
 | `e14bae5` | Joyeeta Roy (`joyeetaroy4040@gmail.com`) | 2026-10-30 | `feat(server): initialize cron scheduler and add manual test suite` |
 | `b13c8b0` | Joyeeta Roy (`joyeetaroy4040@gmail.com`) | 2026-10-29 | `feat(backend): implement Phase 0 (Prisma & Supabase), Phase 3 (Jobs API), and Phase 6 (Placement Reports)` |

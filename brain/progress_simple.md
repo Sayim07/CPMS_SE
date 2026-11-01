@@ -96,7 +96,7 @@ Think of building this website like building a modern high-tech building. Everyo
 |---|---|---|---|---|
 | **Sayim** | Phases UI, 4, 7 (Project Lead) | Full Stack Architect & Screen Builder | Comprehensive | **100% Done** (All 18 screens ready, 20 commits & PR merges) |
 | **Joyeeta** | Phases 0, 3, 6 | Electronic Filing Cabinet (Database, Jobs & Reports) | Medium | **100% Done (Phases 0, 3, 6 merged via PR #1)** |
-| **Aditya** | Phases 1, 2 | Front Door Security (Login, Locks & Profiles) | Medium | **Pending (0 Commits - Auth & Profiles to start)** |
+| **Aditya** | Phases 1, 2 | Front Door Security (Login, Locks & Profiles) | Medium | **100% Code Written (PR #3 Merged - Integration Pending)** |
 | **Aakriti** | Phases 5 & 0, 1 | Front Desk Messenger (Health, Catalog & Alerts) | **Easiest / Friendly** | **Pending (0 Commits - Reference APIs & Alerts to start)** |
 
 ---
