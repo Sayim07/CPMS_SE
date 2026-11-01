@@ -1,0 +1,56 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                    String    @id @default(uuid())
+  email                 String    @unique
+  password              String
+  role                  String    @default("STUDENT") // STUDENT | COMPANY | TPO | ADMIN
+  failed_login_attempts Int       @default(0)
+  lock_until            DateTime?
+  created_at            DateTime  @default(now())
+  updated_at            DateTime  @updatedAt
+
+  student               Student?
+  company               Company?
+
+  @@map("users")
+}
+
+model Student {
+  id          String   @id @default(uuid())
+  user_id     String   @unique
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  roll_number String   @unique
+  name        String
+  department  String?
+  cgpa        Float?
+  backlogs    Int?     @default(0)
+  resume_url  String?
+  is_verified Boolean  @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  @@map("students")
+}
+
+model Company {
+  id             String   @id @default(uuid())
+  user_id        String   @unique
+  user           User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  company_name   String
+  gst_tax_id     String   @unique
+  status         String   @default("PENDING") // PENDING | APPROVED | REJECTED
+  website        String?
+  contact_person String?
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  @@map("companies")
+}

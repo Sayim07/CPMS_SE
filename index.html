@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CPMS - Campus Placement Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .glass-card { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+  <!-- Navigation Bar -->
+  <header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-50 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 text-white font-bold text-lg">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div>
+          <span class="font-bold text-lg text-white tracking-tight">CPMS <span class="text-indigo-400">Portal</span></span>
+          <span class="text-xs block text-slate-400">Campus Placement Management System</span>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-4">
+        <div id="serviceStatus" class="flex items-center space-x-2 px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full text-xs font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>System Online</span>
+        </div>
+        <div id="userBadge" class="hidden items-center space-x-2 px-3 py-1 bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 rounded-full text-xs font-medium">
+          <i class="fa-solid fa-user-circle"></i>
+          <span id="userBadgeText">Not signed in</span>
+          <button onclick="logoutUser()" title="Sign Out" class="ml-2 text-rose-400 hover:text-rose-300"><i class="fa-solid fa-right-from-bracket"></i></button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+
+    <!-- Navigation Tabs -->
+    <div class="flex border-b border-slate-800 space-x-2 sm:space-x-4 mb-8 overflow-x-auto pb-1 text-sm font-medium">
+      <button onclick="switchTab('loginTab')" id="tab-loginTab" class="tab-btn px-4 py-2.5 text-indigo-400 border-b-2 border-indigo-500 font-semibold flex items-center space-x-2">
+        <i class="fa-solid fa-lock text-sm"></i>
+        <span>Sign In</span>
+      </button>
+      <button onclick="switchTab('studentRegTab')" id="tab-studentRegTab" class="tab-btn px-4 py-2.5 text-slate-400 hover:text-slate-200 border-b-2 border-transparent flex items-center space-x-2">
+        <i class="fa-solid fa-user-graduate text-sm"></i>
+        <span>Student Registration</span>
+      </button>
+      <button onclick="switchTab('companyRegTab')" id="tab-companyRegTab" class="tab-btn px-4 py-2.5 text-slate-400 hover:text-slate-200 border-b-2 border-transparent flex items-center space-x-2">
+        <i class="fa-solid fa-building text-sm"></i>
+        <span>Company Registration</span>
+      </button>
+      <button onclick="switchTab('profileTab')" id="tab-profileTab" class="tab-btn px-4 py-2.5 text-slate-400 hover:text-slate-200 border-b-2 border-transparent flex items-center space-x-2">
+        <i class="fa-solid fa-id-card text-sm"></i>
+        <span>Student Profile</span>
+      </button>
+      <button onclick="switchTab('rbacTab')" id="tab-rbacTab" class="tab-btn px-4 py-2.5 text-slate-400 hover:text-slate-200 border-b-2 border-transparent flex items-center space-x-2">
+        <i class="fa-solid fa-shield text-sm"></i>
+        <span>Access Verification</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: Login & Account Security -->
+    <div id="loginTab" class="tab-content grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-6 space-y-6">
+        <div class="glass-card rounded-2xl p-6 sm:p-8 shadow-xl">
+          <div class="mb-6">
+            <h3 class="text-xl font-bold text-white flex items-center space-x-2">
+              <span>Account Login</span>
+            </h3>
+            <p class="text-xs text-slate-400 mt-1">Sign in with your registered college or recruiter email</p>
+          </div>
+
+          <!-- Lockout Alert Box (Hidden by default) -->
+          <div id="lockoutAlert" class="hidden mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300">
+            <div class="flex items-start space-x-3">
+              <i class="fa-solid fa-lock text-rose-400 text-xl mt-0.5"></i>
+              <div>
+                <h4 class="font-bold text-rose-200">Account Temporarily Locked</h4>
+                <p id="lockoutMsg" class="text-xs mt-1 text-rose-300">5 consecutive failed attempts detected. Access is temporarily suspended for 15 minutes.</p>
+                <div class="mt-2 flex items-center space-x-2 text-xs font-mono font-bold text-rose-400">
+                  <i class="fa-regular fa-clock"></i>
+                  <span id="lockoutTimer">15:00 remaining</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
+              <div class="relative">
+                <i class="fa-regular fa-envelope absolute left-3 top-3 text-slate-500"></i>
+                <input type="email" id="loginEmail" required value="aditya.student@college.edu" class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Password</label>
+              <div class="relative">
+                <i class="fa-solid fa-key absolute left-3 top-3 text-slate-500"></i>
+                <input type="password" id="loginPassword" required value="Password123!" class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition">
+              </div>
+            </div>
+
+            <!-- Quick Autofill Presets -->
+            <div class="flex flex-wrap gap-2 text-xs pt-1">
+              <span class="text-slate-500 text-xs py-1">Quick fill:</span>
+              <button type="button" onclick="presetLogin('aditya.student@college.edu', 'Password123!')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-indigo-300 rounded text-xs border border-slate-700">Student</button>
+              <button type="button" onclick="presetLogin('recruiter@techcorp.com', 'CompanySecret123!')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-purple-300 rounded text-xs border border-slate-700">Company</button>
+              <button type="button" onclick="presetLogin('aditya.student@college.edu', 'WrongPass')" class="px-2.5 py-1 bg-rose-900/30 hover:bg-rose-900/50 text-rose-300 rounded text-xs border border-rose-800/40">Test Wrong Password</button>
+            </div>
+
+            <div class="pt-2">
+              <button type="submit" id="loginBtn" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-indigo-600/25 flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                <span>Sign In</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Security & Session Status Panel -->
+      <div class="lg:col-span-6 space-y-6">
+        <div class="glass-card rounded-2xl p-6 sm:p-8 shadow-xl">
+          <h4 class="font-bold text-white text-base mb-4 flex items-center space-x-2">
+            <i class="fa-solid fa-shield-halved text-indigo-400"></i>
+            <span>Security & Session Status</span>
+          </h4>
+
+          <div class="space-y-4">
+            <!-- Attempt Meter -->
+            <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+              <div class="flex justify-between items-center text-xs mb-2">
+                <span class="font-medium text-slate-300">Login Attempts</span>
+                <span id="attemptCountBadge" class="font-mono text-emerald-400 font-bold">0 / 5 (Normal)</span>
+              </div>
+              <div class="w-full bg-slate-800 rounded-full h-3 overflow-hidden p-0.5">
+                <div id="attemptMeterBar" class="bg-emerald-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-2">After 5 incorrect password attempts, the account is locked for 15 minutes.</p>
+            </div>
+
+            <!-- Active Token View -->
+            <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+              <div class="flex justify-between items-center text-xs mb-2">
+                <span class="font-medium text-slate-300">Session Token</span>
+                <span id="tokenStatusBadge" class="px-2 py-0.5 bg-slate-800 text-slate-400 rounded text-[10px]">No Active Session</span>
+              </div>
+              <div id="tokenOutput" class="p-3 bg-slate-950 rounded-lg text-xs font-mono text-slate-400 break-all max-h-24 overflow-y-auto">
+                Sign in to create an active session.
+              </div>
+            </div>
+
+            <!-- Server Response Log -->
+            <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800">
+              <div class="flex justify-between items-center text-xs mb-1">
+                <span class="font-medium text-slate-300">Response Status</span>
+                <span id="lastHttpCode" class="font-mono text-slate-400 text-xs">--</span>
+              </div>
+              <pre id="lastJsonLog" class="p-3 bg-slate-950 rounded-lg text-[11px] font-mono text-indigo-300 overflow-x-auto max-h-36">Ready for sign in...</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: Student Registration -->
+    <div id="studentRegTab" class="tab-content hidden max-w-2xl mx-auto">
+      <div class="glass-card rounded-2xl p-6 sm:p-8 shadow-xl">
+        <div class="mb-6">
+          <h3 class="text-xl font-bold text-white">Student Registration</h3>
+          <p class="text-xs text-slate-400 mt-1">Create your student placement profile</p>
+        </div>
+
+        <form id="studentRegForm" onsubmit="handleStudentRegister(event)" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Full Name *</label>
+              <input type="text" id="srName" required value="Aditya Sharma" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm focus:border-indigo-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Roll Number *</label>
+              <input type="text" id="srRoll" required value="2022BCSE045" placeholder="e.g. 2022BCSE045" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm focus:border-indigo-500 outline-none">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">College Email Address *</label>
+            <input type="email" id="srEmail" required value="aditya.student@college.edu" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm focus:border-indigo-500 outline-none">
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Password *</label>
+            <input type="password" id="srPass" required value="Password123!" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm focus:border-indigo-500 outline-none">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Department</label>
+              <input type="text" id="srDept" value="Computer Science" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">CGPA</label>
+              <input type="number" step="0.01" min="0" max="10" id="srCgpa" value="8.75" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Active Backlogs</label>
+              <input type="number" min="0" id="srBacklogs" value="0" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm outline-none">
+            </div>
+          </div>
+
+          <div class="pt-4">
+            <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-indigo-600/20">
+              Create Student Account
+            </button>
+          </div>
+        </form>
+
+        <div id="studentRegFeedback" class="mt-4 hidden p-4 rounded-xl text-xs font-mono"></div>
+      </div>
+    </div>
+
+    <!-- TAB 3: Company Registration -->
+    <div id="companyRegTab" class="tab-content hidden max-w-2xl mx-auto">
+      <div class="glass-card rounded-2xl p-6 sm:p-8 shadow-xl">
+        <div class="mb-6">
+          <h3 class="text-xl font-bold text-white">Company Registration</h3>
+          <p class="text-xs text-slate-400 mt-1">Register your organization for campus recruitment</p>
+        </div>
+
+        <form id="companyRegForm" onsubmit="handleCompanyRegister(event)" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Company Name *</label>
+              <input type="text" id="crName" required value="TechCorp Solutions" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">GST / Tax ID *</label>
+              <input type="text" id="crGst" required value="27AAPFU0939F1ZV" placeholder="e.g. 27AAPFU0939F1ZV" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm outline-none">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Corporate Email Address *</label>
+            <input type="email" id="crEmail" required value="recruiter@techcorp.com" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm outline-none">
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Password *</label>
+            <input type="password" id="crPass" required value="CompanySecret123!" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm outline-none">
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Website URL</label>
+              <input type="url" id="crWeb" value="https://techcorp.com" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Contact Person</label>
+              <input type="text" id="crContact" value="John Recruiter" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm outline-none">
+            </div>
+          </div>
+
+          <div class="pt-4">
+            <button type="submit" class="w-full py-3 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-purple-600/20">
+              Create Company Account
+            </button>
+          </div>
+        </form>
+
+        <div id="companyRegFeedback" class="mt-4 hidden p-4 rounded-xl text-xs font-mono"></div>
+      </div>
+    </div>
+
+    <!-- TAB 4: Student Profile -->
+    <div id="profileTab" class="tab-content hidden grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-6 space-y-6">
+        <div class="glass-card rounded-2xl p-6 sm:p-8 shadow-xl">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h3 class="text-xl font-bold text-white">Student Profile</h3>
+              <p class="text-xs text-slate-400 mt-1">View and update your academic details</p>
+            </div>
+            <button onclick="fetchStudentProfile()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-indigo-300 rounded-lg text-xs font-medium border border-slate-700 flex items-center space-x-1">
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span>Refresh</span>
+            </button>
+          </div>
+
+          <div id="profileAlertBox" class="hidden mb-4 p-3 rounded-xl text-xs"></div>
+
+          <!-- Current Student Status Card -->
+          <div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3 mb-6">
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-slate-400">Verification Status:</span>
+              <span id="pVerificationBadge" class="px-3 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-full text-xs font-semibold flex items-center space-x-1">
+                <i class="fa-solid fa-hourglass-half"></i>
+                <span>Pending Verification</span>
+              </span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-slate-400">Roll Number:</span>
+              <span id="pRollNumber" class="text-xs font-mono text-white font-semibold">--</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-slate-400">Current CGPA:</span>
+              <span id="pCurrentCgpa" class="text-xs font-mono text-indigo-300 font-bold">--</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-slate-400">Backlogs:</span>
+              <span id="pCurrentBacklogs" class="text-xs font-mono text-slate-300">--</span>
+            </div>
+          </div>
+
+          <!-- Profile Edit Form -->
+          <form id="profileEditForm" onsubmit="handleUpdateProfile(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Full Name</label>
+              <input type="text" id="profName" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm outline-none">
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Department</label>
+              <input type="text" id="profDept" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm outline-none">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 p-4 rounded-xl bg-amber-500/5 border border-amber-500/20">
+              <div class="col-span-2">
+                <span class="text-xs font-bold text-amber-400 flex items-center space-x-1">
+                  <i class="fa-solid fa-circle-exclamation"></i>
+                  <span>Academic Credentials</span>
+                </span>
+                <p class="text-[11px] text-slate-400 mt-0.5">Editing CGPA or Backlogs will reset verification to pending for faculty review.</p>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">CGPA</label>
+                <input type="number" step="0.01" min="0" max="10" id="profCgpa" class="w-full px-4 py-2 rounded-lg bg-slate-900 border border-amber-500/40 text-slate-200 text-sm outline-none">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Backlogs</label>
+                <input type="number" min="0" id="profBacklogs" class="w-full px-4 py-2 rounded-lg bg-slate-900 border border-amber-500/40 text-slate-200 text-sm outline-none">
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <button type="submit" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-indigo-600/20">
+                Save Profile Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Resume Upload -->
+      <div class="lg:col-span-6 space-y-6">
+        <div class="glass-card rounded-2xl p-6 sm:p-8 shadow-xl">
+          <div class="mb-4">
+            <h3 class="text-xl font-bold text-white">Resume Document</h3>
+            <p class="text-xs text-slate-400 mt-1">Upload your verified resume in PDF format</p>
+          </div>
+
+          <form onsubmit="handleGeneratePresignedUrl(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Resume Filename</label>
+              <input type="text" id="resumeFilename" value="Resume.pdf" required class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm outline-none">
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">File Format</label>
+              <select id="resumeMimeType" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-slate-200 text-sm outline-none">
+                <option value="application/pdf">PDF Document (*.pdf)</option>
+              </select>
+            </div>
+
+            <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-xl text-sm transition">
+              Generate Secure Upload Link
+            </button>
+          </form>
+
+          <div id="resumeUrlOutput" class="mt-4 p-4 rounded-xl bg-slate-900/80 border border-slate-800 text-xs font-mono text-slate-300 hidden break-all"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: Access Verification -->
+    <div id="rbacTab" class="tab-content hidden max-w-4xl mx-auto space-y-6">
+      <div class="glass-card rounded-2xl p-6 sm:p-8 shadow-xl">
+        <h3 class="text-xl font-bold text-white mb-2">Access Verification</h3>
+        <p class="text-xs text-slate-400 mb-6">Verify role permissions and access controls across different sections.</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <button onclick="testRbacEndpoint('/auth/me', 'GET')" class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-indigo-500/50 text-left transition group">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-indigo-400">Current User</span>
+              <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 rounded text-[10px]">All Roles</span>
+            </div>
+            <p class="text-xs text-slate-400">Verifies current session and retrieves user details.</p>
+          </button>
+
+          <button onclick="testRbacEndpoint('/students/me', 'GET')" class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-indigo-500/50 text-left transition group">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-indigo-400">Student Area</span>
+              <span class="px-2 py-0.5 bg-indigo-500/10 text-indigo-400 rounded text-[10px]">Student Only</span>
+            </div>
+            <p class="text-xs text-slate-400">Accessible only when signed in with a student account.</p>
+          </button>
+
+          <button onclick="testRbacEndpoint('/auth/admin-only', 'GET')" class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-indigo-500/50 text-left transition group">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold text-rose-400">Admin Area</span>
+              <span class="px-2 py-0.5 bg-rose-500/10 text-rose-400 rounded text-[10px]">Admin Only</span>
+            </div>
+            <p class="text-xs text-slate-400">Protected area reserved exclusively for administrators.</p>
+          </button>
+        </div>
+
+        <!-- Response Log -->
+        <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800">
+          <div class="flex justify-between items-center text-xs mb-2">
+            <span class="font-semibold text-slate-300">Access Response</span>
+            <span id="rbacStatusPill" class="px-2 py-0.5 bg-slate-800 text-slate-400 rounded text-[10px]">Ready</span>
+          </div>
+          <pre id="rbacResponseOutput" class="p-3 bg-slate-950 rounded-lg text-xs font-mono text-slate-300 overflow-x-auto max-h-48">Select an area above to verify access permissions.</pre>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-900 py-6 text-center text-xs text-slate-500">
+    Campus Placement Management System &bull; All rights reserved &bull; 2026
+  </footer>
+
+  <script>
+    let currentAuthToken = localStorage.getItem('cpms_token') || '';
+    let currentUser = null;
+    let lockoutInterval = null;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (currentAuthToken) {
+        verifySession();
+      }
+    });
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('text-indigo-400', 'border-indigo-500', 'font-semibold');
+        btn.classList.add('text-slate-400', 'border-transparent');
+      });
+
+      document.getElementById(tabId).classList.remove('hidden');
+      const activeBtn = document.getElementById('tab-' + tabId);
+      activeBtn.classList.add('text-indigo-400', 'border-indigo-500', 'font-semibold');
+      activeBtn.classList.remove('text-slate-400', 'border-transparent');
+
+      if (tabId === 'profileTab' && currentAuthToken) {
+        fetchStudentProfile();
+      }
+    }
+
+    function presetLogin(email, pass) {
+      document.getElementById('loginEmail').value = email;
+      document.getElementById('loginPassword').value = pass;
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const res = await fetch('/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+        updateResponseLog(res.status, data);
+
+        if (res.status === 200) {
+          currentAuthToken = data.token;
+          localStorage.setItem('cpms_token', data.token);
+          currentUser = data.user;
+          updateAuthUI(true, data.user);
+          document.getElementById('tokenOutput').innerText = data.token;
+          document.getElementById('tokenStatusBadge').className = 'px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded text-[10px]';
+          document.getElementById('tokenStatusBadge').innerText = 'Active';
+          document.getElementById('attemptMeterBar').style.width = '0%';
+          document.getElementById('attemptMeterBar').className = 'bg-emerald-500 h-2 rounded-full transition-all duration-300';
+          document.getElementById('attemptCountBadge').innerText = '0 / 5 (Normal)';
+          document.getElementById('attemptCountBadge').className = 'font-mono text-emerald-400 font-bold';
+          document.getElementById('lockoutAlert').classList.add('hidden');
+        } else if (res.status === 423) {
+          handleLockoutUI(data);
+        } else if (res.status === 401 && data.failed_login_attempts !== undefined) {
+          const attempts = data.failed_login_attempts;
+          const percent = (attempts / 5) * 100;
+          document.getElementById('attemptMeterBar').style.width = percent + '%';
+          document.getElementById('attemptMeterBar').className = attempts >= 3 ? 'bg-amber-500 h-2 rounded-full transition-all duration-300' : 'bg-emerald-500 h-2 rounded-full transition-all duration-300';
+          document.getElementById('attemptCountBadge').innerText = `${attempts} / 5 (${data.remaining_attempts} left)`;
+          document.getElementById('attemptCountBadge').className = 'font-mono text-amber-400 font-bold';
+        }
+      } catch (err) {
+        alert('Could not connect to server');
+      }
+    }
+
+    function handleLockoutUI(data) {
+      document.getElementById('attemptMeterBar').style.width = '100%';
+      document.getElementById('attemptMeterBar').className = 'bg-rose-500 h-2 rounded-full transition-all duration-300';
+      document.getElementById('attemptCountBadge').innerText = '5 / 5 (LOCKED)';
+      document.getElementById('attemptCountBadge').className = 'font-mono text-rose-400 font-bold';
+      document.getElementById('lockoutAlert').classList.remove('hidden');
+
+      if (data.locked_until) {
+        startLockoutTimer(new Date(data.locked_until));
+      }
+    }
+
+    function startLockoutTimer(targetDate) {
+      if (lockoutInterval) clearInterval(lockoutInterval);
+      const timerEl = document.getElementById('lockoutTimer');
+
+      lockoutInterval = setInterval(() => {
+        const remainingMs = targetDate.getTime() - Date.now();
+        if (remainingMs <= 0) {
+          clearInterval(lockoutInterval);
+          timerEl.innerText = 'Lockout expired! You may now sign in.';
+          document.getElementById('attemptMeterBar').style.width = '0%';
+          document.getElementById('attemptCountBadge').innerText = '0 / 5 (Reset)';
+          return;
+        }
+        const mins = Math.floor(remainingMs / 60000);
+        const secs = Math.floor((remainingMs % 60000) / 1000);
+        timerEl.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs} remaining`;
+      }, 1000);
+    }
+
+    async function verifySession() {
+      try {
+        const res = await fetch('/auth/me', {
+          headers: { 'Authorization': `Bearer ${currentAuthToken}` }
+        });
+        if (res.ok) {
+          const data = await res.json();
+          currentUser = data.user;
+          updateAuthUI(true, data.user);
+          document.getElementById('tokenOutput').innerText = currentAuthToken;
+          document.getElementById('tokenStatusBadge').className = 'px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded text-[10px]';
+          document.getElementById('tokenStatusBadge').innerText = 'Active';
+        } else {
+          logoutUser();
+        }
+      } catch (err) {
+        logoutUser();
+      }
+    }
+
+    function updateAuthUI(isLoggedIn, user) {
+      const badge = document.getElementById('userBadge');
+      const badgeText = document.getElementById('userBadgeText');
+      if (isLoggedIn && user) {
+        badge.classList.remove('hidden');
+        badge.classList.add('flex');
+        badgeText.innerText = `${user.email} (${user.role})`;
+      } else {
+        badge.classList.add('hidden');
+        badge.classList.remove('flex');
+      }
+    }
+
+    function logoutUser() {
+      currentAuthToken = '';
+      currentUser = null;
+      localStorage.removeItem('cpms_token');
+      updateAuthUI(false, null);
+      document.getElementById('tokenOutput').innerText = 'Signed out.';
+      document.getElementById('tokenStatusBadge').className = 'px-2 py-0.5 bg-slate-800 text-slate-400 rounded text-[10px]';
+      document.getElementById('tokenStatusBadge').innerText = 'No Active Session';
+    }
+
+    async function handleStudentRegister(e) {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById('srName').value,
+        roll_number: document.getElementById('srRoll').value,
+        email: document.getElementById('srEmail').value,
+        password: document.getElementById('srPass').value,
+        department: document.getElementById('srDept').value,
+        cgpa: parseFloat(document.getElementById('srCgpa').value),
+        backlogs: parseInt(document.getElementById('srBacklogs').value)
+      };
+
+      const res = await fetch('/auth/register/student', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      const fb = document.getElementById('studentRegFeedback');
+      fb.classList.remove('hidden');
+      if (res.ok) {
+        fb.className = 'mt-4 p-4 rounded-xl text-xs font-mono bg-emerald-500/10 border border-emerald-500/30 text-emerald-300';
+        fb.innerText = `Account created successfully for ${data.data.student.name} (Roll: ${data.data.student.roll_number}).`;
+      } else {
+        fb.className = 'mt-4 p-4 rounded-xl text-xs font-mono bg-rose-500/10 border border-rose-500/30 text-rose-300';
+        fb.innerText = `Error: ${data.message || 'Registration failed'}`;
+      }
+    }
+
+    async function handleCompanyRegister(e) {
+      e.preventDefault();
+      const payload = {
+        company_name: document.getElementById('crName').value,
+        gst_tax_id: document.getElementById('crGst').value,
+        email: document.getElementById('crEmail').value,
+        password: document.getElementById('crPass').value,
+        website: document.getElementById('crWeb').value,
+        contact_person: document.getElementById('crContact').value
+      };
+
+      const res = await fetch('/auth/register/company', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      const fb = document.getElementById('companyRegFeedback');
+      fb.classList.remove('hidden');
+      if (res.ok) {
+        fb.className = 'mt-4 p-4 rounded-xl text-xs font-mono bg-emerald-500/10 border border-emerald-500/30 text-emerald-300';
+        fb.innerText = `Company account registered successfully for ${data.data.company.company_name}. Pending approval.`;
+      } else {
+        fb.className = 'mt-4 p-4 rounded-xl text-xs font-mono bg-rose-500/10 border border-rose-500/30 text-rose-300';
+        fb.innerText = `Error: ${data.message || 'Registration failed'}`;
+      }
+    }
+
+    async function fetchStudentProfile() {
+      if (!currentAuthToken) {
+        alert('Please sign in as a student first');
+        switchTab('loginTab');
+        return;
+      }
+      const res = await fetch('/students/me', {
+        headers: { 'Authorization': `Bearer ${currentAuthToken}` }
+      });
+      const data = await res.json();
+      if (res.ok) {
+        const s = data.data;
+        document.getElementById('pRollNumber').innerText = s.roll_number;
+        document.getElementById('pCurrentCgpa').innerText = s.cgpa !== null ? s.cgpa : 'N/A';
+        document.getElementById('pCurrentBacklogs').innerText = s.backlogs;
+        document.getElementById('profName').value = s.name;
+        document.getElementById('profDept').value = s.department || '';
+        document.getElementById('profCgpa').value = s.cgpa || '';
+        document.getElementById('profBacklogs').value = s.backlogs || 0;
+
+        const badge = document.getElementById('pVerificationBadge');
+        if (s.is_verified) {
+          badge.className = 'px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full text-xs font-semibold flex items-center space-x-1';
+          badge.innerHTML = '<i class="fa-solid fa-circle-check"></i><span>Verified</span>';
+        } else {
+          badge.className = 'px-3 py-1 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-full text-xs font-semibold flex items-center space-x-1';
+          badge.innerHTML = '<i class="fa-solid fa-hourglass-half"></i><span>Pending Verification</span>';
+        }
+      }
+    }
+
+    async function handleUpdateProfile(e) {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById('profName').value,
+        department: document.getElementById('profDept').value,
+        cgpa: parseFloat(document.getElementById('profCgpa').value),
+        backlogs: parseInt(document.getElementById('profBacklogs').value)
+      };
+
+      const res = await fetch('/students/me', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentAuthToken}`
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      const alertBox = document.getElementById('profileAlertBox');
+      alertBox.classList.remove('hidden');
+
+      if (res.ok) {
+        if (data.verification_reset) {
+          alertBox.className = 'mb-4 p-3 rounded-xl text-xs bg-amber-500/20 border border-amber-500/40 text-amber-300';
+          alertBox.innerHTML = `<strong>Verification Notice:</strong> Academic fields were modified. Profile verification has been reset to pending.`;
+        } else {
+          alertBox.className = 'mb-4 p-3 rounded-xl text-xs bg-emerald-500/20 border border-emerald-500/40 text-emerald-300';
+          alertBox.innerHTML = `<strong>Success:</strong> Profile updated successfully.`;
+        }
+        fetchStudentProfile();
+      } else {
+        alertBox.className = 'mb-4 p-3 rounded-xl text-xs bg-rose-500/20 border border-rose-500/40 text-rose-300';
+        alertBox.innerText = `Error: ${data.message}`;
+      }
+    }
+
+    async function handleGeneratePresignedUrl(e) {
+      e.preventDefault();
+      const filename = document.getElementById('resumeFilename').value;
+      const file_type = document.getElementById('resumeMimeType').value;
+
+      const res = await fetch('/students/me/resume/presigned-url', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentAuthToken}`
+        },
+        body: JSON.stringify({ filename, file_type })
+      });
+
+      const data = await res.json();
+      const out = document.getElementById('resumeUrlOutput');
+      out.classList.remove('hidden');
+      out.innerText = JSON.stringify(data, null, 2);
+    }
+
+    async function testRbacEndpoint(endpoint, method) {
+      const pill = document.getElementById('rbacStatusPill');
+      const out = document.getElementById('rbacResponseOutput');
+      pill.innerText = 'Checking permissions...';
+
+      try {
+        const res = await fetch(endpoint, {
+          method,
+          headers: {
+            'Authorization': currentAuthToken ? `Bearer ${currentAuthToken}` : ''
+          }
+        });
+        const data = await res.json();
+
+        if (res.status === 200) {
+          pill.className = 'px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded text-[10px] font-bold';
+          pill.innerText = `Authorized (200 OK)`;
+        } else if (res.status === 403) {
+          pill.className = 'px-2 py-0.5 bg-rose-500/20 text-rose-400 rounded text-[10px] font-bold';
+          pill.innerText = `Access Denied (403 Forbidden)`;
+        } else if (res.status === 401) {
+          pill.className = 'px-2 py-0.5 bg-amber-500/20 text-amber-400 rounded text-[10px] font-bold';
+          pill.innerText = `Sign In Required (401)`;
+        }
+        out.innerText = JSON.stringify(data, null, 2);
+      } catch (err) {
+        out.innerText = 'Network error: ' + err.message;
+      }
+    }
+
+    function updateResponseLog(statusCode, data) {
+      const codeEl = document.getElementById('lastHttpCode');
+      codeEl.innerText = `${statusCode}`;
+      codeEl.className = statusCode === 200 || statusCode === 201 ? 'font-mono text-emerald-400 text-xs font-bold' : (statusCode === 423 ? 'font-mono text-rose-400 text-xs font-bold' : 'font-mono text-amber-400 text-xs font-bold');
+      document.getElementById('lastJsonLog').innerText = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
