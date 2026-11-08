@@ -86,7 +86,7 @@ Think of building this website like building a modern high-tech building. Everyo
 - **What She Needs to Do:**
   - **Phase 0 & 1 (Reference Helpers):** Build the pulse check (`/health` — answering "Yes, server is alive!") and the department catalog (`/departments` — listing CSE, IT, ECE, MECH for registration dropdowns).
   - **Phase 5 (Notifications & Candidate Alerts):** Show students their messages (e.g., *"Interview scheduled for tomorrow"*), add the "Mark as Read" button, and handle interview round updates.
-- **Current Progress:** Assigned and ready to start Phase 0/1 reference endpoints.
+- **Current Progress:** **100% Completed** — Health diagnostics (`/health`), department catalog (`/departments`), notification service (`/notifications`), and applicant stage progression endpoints (`/applications/:id/stage`, `/jobs/:id/rounds`) are fully implemented and verified with automated test suites.
 
 ---
 
@@ -96,8 +96,8 @@ Think of building this website like building a modern high-tech building. Everyo
 |---|---|---|---|---|
 | **Sayim** | Phases UI, 4, 7 (Project Lead) | Full Stack Architect & Screen Builder | Comprehensive | **100% Done** (All 18 screens ready, 20 commits & PR merges) |
 | **Joyeeta** | Phases 0, 3, 6 | Electronic Filing Cabinet (Database, Jobs & Reports) | Medium | **100% Done (Phases 0, 3, 6 merged via PR #1)** |
-| **Aditya** | Phases 1, 2 | Front Door Security (Login, Locks & Profiles) | Medium | **100% Code Written (PR #3 Merged - Integration Pending)** |
-| **Aakriti** | Phases 5 & 0, 1 | Front Desk Messenger (Health, Catalog & Alerts) | **Easiest / Friendly** | **Pending (0 Commits - Reference APIs & Alerts to start)** |
+| **Aditya** | Phases 1, 2 | Front Door Security (Login, Locks & Profiles) | Medium | **Pending (0 Commits - Auth & Profiles to start)** |
+| **Aakriti** | Phases 5 & 0, 1 | Front Desk Messenger (Health, Catalog & Alerts) | **Easiest / Friendly** | **100% Done (Phases 5, 0, 1 Implemented & Tested with Vitest)** |
 
 ---
 

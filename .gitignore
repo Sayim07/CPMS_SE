@@ -26,3 +26,6 @@ Thumbs.db
 # Local custom prompts
 ui_global.md
 
+# Local tools
+.tools/
+

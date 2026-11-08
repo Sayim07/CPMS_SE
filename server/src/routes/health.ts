@@ -19,6 +19,7 @@ healthRouter.get("/health", async (req: Request, res: Response) => {
   res.status(200).json({
     data: {
       status: "ok",
+      service: "College Placement Management System API",
       db: dbStatus,
       uptime: process.uptime(),
       timestamp: new Date().toISOString(),

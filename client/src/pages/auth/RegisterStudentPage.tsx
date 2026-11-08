@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { Button } from "../../components/ui/Button";
@@ -8,6 +8,21 @@ import { CheckCircle2 } from "lucide-react";
 export const RegisterStudentPage: React.FC = () => {
   const { setRole } = useAuth();
   const navigate = useNavigate();
+
+  const [departments, setDepartments] = useState(MOCK_DEPARTMENTS);
+
+  useEffect(() => {
+    fetch("/api/v1/departments")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.data && Array.isArray(data.data) && data.data.length > 0) {
+          setDepartments(data.data);
+        }
+      })
+      .catch(() => {
+        // Fallback silently to MOCK_DEPARTMENTS
+      });
+  }, []);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -112,7 +127,7 @@ export const RegisterStudentPage: React.FC = () => {
                   onChange={(e) => setFormData({ ...formData, departmentId: e.target.value })}
                   className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                  {MOCK_DEPARTMENTS.map((dept) => (
+                  {departments.map((dept) => (
                     <option key={dept.id} value={dept.id}>
                       {dept.code} — {dept.name}
                     </option>

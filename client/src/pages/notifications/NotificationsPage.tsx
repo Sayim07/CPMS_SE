@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/Button";
 import { MOCK_NOTIFICATIONS, type NotificationItem } from "../../mock/mockData";
@@ -16,18 +16,41 @@ export const NotificationsPage: React.FC = () => {
   const [notifications, setNotifications] = useState<NotificationItem[]>(MOCK_NOTIFICATIONS);
   const [activeTab, setActiveTab] = useState<"ALL" | "UNREAD">("ALL");
 
+  useEffect(() => {
+    fetch("/api/v1/notifications")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.data && Array.isArray(data.data) && data.data.length > 0) {
+          setNotifications(data.data);
+        }
+      })
+      .catch(() => {
+        // Fallback silently to MOCK_NOTIFICATIONS
+      });
+  }, []);
+
   const unreadCount = notifications.filter((n) => !n.read_at).length;
 
-  const handleMarkAllAsRead = () => {
+  const handleMarkAllAsRead = async () => {
     setNotifications((prev) =>
       prev.map((n) => ({ ...n, read_at: new Date().toISOString() }))
     );
+    try {
+      await fetch("/api/v1/notifications/read-all", { method: "PATCH" });
+    } catch {
+      // offline/mock fallback
+    }
   };
 
-  const handleMarkSingleAsRead = (id: string) => {
+  const handleMarkSingleAsRead = async (id: string) => {
     setNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, read_at: new Date().toISOString() } : n))
     );
+    try {
+      await fetch(`/api/v1/notifications/${id}/read`, { method: "PATCH" });
+    } catch {
+      // offline/mock fallback
+    }
   };
 
   const filteredNotifications =

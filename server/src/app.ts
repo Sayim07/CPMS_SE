@@ -8,6 +8,9 @@ import { jobsRouter } from "./routes/jobs";
 import { tpoRouter } from "./routes/tpo";
 import { reportsRouter } from "./routes/reports";
 import { adminRouter } from "./routes/admin";
+import { notificationsRouter } from "./routes/notifications";
+import { funnelRouter } from "./routes/funnel";
+import { departmentsRouter } from "./routes/departments";
 import { authenticate, requireRole } from "./middleware/auth";
 import { errorHandler } from "./middleware/errorHandler";
 
@@ -26,7 +29,10 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Route Mounts conforming to Schema.md §4 Base Path /api/v1
 app.use("/api/v1", healthRouter);
+app.use("/api/v1", departmentsRouter);
 app.use("/api/v1", jobsRouter);
+app.use("/api/v1", notificationsRouter);
+app.use("/api/v1", funnelRouter);
 app.use("/api/v1/tpo", authenticate, requireRole([Role.TPO, Role.ADMIN]), tpoRouter);
 app.use("/api/v1/reports", authenticate, requireRole([Role.TPO, Role.ADMIN]), reportsRouter);
 app.use("/api/v1/admin", authenticate, requireRole([Role.ADMIN]), adminRouter);
