@@ -59,24 +59,24 @@ export const Modal: React.FC<ModalProps> = ({
       {/* Modal Dialog */}
       <div
         className={cn(
-          "relative w-full bg-white rounded-lg border border-slate-200 shadow-xl overflow-hidden z-10 transition-all",
-          "scale-100 opacity-100 my-8",
+          "relative w-full bg-white dark:bg-zinc-900 rounded-neo border-2 border-black dark:border-white shadow-[6px_6px_0px_0px_#000] dark:shadow-[6px_6px_0px_0px_#fff] overflow-hidden z-10 transition-all",
+          "scale-100 opacity-100 my-8 text-black dark:text-white",
           maxWidthStyles[maxWidth]
         )}
       >
         {/* Header */}
-        <div className="flex items-start justify-between px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+        <div className="flex items-start justify-between px-6 py-4 border-b-2 border-black dark:border-white bg-[#F5EEDB] dark:bg-zinc-800">
           <div>
-            <h3 className="text-base font-semibold text-slate-900 tracking-tight">{title}</h3>
-            {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
+            <h3 className="text-base font-black text-black dark:text-white uppercase tracking-tight">{title}</h3>
+            {subtitle && <p className="text-xs text-zinc-600 dark:text-zinc-400 font-mono mt-0.5">{subtitle}</p>}
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+            className="p-1 rounded-neo border-2 border-black dark:border-white bg-white dark:bg-zinc-900 text-black dark:text-white hover:bg-rose-400 hover:text-black transition-colors shadow-[2px_2px_0px_0px_#000] active:translate-x-0.5 active:translate-y-0.5"
             aria-label="Close modal"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4 stroke-[2.5]" />
           </button>
         </div>
 

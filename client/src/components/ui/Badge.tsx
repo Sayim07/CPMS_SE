@@ -24,11 +24,11 @@ export const Badge: React.FC<BadgeProps> = ({
   size = "md",
 }) => {
   const variantStyles: Record<BadgeVariant, string> = {
-    eligible: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    mismatch: "bg-red-50 text-red-700 border-red-200",
-    warning: "bg-amber-50 text-amber-700 border-amber-200",
-    info: "bg-sky-50 text-sky-700 border-sky-200",
-    neutral: "bg-slate-100 text-slate-700 border-slate-200",
+    eligible: "bg-[#86EFAC] text-black border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff]",
+    mismatch: "bg-[#FF70A6] text-black border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff]",
+    warning: "bg-[#FFE600] text-black border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff]",
+    info: "bg-[#7DD3FC] text-black border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff]",
+    neutral: "bg-white dark:bg-zinc-800 text-black dark:text-white border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff]",
   };
 
   const defaultIcons: Record<BadgeVariant, React.ReactNode> = {
@@ -44,7 +44,7 @@ export const Badge: React.FC<BadgeProps> = ({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-md font-medium border leading-none",
+        "inline-flex items-center gap-1.5 rounded-neo font-bold leading-none select-none tracking-wider",
         variantStyles[variant],
         sizeStyles,
         className

@@ -1,10 +1,12 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext";
 import { AppShell } from "./components/layout/AppShell";
 import { SmoothScrollProvider } from "./components/layout/SmoothScrollProvider";
 
-// Auth Pages (Public)
+// Public Pages (Standalone without AppShell)
+import { LandingPage } from "./pages/landing/LandingPage";
 import { LoginPage } from "./pages/auth/LoginPage";
 import { RegisterStudentPage } from "./pages/auth/RegisterStudentPage";
 import { RegisterCompanyPage } from "./pages/auth/RegisterCompanyPage";
@@ -35,11 +37,13 @@ import { NotificationsPage } from "./pages/notifications/NotificationsPage";
 
 export const App: React.FC = () => {
   return (
-    <SmoothScrollProvider>
-      <BrowserRouter>
-        <AuthProvider>
+    <ThemeProvider>
+      <SmoothScrollProvider>
+        <BrowserRouter>
+          <AuthProvider>
           <Routes>
-            {/* Public Auth Routes (Standalone without AppShell) */}
+            {/* Public Standalone Landing Page & Auth Routes */}
+            <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register/student" element={<RegisterStudentPage />} />
             <Route path="/register/company" element={<RegisterCompanyPage />} />
@@ -79,9 +83,8 @@ export const App: React.FC = () => {
                     {/* Notifications Center */}
                     <Route path="/notifications" element={<NotificationsPage />} />
 
-                    {/* Default & Fallback Redirection */}
-                    <Route path="/" element={<Navigate to="/login" replace />} />
-                    <Route path="*" element={<Navigate to="/login" replace />} />
+                    {/* Fallback Redirection */}
+                    <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>
                 </AppShell>
               }
@@ -90,6 +93,7 @@ export const App: React.FC = () => {
         </AuthProvider>
       </BrowserRouter>
     </SmoothScrollProvider>
+  </ThemeProvider>
   );
 };
 

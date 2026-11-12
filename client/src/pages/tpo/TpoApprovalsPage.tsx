@@ -1,12 +1,7 @@
 import React, { useState } from "react";
+import { useDynamicData } from "../../hooks/useDynamicData";
 import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
-import {
-  MOCK_COMPANIES,
-  MOCK_JOBS,
-  type Company,
-  type Job,
-} from "../../mock/mockData";
 import {
   Building2,
   Briefcase,
@@ -20,9 +15,8 @@ import {
 } from "lucide-react";
 
 export const TpoApprovalsPage: React.FC = () => {
+  const { companies, jobs, updateCompanyStatus, updateJobStatus } = useDynamicData();
   const [activeTab, setActiveTab] = useState<"companies" | "jobs">("companies");
-  const [companies, setCompanies] = useState<Company[]>(MOCK_COMPANIES);
-  const [jobs, setJobs] = useState<Job[]>(MOCK_JOBS);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const showToast = (msg: string) => {
@@ -31,30 +25,22 @@ export const TpoApprovalsPage: React.FC = () => {
   };
 
   const handleApproveCompany = (id: string, name: string) => {
-    setCompanies((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, status: "APPROVED" } : c))
-    );
+    updateCompanyStatus(id, "APPROVED");
     showToast(`Corporate partner "${name}" has been approved for campus recruitment.`);
   };
 
   const handleRejectCompany = (id: string, name: string) => {
-    setCompanies((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, status: "REJECTED" } : c))
-    );
+    updateCompanyStatus(id, "REJECTED");
     showToast(`Corporate partner "${name}" registration has been rejected.`);
   };
 
   const handleApproveJob = (id: string, title: string) => {
-    setJobs((prev) =>
-      prev.map((j) => (j.id === id ? { ...j, status: "ACTIVE" } : j))
-    );
+    updateJobStatus(id, "ACTIVE");
     showToast(`Job drive "${title}" approved and published to all eligible students.`);
   };
 
   const handleCloseJob = (id: string, title: string) => {
-    setJobs((prev) =>
-      prev.map((j) => (j.id === id ? { ...j, status: "CLOSED" } : j))
-    );
+    updateJobStatus(id, "CLOSED");
     showToast(`Job drive "${title}" is now officially closed to new applications.`);
   };
 
@@ -145,8 +131,13 @@ export const TpoApprovalsPage: React.FC = () => {
             </div>
 
             <div className="divide-y divide-slate-100">
-              {companies.map((company) => (
-                <div key={company.id} className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              {companies.length === 0 ? (
+                <div className="p-8 text-center text-slate-400 font-mono text-xs italic">
+                  No registered companies found. Once corporate employers complete intake registration, their profiles will appear here for vetting and approval.
+                </div>
+              ) : (
+                companies.map((company) => (
+                  <div key={company.id} className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="space-y-1.5">
                     <div className="flex items-center gap-3">
                       <h4 className="font-semibold text-sm text-slate-900">{company.company_name}</h4>
@@ -212,8 +203,9 @@ export const TpoApprovalsPage: React.FC = () => {
                     )}
                   </div>
                 </div>
-              ))}
-            </div>
+              ))
+            )}
+          </div>
           </div>
         </div>
       )}
@@ -233,8 +225,13 @@ export const TpoApprovalsPage: React.FC = () => {
             </div>
 
             <div className="divide-y divide-slate-100">
-              {jobs.map((job) => (
-                <div key={job.id} className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              {jobs.length === 0 ? (
+                <div className="p-8 text-center text-slate-400 font-mono text-xs italic">
+                  No recruitment drives posted yet. When corporate recruiters create placement drives, they will appear here for TPO vetting and publication.
+                </div>
+              ) : (
+                jobs.map((job) => (
+                  <div key={job.id} className="p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                   <div className="space-y-2">
                     <div className="flex items-center gap-3">
                       <h4 className="font-semibold text-sm text-slate-900">{job.title}</h4>
@@ -310,8 +307,9 @@ export const TpoApprovalsPage: React.FC = () => {
                     )}
                   </div>
                 </div>
-              ))}
-            </div>
+              ))
+            )}
+          </div>
           </div>
         </div>
       )}
@@ -322,7 +320,7 @@ export const TpoApprovalsPage: React.FC = () => {
         <div>
           <span className="font-semibold text-slate-800">Deterministic Approval Workflow:</span>
           <p className="text-[11px] text-slate-500 mt-0.5">
-            Approving a Job Drive immediately schedules eligibility evaluation for all 120 registered students.
+            Approving a Job Drive immediately evaluates eligibility for all registered students.
             Students matching all criteria will see this drive highlighted with the "Eligible" badge.
           </p>
         </div>

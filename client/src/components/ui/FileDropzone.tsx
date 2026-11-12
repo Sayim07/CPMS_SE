@@ -87,38 +87,38 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
           className={cn(
             "border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors duration-150",
             isDragging
-              ? "border-indigo-500 bg-indigo-50/50"
-              : "border-slate-300 hover:border-slate-400 bg-white"
+              ? "border-primary bg-primary/10"
+              : "border-outline-variant/60 hover:border-outline bg-surface-container-lowest text-on-surface"
           )}
         >
-          <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 mx-auto mb-2">
-            <UploadCloud className="w-5 h-5 text-indigo-600" />
+          <div className="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary mx-auto mb-2">
+            <UploadCloud className="w-5 h-5 text-primary" />
           </div>
-          <p className="text-xs font-semibold text-slate-700">
+          <p className="text-xs font-semibold text-on-surface">
             Click to upload resume or drag and drop
           </p>
-          <p className="text-[11px] text-slate-400 mt-0.5">
+          <p className="text-[11px] text-on-surface-variant mt-0.5">
             PDF format only, maximum 2 MB (Rules.md §4.3)
           </p>
         </div>
       ) : (
         /* File Card when already attached */
-        <div className="bg-white border border-slate-200 rounded-lg p-4 flex items-center justify-between shadow-sm">
+        <div className="bg-surface-container-lowest border border-outline-variant/40 rounded-lg p-4 flex items-center justify-between shadow-xs text-on-surface">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-md bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600">
+            <div className="w-9 h-9 rounded-md bg-primary/10 border border-primary/20 flex items-center justify-center text-primary">
               <FileText className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-xs font-semibold text-slate-900">
+              <p className="text-xs font-semibold text-on-surface">
                 {selectedFile ? selectedFile.name : currentFileName || "Resume.pdf"}
               </p>
-              <p className="text-[11px] text-slate-400 flex items-center gap-1.5 mt-0.5 font-mono">
+              <p className="text-[11px] text-on-surface-variant flex items-center gap-1.5 mt-0.5 font-data-mono">
                 {selectedFile ? (
                   `${(selectedFile.size / 1024).toFixed(1)} KB`
                 ) : (
                   `Uploaded on ${currentUploadedAt ? new Date(currentUploadedAt).toLocaleDateString() : "Active"}`
                 )}
-                <span className="text-emerald-600 font-sans font-medium flex items-center gap-0.5">
+                <span className="text-tertiary font-sans font-medium flex items-center gap-0.5">
                   <CheckCircle2 className="w-3 h-3" /> Verified PDF
                 </span>
               </p>

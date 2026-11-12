@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import { useDynamicData } from "../../hooks/useDynamicData";
 import { DataTable, type Column } from "../../components/ui/DataTable";
 import { Badge } from "../../components/ui/Badge";
 import { Modal } from "../../components/ui/Modal";
-import { MOCK_AUDIT_LOGS, type AuditLog } from "../../mock/mockData";
+import { type AuditLog } from "../../mock/mockData";
 import {
   ShieldAlert,
   Search,
@@ -12,7 +13,7 @@ import {
 } from "lucide-react";
 
 export const AdminAuditPage: React.FC = () => {
-  const [logs] = useState<AuditLog[]>(MOCK_AUDIT_LOGS);
+  const { auditLogs: logs } = useDynamicData();
   const [searchQuery, setSearchQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState("ALL");
   const [selectedLog, setSelectedLog] = useState<AuditLog | null>(null);
@@ -47,7 +48,7 @@ export const AdminAuditPage: React.FC = () => {
       key: "created_at",
       header: "Timestamp",
       render: (log) => (
-        <span className="font-mono text-[11px] text-slate-600">
+        <span className="font-data-mono text-[11px] text-on-surface-variant">
           {new Date(log.created_at).toLocaleString()}
         </span>
       ),
@@ -57,8 +58,8 @@ export const AdminAuditPage: React.FC = () => {
       header: "Actor",
       render: (log) => (
         <div>
-          <span className="font-mono text-xs text-slate-800 font-semibold">{log.actor_email}</span>
-          <p className="text-[10px] text-slate-400 font-mono">IP: {log.ip_address}</p>
+          <span className="font-data-mono text-xs text-on-surface font-semibold">{log.actor_email}</span>
+          <p className="text-[10px] text-outline font-data-mono">IP: {log.ip_address}</p>
         </div>
       ),
     },
@@ -75,7 +76,7 @@ export const AdminAuditPage: React.FC = () => {
       key: "action",
       header: "Action Code",
       render: (log) => (
-        <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-800 border border-slate-200">
+        <span className="font-data-mono text-xs font-semibold px-2 py-0.5 rounded bg-surface-container text-primary border border-outline-variant/40">
           {log.action}
         </span>
       ),
@@ -85,8 +86,8 @@ export const AdminAuditPage: React.FC = () => {
       header: "Target Entity",
       render: (log) => (
         <div className="text-xs">
-          <span className="font-medium text-slate-700">{log.entity_type}</span>
-          <span className="text-[11px] text-slate-400 font-mono block">{log.entity_id}</span>
+          <span className="font-medium text-on-surface">{log.entity_type}</span>
+          <span className="text-[11px] text-outline font-data-mono block">{log.entity_id}</span>
         </div>
       ),
     },
@@ -96,7 +97,7 @@ export const AdminAuditPage: React.FC = () => {
       render: (log) => (
         <button
           onClick={() => setSelectedLog(log)}
-          className="inline-flex items-center gap-1 text-xs text-indigo-600 hover:text-indigo-800 font-medium"
+          className="inline-flex items-center gap-1 text-xs text-primary hover:underline font-medium"
         >
           <Eye className="w-3.5 h-3.5" />
           View JSON
@@ -106,56 +107,56 @@ export const AdminAuditPage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-on-surface">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-3 border-b border-outline-variant/40">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          <h1 className="font-headline-lg text-xl sm:text-2xl font-bold tracking-tight text-on-surface">
             Immutable System Audit Trail
           </h1>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-on-surface-variant mt-1">
             Cryptographically stamped append-only event log · Governed by Rules.md §5
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs font-mono text-slate-500 bg-white border border-slate-200 px-3 py-1.5 rounded-md flex items-center gap-1.5">
-            <Terminal className="w-3.5 h-3.5 text-slate-400" />
-            Audit Records: <span className="font-bold text-slate-800">{logs.length}</span>
+          <span className="text-xs font-data-mono text-on-surface-variant bg-surface-container-low border border-outline-variant/40 px-3 py-1.5 rounded-md flex items-center gap-1.5">
+            <Terminal className="w-3.5 h-3.5 text-outline" />
+            Audit Records: <span className="font-bold text-primary">{logs.length}</span>
           </span>
         </div>
       </div>
 
       {/* Security Banner */}
-      <div className="bg-slate-900 text-slate-200 p-3.5 rounded-lg flex items-center justify-between text-xs shadow-sm">
+      <div className="bg-surface-container-lowest border border-outline-variant/40 text-on-surface p-3.5 rounded-lg flex items-center justify-between text-xs shadow-xs">
         <div className="flex items-center gap-2.5">
-          <ShieldAlert className="w-4 h-4 text-emerald-400 shrink-0" />
-          <span>
+          <ShieldAlert className="w-4 h-4 text-tertiary shrink-0" />
+          <span className="text-on-surface-variant">
             Tamper-Resistant Logging Enabled: All database mutations, verifications, and policy updates are permanently logged.
           </span>
         </div>
-        <span className="text-[11px] font-mono text-slate-400 hidden sm:inline">Retention: 7 Years</span>
+        <span className="text-[11px] font-data-mono text-outline hidden sm:inline">Retention: 7 Years</span>
       </div>
 
       {/* Filter and Search */}
-      <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+      <div className="bg-surface-container-lowest border border-outline-variant/40 rounded-lg p-4 shadow-xs">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="relative sm:col-span-2">
-            <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+            <Search className="w-4 h-4 absolute left-3 top-2.5 text-outline" />
             <input
               type="text"
               placeholder="Search by Actor Email, Action, Entity ID, or IP..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-xs border border-slate-200 rounded-md focus:ring-1 focus:ring-indigo-500 focus:outline-none"
+              className="w-full pl-9 pr-3 py-2 text-xs border border-outline-variant/40 bg-surface-container-low text-on-surface rounded-md focus:ring-1 focus:ring-primary focus:outline-none"
             />
           </div>
 
           <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-slate-400 shrink-0" />
+            <Filter className="w-4 h-4 text-outline shrink-0" />
             <select
               value={roleFilter}
               onChange={(e) => setRoleFilter(e.target.value)}
-              className="w-full py-2 px-3 text-xs border border-slate-200 rounded-md focus:ring-1 focus:ring-indigo-500 bg-white"
+              className="w-full py-2 px-3 text-xs border border-outline-variant/40 rounded-md focus:ring-1 focus:ring-primary bg-surface-container-low text-on-surface"
             >
               <option value="ALL">All Roles</option>
               <option value="TPO">TPO Officers</option>

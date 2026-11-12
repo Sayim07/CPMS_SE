@@ -37,6 +37,7 @@ export interface Company {
   gst_tax_id: string;
   contact_person: string;
   contact_phone: string;
+  email?: string;
   status: "PENDING" | "APPROVED" | "REJECTED";
 }
 

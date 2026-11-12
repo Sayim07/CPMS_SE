@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useDynamicData } from "../../hooks/useDynamicData";
 import { Button } from "../../components/ui/Button";
-import { MOCK_NOTIFICATIONS, type NotificationItem } from "../../mock/mockData";
 import {
   Bell,
   CheckCheck,
@@ -13,21 +13,17 @@ import {
 } from "lucide-react";
 
 export const NotificationsPage: React.FC = () => {
-  const [notifications, setNotifications] = useState<NotificationItem[]>(MOCK_NOTIFICATIONS);
+  const { notifications, markNotificationsRead, markSingleNotificationRead } = useDynamicData();
   const [activeTab, setActiveTab] = useState<"ALL" | "UNREAD">("ALL");
 
   const unreadCount = notifications.filter((n) => !n.read_at).length;
 
   const handleMarkAllAsRead = () => {
-    setNotifications((prev) =>
-      prev.map((n) => ({ ...n, read_at: new Date().toISOString() }))
-    );
+    markNotificationsRead();
   };
 
   const handleMarkSingleAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read_at: new Date().toISOString() } : n))
-    );
+    markSingleNotificationRead(id);
   };
 
   const filteredNotifications =

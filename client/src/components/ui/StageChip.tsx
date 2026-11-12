@@ -19,24 +19,24 @@ export const StageChip: React.FC<StageChipProps> = ({ stage, className, size = "
     switch (stage) {
       // Application Stages
       case "APPLIED":
-        return { style: "bg-slate-100 text-slate-700 border-slate-200", label: "Applied", dotColor: "bg-slate-500" };
+        return { style: "bg-white dark:bg-zinc-800 text-black dark:text-white border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff]", label: "Applied", dotColor: "bg-black dark:bg-white" };
       case "SHORTLISTED":
-        return { style: "bg-sky-50 text-sky-700 border-sky-200", label: "Shortlisted", dotColor: "bg-sky-500" };
+        return { style: "bg-[#7DD3FC] text-black border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff]", label: "Shortlisted", dotColor: "bg-black" };
       case "IN_INTERVIEW":
-        return { style: "bg-indigo-50 text-indigo-700 border-indigo-200", label: "In Interview", dotColor: "bg-indigo-500" };
+        return { style: "bg-[#A388EE] text-black border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff]", label: "In Interview", dotColor: "bg-black" };
       case "SELECTED":
       case "APPROVED":
       case "ACTIVE":
-        return { style: "bg-emerald-50 text-emerald-700 border-emerald-200", label: stage === "ACTIVE" ? "Active" : stage === "APPROVED" ? "Approved" : "Selected", dotColor: "bg-emerald-500" };
+        return { style: "bg-[#86EFAC] text-black border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff]", label: stage === "ACTIVE" ? "Active" : stage === "APPROVED" ? "Approved" : "Selected", dotColor: "bg-black" };
       case "REJECTED":
-        return { style: "bg-red-50 text-red-700 border-red-200", label: "Rejected", dotColor: "bg-red-500" };
+        return { style: "bg-[#FF70A6] text-black border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff]", label: "Rejected", dotColor: "bg-black" };
       case "CLOSED":
-        return { style: "bg-slate-100 text-slate-600 border-slate-200", label: "Closed", dotColor: "bg-slate-400" };
+        return { style: "bg-zinc-200 dark:bg-zinc-700 text-black dark:text-white border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff]", label: "Closed", dotColor: "bg-black dark:bg-white" };
       case "PENDING":
       case "PENDING_APPROVAL":
-        return { style: "bg-amber-50 text-amber-700 border-amber-200", label: "Pending Approval", dotColor: "bg-amber-500" };
+        return { style: "bg-[#FFE600] text-black border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff]", label: "Pending Approval", dotColor: "bg-black" };
       default:
-        return { style: "bg-slate-100 text-slate-700 border-slate-200", label: stage, dotColor: "bg-slate-400" };
+        return { style: "bg-white dark:bg-zinc-800 text-black dark:text-white border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff]", label: stage, dotColor: "bg-black dark:bg-white" };
     }
   };
 
@@ -46,7 +46,7 @@ export const StageChip: React.FC<StageChipProps> = ({ stage, className, size = "
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-md font-medium border leading-none tracking-tight",
+        "inline-flex items-center gap-1.5 rounded-neo font-bold leading-none tracking-tight select-none uppercase text-[11px]",
         style,
         sizeStyles,
         className

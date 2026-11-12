@@ -42,17 +42,17 @@ export function DataTable<T>({
   const totalPages = total ? Math.ceil(total / pageSize) : 1;
 
   return (
-    <div className={cn("bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden", className)}>
+    <div className={cn("bg-white dark:bg-zinc-900 border-2 border-black dark:border-white rounded-neo shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff] overflow-hidden", className)}>
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-sm divide-y divide-slate-200">
-          <thead className="bg-slate-50 sticky top-0 z-10">
+        <table className="w-full text-left text-sm divide-y-2 divide-black dark:divide-white">
+          <thead className="bg-[#FFE600] text-black border-b-2 border-black dark:border-white sticky top-0 z-10 select-none">
             <tr>
               {columns.map((col) => (
                 <th
                   key={col.key}
                   scope="col"
                   className={cn(
-                    "py-3 px-4 text-xs font-semibold uppercase tracking-wider text-slate-500",
+                    "py-3 px-4 text-xs font-black uppercase tracking-wider text-black font-mono",
                     col.align === "center" ? "text-center" : col.align === "right" ? "text-right" : "text-left",
                     col.className
                   )}
@@ -62,10 +62,10 @@ export function DataTable<T>({
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 bg-white">
+          <tbody className="divide-y-2 divide-black dark:divide-white bg-white dark:bg-zinc-900 text-black dark:text-white">
             {isLoading ? (
               <tr>
-                <td colSpan={columns.length} className="py-8 text-center text-slate-400 text-sm">
+                <td colSpan={columns.length} className="py-8 text-center text-black/60 dark:text-white/60 text-sm font-bold">
                   Loading records...
                 </td>
               </tr>
@@ -77,12 +77,12 @@ export function DataTable<T>({
               </tr>
             ) : (
               data.map((row) => (
-                <tr key={keyExtractor(row)} className="hover:bg-slate-50/70 transition-colors">
+                <tr key={keyExtractor(row)} className="hover:bg-yellow-50 dark:hover:bg-zinc-800 transition-colors">
                   {columns.map((col) => (
                     <td
                       key={col.key}
                       className={cn(
-                        "py-3 px-4 text-slate-700 whitespace-nowrap",
+                        "py-3 px-4 text-black dark:text-white whitespace-nowrap text-xs font-medium",
                         col.align === "center" ? "text-center" : col.align === "right" ? "text-right" : "text-left",
                         col.className
                       )}
@@ -98,11 +98,11 @@ export function DataTable<T>({
       </div>
 
       {total !== undefined && onPageChange && total > 0 && (
-        <div className="flex items-center justify-between px-4 py-3 border-t border-slate-200 bg-slate-50/60 text-xs text-slate-500">
+        <div className="flex items-center justify-between px-4 py-3 border-t-2 border-black dark:border-white bg-[#f7f2e7] dark:bg-zinc-800 text-xs text-black dark:text-white font-bold">
           <div>
-            Showing <span className="font-medium text-slate-700">{(page - 1) * pageSize + 1}</span> to{" "}
-            <span className="font-medium text-slate-700">{Math.min(page * pageSize, total)}</span> of{" "}
-            <span className="font-medium text-slate-700">{total}</span> entries
+            Showing <span className="font-black">{(page - 1) * pageSize + 1}</span> to{" "}
+            <span className="font-black">{Math.min(page * pageSize, total)}</span> of{" "}
+            <span className="font-black">{total}</span> entries
           </div>
 
           <div className="flex items-center gap-1.5">
@@ -116,7 +116,7 @@ export function DataTable<T>({
               <ChevronLeft className="w-3.5 h-3.5" />
               <span>Previous</span>
             </Button>
-            <span className="px-2 text-slate-600 font-medium">
+            <span className="px-2 font-mono font-bold">
               Page {page} of {totalPages}
             </span>
             <Button
