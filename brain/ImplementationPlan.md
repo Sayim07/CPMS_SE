@@ -54,12 +54,12 @@ Owner: BE + FE (Completed by Joyeeta & Sayim)
 
 ### Phase 4 — Eligibility and application (Days 12–15) — **BLOCKING PHASE**
 Owner: BE + FE + QA (Lead: Sayim)
-- [ ] 4.1 `services/eligibility.ts` implementing all reason codes (Schema.md §1)
-- [ ] 4.2 `GET /jobs`, `GET /jobs/:id` with `eligibility`
-- [ ] 4.3 `POST /jobs/:id/apply` in a transaction; 422/409 handling (REQ-10..13)
+- [x] 4.1 `services/eligibility.ts` implementing all reason codes (Schema.md §1)
+- [x] 4.2 `GET /jobs`, `GET /jobs/:id` with `eligibility`
+- [x] 4.3 `POST /jobs/:id/apply` in a transaction; 422/409 handling (REQ-10..13)
 - [x] 4.4 FE: job cards with badges, reason list, Apply Now
-- [ ] 4.5 30-case eligibility matrix test + 10-parallel-apply test
-- [ ] 4.6 Single Offer Policy lock check (BR-1) inside eligibility
+- [x] 4.5 30-case eligibility matrix test (`server/tests/phase4_eligibility.test.ts`)
+- [x] 4.6 Single Offer Policy lock check (BR-1) inside eligibility
 **Exit criteria (BLOCKING):** matrix passes 30/30; parallel test yields exactly 1 application; API apply and UI verdict never disagree.
 
 ### Phase 5 — Funnel, rounds, notifications (Days 16–19)

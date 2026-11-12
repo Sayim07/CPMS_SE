@@ -80,8 +80,8 @@ export const App: React.FC = () => {
                     <Route path="/notifications" element={<NotificationsPage />} />
 
                     {/* Default & Fallback Redirection */}
-                    <Route path="/" element={<Navigate to="/student" replace />} />
-                    <Route path="*" element={<Navigate to="/student" replace />} />
+                    <Route path="/" element={<Navigate to="/login" replace />} />
+                    <Route path="*" element={<Navigate to="/login" replace />} />
                   </Routes>
                 </AppShell>
               }

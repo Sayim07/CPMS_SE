@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth, type Role } from "../../context/AuthContext";
 import { Button } from "../../components/ui/Button";
-import { Lock, Mail, AlertCircle, ShieldAlert } from "lucide-react";
+import { Lock, Mail, AlertCircle, ShieldAlert, Loader2 } from "lucide-react";
 
 export const LoginPage: React.FC = () => {
-  const { setRole } = useAuth();
+  const { login, setRole, isLoading } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("asha.roy@college.edu");
@@ -14,38 +14,38 @@ export const LoginPage: React.FC = () => {
   const [isLocked, setIsLocked] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (isLocked) return;
 
-    // Simulate incorrect password on test password mismatch
-    if (password !== "Passw0rd!x") {
+    setErrorMessage(null);
+
+    // Call real Auth API
+    const res = await login(email, password);
+
+    if (res.locked) {
+      setIsLocked(true);
+      setErrorMessage(res.message || "Account temporarily locked for 15 minutes due to 5 consecutive failed login attempts (REQ-2).");
+      return;
+    }
+
+    if (!res.success) {
       const nextFailed = failedAttempts + 1;
       setFailedAttempts(nextFailed);
-      if (nextFailed >= 5) {
-        setIsLocked(true);
-        setErrorMessage("Account temporarily locked for 15 minutes due to 5 consecutive failed login attempts (REQ-2).");
-      } else {
-        setErrorMessage(`Invalid email or password. Attempt ${nextFailed} of 5 before lockout.`);
-      }
+      setErrorMessage(res.message || `Invalid email or password. Attempt ${nextFailed} of 5.`);
       return;
     }
 
     // Role-based redirection per AppFlow.md §2.1
     if (email.includes("college.edu") && !email.includes("tpo") && !email.includes("admin")) {
-      setRole("STUDENT");
       navigate("/student");
     } else if (email.includes("acme") || email.includes("company")) {
-      setRole("COMPANY");
       navigate("/company");
     } else if (email.includes("tpo")) {
-      setRole("TPO");
       navigate("/tpo");
     } else if (email.includes("admin")) {
-      setRole("ADMIN");
       navigate("/admin");
     } else {
-      setRole("STUDENT");
       navigate("/student");
     }
   };
@@ -116,7 +116,7 @@ export const LoginPage: React.FC = () => {
                   type="email"
                   required
                   value={email}
-                  disabled={isLocked}
+                  disabled={isLocked || isLoading}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-md focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
@@ -134,7 +134,7 @@ export const LoginPage: React.FC = () => {
                   type="password"
                   required
                   value={password}
-                  disabled={isLocked}
+                  disabled={isLocked || isLoading}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-9 pr-3 py-2 text-xs bg-slate-50 border border-slate-200 rounded-md focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
@@ -145,10 +145,11 @@ export const LoginPage: React.FC = () => {
               type="submit"
               variant="primary"
               size="md"
-              disabled={isLocked}
-              className="w-full text-xs font-semibold"
+              disabled={isLocked || isLoading}
+              className="w-full text-xs font-semibold flex items-center justify-center gap-2"
             >
-              Sign In
+              {isLoading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+              {isLoading ? "Authenticating..." : "Sign In"}
             </Button>
           </form>
 

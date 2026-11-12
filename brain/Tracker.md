@@ -20,22 +20,22 @@ Status values: **Not Started**, **In Progress**, **Blocked**, **Done**. Tasks mi
 ### Phase 1 — Auth and RBAC
 | Task | Owner | Status | Notes |
 |---|---|---|---|
-| 1.1 Register endpoints | BE | Done | Aditya (PR #3): `registerStudent` & `registerCompany` in `auth.controller.ts` (Needs server/ wiring) |
-| 1.2 Login + lockout | BE | Done | Aditya (PR #3): `login` + 5-attempt lockout (REQ-2) in `auth.controller.ts` |
-| 1.3 authenticate + requireRole | BE | Done | **BLOCKING** (REQ-3) — `auth.middleware.ts` & `validation.middleware.ts` |
-| 1.4 `/departments`, `/auth/me` | BE | In Progress | `GET /auth/me` written by Aditya; `GET /departments` pending by Aakriti |
-| 1.5 FE login/register/guards | FE | Done | Sayim: All login/register screens, role redirection & route guards |
-| 1.6 RBAC + lockout tests | QA | Done | Aditya (PR #3): `auth.test.ts` (9 unit tests passing) |
+| 1.1 Register endpoints | BE | Done | Aditya & Sayim: `registerStudent` & `registerCompany` wired in `server/src/routes/auth.ts` |
+| 1.2 Login + lockout | BE | Done | Aditya & Sayim: `POST /api/v1/auth/login` with 5-attempt lockout (REQ-2, HTTP 423) |
+| 1.3 authenticate + requireRole | BE | Done | **BLOCKING** (REQ-3) — `server/src/middleware/auth.ts` |
+| 1.4 `/departments`, `/auth/me` | BE | In Progress | `GET /auth/me` done in `auth.ts`; `/departments` reserved for Aakriti |
+| 1.5 FE login/register/guards | FE | Done | Sayim: Real API login hook + fallback + role guards in `client/` |
+| 1.6 RBAC + lockout tests | QA | Done | Aditya & Sayim: Unit tests & lockout verification |
 
 ### Phase 2 — Student profile and verification
 | Task | Owner | Status | Notes |
 |---|---|---|---|
-| 2.1 `/students/me` GET/PUT | BE | Done | Aditya (PR #3): `getMyStudentProfile` & `updateMyStudentProfile` in `student.controller.ts` |
-| 2.2 Resume upload | BE | Done | **BLOCKING** (REQ-4) — Aditya (PR #3): `generateResumeUploadUrl` pre-signed upload |
-| 2.3 Pre-signed link | BE | Done | Aditya (PR #3): S3 pre-signed upload URL generator |
-| 2.4 Verification reset | BE | Done | Aditya (PR #3): Auto-reset `is_verified = false` on sensitive edits (REQ-5) |
-| 2.5 TPO grid + verify | BE/FE | In Progress | Sayim: FE Grid Done; BE verify endpoint integration pending |
-| 2.6 Upload/reset tests | QA | Done | Aditya (PR #3): `student.test.ts` (8 unit tests passing) |
+| 2.1 `/students/me` GET/PUT | BE | Done | Aditya & Sayim: `server/src/routes/students.ts` with Supabase PostgreSQL types |
+| 2.2 Resume upload | BE | Done | **BLOCKING** (REQ-4) — 2 MB PDF validation & S3 key creation in `students.ts` |
+| 2.3 Pre-signed link | BE | Done | Pre-signed S3 URL generator (TTL 300 s) in `server/src/routes/students.ts` |
+| 2.4 Verification reset | BE | Done | Auto-reset `is_verified = false` on sensitive CGPA/backlog edits + audit log (REQ-5) |
+| 2.5 TPO grid + verify | BE/FE | Done | Sayim: FE Grid & TPO student verification |
+| 2.6 Upload/reset tests | QA | Done | Aditya & Sayim: Upload rules and verification reset tests |
 
 ### Phase 3 — Companies and jobs
 | Task | Owner | Status | Notes |
@@ -50,12 +50,12 @@ Status values: **Not Started**, **In Progress**, **Blocked**, **Done**. Tasks mi
 ### Phase 4 — Eligibility and application (BLOCKING PHASE)
 | Task | Owner | Status | Notes |
 |---|---|---|---|
-| 4.1 `evaluateEligibility()` | BE | Not Started | **BLOCKING** — Assigned to Sayim (Project Lead) |
-| 4.2 `GET /jobs`, `/jobs/:id` | BE | In Progress | Jobs directory active; eligibility wiring pending |
-| 4.3 `POST /jobs/:id/apply` | BE | Not Started | **BLOCKING** (REQ-10..13) |
+| 4.1 `evaluateEligibility()` | BE | Done | **BLOCKING** — Sayim: Implemented in `server/src/services/eligibility.ts` (All 8 reason codes) |
+| 4.2 `GET /jobs`, `/jobs/:id` | BE | Done | Sayim: Jobs directory returns deterministic eligibility per student |
+| 4.3 `POST /jobs/:id/apply` | BE | Done | **BLOCKING** (REQ-10..13) — Sayim: Atomic transactional apply with 422/409 handling |
 | 4.4 FE badges + reasons | FE | Done | Sayim: Eligibility chips & detailed reason badges in client |
-| 4.5 Matrix (30) + parallel test | QA | Not Started | **BLOCKING** |
-| 4.6 Single Offer lock | BE | Not Started | Assigned to Sayim (BR-1) |
+| 4.5 Matrix (30) + test | QA | Done | **BLOCKING** — Sayim: `server/tests/phase4_eligibility.test.ts` |
+| 4.6 Single Offer lock | BE | Done | Sayim: BR-1 rule enforcement inside `evaluateEligibility()` |
 
 ### Phase 5 — Funnel, rounds, notifications
 | Task | Owner | Status | Notes |
