@@ -32,6 +32,7 @@
     "archiver": "^7.0.1",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
+    "cpms-workspace": "file:..",
     "csv-stringify": "^6.5.2",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
@@ -54,4 +55,3 @@
     "vitest": "^2.1.8"
   }
 }
-

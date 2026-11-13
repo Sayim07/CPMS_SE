@@ -219,7 +219,7 @@ funnelRouter.patch(
       // Notify candidate
       const notificationMessage =
         targetStage === ApplicationStage.SELECTED
-          ? `Congratulations! You have been selected for ${application.job.title} at ${application.job.company.name}.`
+          ? `Congratulations! You have been selected for ${application.job.title} at ${application.job.company.company_name}.`
           : `Your application status for ${application.job.title} is now ${targetStage}.`;
 
       await notifyUser({
