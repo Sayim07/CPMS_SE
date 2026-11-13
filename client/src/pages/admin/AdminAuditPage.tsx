@@ -65,7 +65,7 @@ export const AdminAuditPage: React.FC = () => {
     },
     {
       key: "actor_role",
-      header: "Role",
+      header: "Actor Role",
       render: (log) => (
         <Badge variant={getRoleBadgeVariant(log.actor_role)} size="sm">
           {log.actor_role}
@@ -83,13 +83,53 @@ export const AdminAuditPage: React.FC = () => {
     },
     {
       key: "entity_type",
-      header: "Target Entity",
-      render: (log) => (
-        <div className="text-xs">
-          <span className="font-medium text-on-surface">{log.entity_type}</span>
-          <span className="text-[11px] text-outline font-data-mono block">{log.entity_id}</span>
-        </div>
-      ),
+      header: "Target Entity / Subject",
+      render: (log) => {
+        const d = (log.details || {}) as Record<string, any>;
+        let label = log.entity_type;
+        let subtitle = log.entity_id;
+
+        if (log.action === "TPO_PROVISIONED" || log.action === "STAFF_ACTIVATED" || log.action === "STAFF_DEACTIVATED") {
+          label = `TPO Officer: ${d.name || "Placement Cell"}`;
+          subtitle = String(d.email || log.entity_id);
+        } else if (log.action === "COMPANY_ONBOARDED" || log.action === "COMPANY_REGISTER") {
+          label = `Recruiter: ${d.company_name || d.name || "Corporate Partner"}`;
+          subtitle = String(d.email || log.entity_id);
+        } else if (log.action === "STUDENT_REGISTER" || log.action === "STUDENT_LOGIN") {
+          label = `Student: ${d.full_name || log.actor_email}`;
+          subtitle = d.roll_no ? `Roll: ${d.roll_no}` : log.entity_id;
+        } else if (log.action === "SETTINGS_UPDATED") {
+          label = "Policy & Departments";
+          subtitle = `Single Offer Cutoff: ${d.singleOfferThresholdLpa || 8.0} LPA`;
+        } else if (log.action === "SYSTEM_INITIALIZED") {
+          label = "Institutional Governance";
+          subtitle = "CPMS Security & RBAC Policy Activated";
+        } else if (log.action === "TPO_LOGIN") {
+          label = "TPO Portal Session";
+          subtitle = `/tpo (${d.name || log.actor_email})`;
+        } else if (log.action === "ADMIN_LOGIN") {
+          label = "Super Admin Session";
+          subtitle = `/admin (Sayim Mullick)`;
+        } else if (log.action === "CANDIDATE_SELECTED") {
+          label = `Selected: ${d.student_name || "Candidate"}`;
+          subtitle = `${d.company_name || "Company"} (${d.job_title || "Drive"}) · Roll: ${d.student_roll || log.entity_id}`;
+        } else if (log.action === "APPLICANT_STAGE_TRANSITIONED") {
+          label = `Stage: ${d.new_stage || "Updated"} (${d.student_name || d.student_roll || "Candidate"})`;
+          subtitle = `${d.company_name || "Company"} (${d.job_title || "Drive"})`;
+        } else if (log.action === "RECRUITER_LOGIN") {
+          label = "Corporate Portal Session";
+          subtitle = `/company (${d.company_name || log.actor_email})`;
+        }
+
+        return (
+          <div className="text-xs">
+            <span className="font-bold text-on-surface block">{label}</span>
+            <span className="text-[11px] text-on-surface-variant font-data-mono block truncate max-w-[240px]">
+              {subtitle}
+            </span>
+          </div>
+        );
+      },
     },
     {
       key: "details",

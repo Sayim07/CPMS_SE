@@ -1,55 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { useDynamicData } from "../../hooks/useDynamicData";
 import { Button } from "../../components/ui/Button";
-import { Badge } from "../../components/ui/Badge";
 import { type Department } from "../../mock/mockData";
 import {
   Sliders,
   Shield,
-  Users,
   Building,
   CheckCircle2,
   Save,
-  Plus,
   Lock,
-  UserCheck,
-  UserX,
 } from "lucide-react";
-
-interface StaffUser {
-  id: string;
-  name: string;
-  email: string;
-  role: "TPO" | "ADMIN";
-  department: string;
-  is_active: boolean;
-}
 
 export const AdminSettingsPage: React.FC = () => {
   const { settings, updateSettings } = useDynamicData();
   const [thresholdLpa, setThresholdLpa] = useState<number>(settings.singleOfferThresholdLpa || 8.0);
   const [departments, setDepartments] = useState<Department[]>(settings.departments);
-  const [staffUsers, setStaffUsers] = useState<StaffUser[]>(settings.staff || []);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  useEffect(() => {
-    setThresholdLpa(settings.singleOfferThresholdLpa || 8.0);
-    setDepartments(settings.departments);
-    if (settings.staff) {
-      setStaffUsers(settings.staff);
-    }
-  }, [settings]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 4000);
   };
 
+  useEffect(() => {
+    setThresholdLpa(settings.singleOfferThresholdLpa || 8.0);
+    setDepartments(settings.departments);
+  }, [settings]);
+
   const handleSavePolicy = () => {
     updateSettings({
       singleOfferThresholdLpa: thresholdLpa,
       departments,
-      staff: staffUsers,
     });
     showToast(`System settings & Single Offer Policy threshold (${thresholdLpa.toFixed(1)} LPA) saved.`);
   };
@@ -61,23 +42,16 @@ export const AdminSettingsPage: React.FC = () => {
     showToast("Department status updated in real-time.");
   };
 
-  const handleToggleStaff = (id: string, name: string) => {
-    const updated = staffUsers.map((u) => (u.id === id ? { ...u, is_active: !u.is_active } : u));
-    setStaffUsers(updated);
-    updateSettings({ staff: updated });
-    showToast(`Account status for ${name} toggled.`);
-  };
-
   return (
     <div className="space-y-6 text-on-surface">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-3 border-b border-outline-variant/40">
         <div>
           <h1 className="font-headline-lg text-xl sm:text-2xl font-bold tracking-tight text-on-surface">
-            System Administration & Policy Governance
+            System Settings & Academic Policy Governance
           </h1>
           <p className="text-xs text-on-surface-variant mt-1">
-            Global placement cell parameters, threshold controls, and institutional roles
+            Deterministic placement rules, single offer dream thresholds, and department participation
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -208,80 +182,13 @@ export const AdminSettingsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Section 3: Staff & Institutional Access Management */}
-      <div className="bg-surface-container-lowest border border-outline-variant/40 rounded-lg overflow-hidden shadow-xs">
-        <div className="p-4 bg-surface-container-low border-b border-outline-variant/40 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Users className="w-4 h-4 text-outline" />
-            <div>
-              <h3 className="text-sm font-semibold text-on-surface">Placement Officers & Administrators</h3>
-              <p className="text-xs text-on-surface-variant">Authorized institutional accounts with administrative privilege</p>
-            </div>
-          </div>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => showToast("Add Staff modal simulation: account intake prepared.")}
-          >
-            <Plus className="w-3.5 h-3.5 mr-1" />
-            Add Staff Member
-          </Button>
-        </div>
-
-        <div className="divide-y divide-outline-variant/30">
-          {staffUsers.map((staff) => (
-            <div key={staff.id} className="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 hover:bg-surface-container-low/40 transition-colors">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2.5">
-                  <span className="font-semibold text-sm text-on-surface">{staff.name}</span>
-                  <Badge variant={staff.role === "ADMIN" ? "mismatch" : "eligible"} size="sm">
-                    {staff.role}
-                  </Badge>
-                  {!staff.is_active && (
-                    <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-surface-container text-outline">
-                      Suspended
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-center gap-3 text-xs text-on-surface-variant font-data-mono">
-                  <span>{staff.email}</span>
-                  <span>·</span>
-                  <span className="font-sans text-on-surface-variant">{staff.department}</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 shrink-0">
-                <Button
-                  variant={staff.is_active ? "ghost" : "primary"}
-                  size="sm"
-                  onClick={() => handleToggleStaff(staff.id, staff.name)}
-                >
-                  {staff.is_active ? (
-                    <>
-                      <UserX className="w-3.5 h-3.5 mr-1 text-outline" />
-                      Deactivate
-                    </>
-                  ) : (
-                    <>
-                      <UserCheck className="w-3.5 h-3.5 mr-1" />
-                      Activate
-                    </>
-                  )}
-                </Button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Security & Access Notice */}
       <div className="bg-surface-container-low border border-outline-variant/40 rounded-md p-3.5 flex items-start gap-3 text-xs text-on-surface-variant">
         <Lock className="w-4 h-4 text-outline shrink-0 mt-0.5" />
         <div>
-          <span className="font-semibold text-on-surface">RBAC Role-Based Access Control:</span>
+          <span className="font-semibold text-on-surface">Deterministic Policy Enforcement:</span>
           <p className="text-[11px] text-on-surface-variant mt-0.5">
-            TPO and ADMIN permissions are guarded by server-side JWT verification and append-only database audit logs.
-            Changes to system settings are immutably recorded with actor ID, IP address, and delta timestamp.
+            Changes to the dream cutoff threshold or department availability are immutably logged and immediately take effect for all active student eligibility checks without requiring system restart.
           </p>
         </div>
       </div>

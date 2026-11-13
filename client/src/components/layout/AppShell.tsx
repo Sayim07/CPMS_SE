@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, Outlet } from "react-router-dom";
 import {
   Briefcase,
   UserCheck,
@@ -14,27 +14,26 @@ import {
   CheckCircle2,
   Users,
   GraduationCap,
-  ChevronDown,
   Sun,
   Moon,
   BookOpen,
+  LogOut,
 } from "lucide-react";
-import { useAuth, type Role } from "../../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import { useDynamicData } from "../../hooks/useDynamicData";
 import { cn } from "../../lib/utils";
 import { CommandMenu } from "../navigation/CommandMenu";
 
 interface AppShellProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export const AppShell: React.FC<AppShellProps> = ({ children }) => {
-  const { user, setRole } = useAuth();
+  const { user, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { jobs, applications, students, notifications, currentStudent } = useDynamicData();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [roleSwitcherOpen, setRoleSwitcherOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -121,6 +120,8 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
               const roleLower = user?.role?.toLowerCase() || "student";
               const isActive =
                 location.pathname === item.path ||
+                (item.path === "/admin/users" && location.pathname === "/admin") ||
+                (item.path === "/tpo/companies" && location.pathname === "/tpo/approvals") ||
                 (item.path !== `/${roleLower}` && location.pathname.startsWith(`${item.path}/`));
 
               return (
@@ -231,47 +232,25 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
 
           {/* Right Header Utility Controls */}
           <div className="flex items-center gap-3">
-            {/* Prototype Role Switcher */}
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setRoleSwitcherOpen(!roleSwitcherOpen)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-neo bg-[#7DD3FC] text-black border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff] hover:translate-x-[1px] hover:translate-y-[1px] text-xs font-black transition-all"
-                title="Switch role for demo preview"
-              >
-                <span className="font-bold opacity-80">ROLE:</span>
-                <span>{user?.role}</span>
-                <ChevronDown className="w-3.5 h-3.5" />
-              </button>
+            {/* Authenticated Role Badge */}
+            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-neo bg-[#7DD3FC] text-black border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff] text-xs font-black select-none">
+              <span className="font-bold opacity-80">ROLE:</span>
+              <span>{user?.role || "GUEST"}</span>
+            </span>
 
-              {roleSwitcherOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-zinc-900 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff] rounded-neo py-1 z-50">
-                  <div className="px-3 py-1.5 text-[10px] font-black text-black dark:text-white uppercase tracking-wider border-b-2 border-black dark:border-white bg-[#FFE600] text-black">
-                    Select Actor View
-                  </div>
-                  {(["STUDENT", "COMPANY", "TPO", "ADMIN"] as Role[]).map((r) => (
-                    <button
-                      key={r}
-                      type="button"
-                      onClick={() => {
-                        setRole(r);
-                        setRoleSwitcherOpen(false);
-                        navigate(`/${r.toLowerCase()}`);
-                      }}
-                      className={cn(
-                        "w-full text-left px-3 py-2 text-xs font-bold flex items-center justify-between hover:bg-[#FFE600] hover:text-black transition-colors",
-                        user?.role === r
-                          ? "font-black bg-yellow-100 dark:bg-zinc-800 text-black dark:text-white"
-                          : "text-black dark:text-white"
-                      )}
-                    >
-                      <span>{r}</span>
-                      {user?.role === r && <CheckCircle2 className="w-3.5 h-3.5 text-black dark:text-white" />}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            {/* Logout Button */}
+            <button
+              type="button"
+              onClick={() => {
+                logout();
+                navigate("/login");
+              }}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-neo bg-white dark:bg-zinc-800 border-2 border-black dark:border-white text-black dark:text-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff] hover:bg-[#FF70A6] hover:text-black text-xs font-black transition-all cursor-pointer"
+              title="Sign Out of Session"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Logout</span>
+            </button>
 
             {/* Notifications Bell */}
             <Link
@@ -359,7 +338,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
 
         {/* Main Routed Content Area */}
         <main className="flex-1 w-full bg-[#F5EEDB] dark:bg-[#141418] neo-grid-pattern p-4 sm:p-6 min-h-[calc(100vh-64px)]">
-          {children}
+          {children || <Outlet />}
         </main>
       </div>
     </div>

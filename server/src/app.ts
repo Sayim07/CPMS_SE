@@ -20,9 +20,24 @@ export const app = express();
 
 // Security and utility middleware
 app.use(helmet());
+
+const allowedOrigins = (env.CORS_ORIGIN || "*").split(",").map((o) => o.trim());
+
 app.use(
   cors({
-    origin: env.CORS_ORIGIN,
+    origin: (origin, callback) => {
+      if (
+        !origin ||
+        allowedOrigins.includes("*") ||
+        allowedOrigins.includes(origin) ||
+        origin.endsWith(".vercel.app") ||
+        origin.includes("localhost")
+      ) {
+        callback(null, true);
+      } else {
+        callback(null, true);
+      }
+    },
     credentials: true,
   })
 );

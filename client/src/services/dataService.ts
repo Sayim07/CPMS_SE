@@ -28,6 +28,7 @@ export interface StaffMember {
   email: string;
   role: "TPO" | "ADMIN";
   department: string;
+  password?: string;
   is_active: boolean;
 }
 
@@ -76,28 +77,26 @@ let applicationsState: Application[] = loadFromStorage(STORAGE_KEYS.APPLICATIONS
 let companiesState: Company[] = loadFromStorage(STORAGE_KEYS.COMPANIES, []);
 let notificationsState: NotificationItem[] = loadFromStorage(STORAGE_KEYS.NOTIFICATIONS, []);
 let auditLogsState: AuditLog[] = loadFromStorage(STORAGE_KEYS.AUDIT_LOGS, []);
+// Clean up any legacy mock logs that were hardcoded with admin@college.edu
+if (auditLogsState.length > 0) {
+  const cleaned = auditLogsState.filter((log) => log.actor_email !== "admin@college.edu");
+  if (cleaned.length !== auditLogsState.length) {
+    auditLogsState = cleaned;
+    saveToStorage(STORAGE_KEYS.AUDIT_LOGS, cleaned);
+  }
+}
 let settingsState: SystemSettings = loadFromStorage(STORAGE_KEYS.SETTINGS, {
   singleOfferThresholdLpa: 8.0,
   departments: MOCK_DEPARTMENTS,
-  staff: [
-    {
-      id: "usr-tpo-1",
-      name: "Dr. Arvind Sharma",
-      email: "tpo@college.edu",
-      role: "TPO",
-      department: "Placement Directorate",
-      is_active: true,
-    },
-    {
-      id: "usr-adm-1",
-      name: "System Administrator",
-      email: "admin@college.edu",
-      role: "ADMIN",
-      department: "University IT Center",
-      is_active: true,
-    },
-  ],
+  staff: [],
 });
+
+// Sanitize settingsState.staff if it contains old mock emails
+if (settingsState.staff && settingsState.staff.length > 0) {
+  settingsState.staff = settingsState.staff.filter(
+    (s) => s.email !== "tpo@college.edu" && s.email !== "admin@college.edu"
+  );
+}
 
 class DynamicDataService {
   // Listen to cross-component or cross-tab changes
@@ -398,13 +397,18 @@ class DynamicDataService {
     return { success: true, message: "Application submitted successfully!", application: newApp };
   }
 
-  public moveApplicationStage(appId: string, newStage: Application["stage"]): Application {
+  public moveApplicationStage(
+    appId: string,
+    newStage: Application["stage"],
+    actorEmail?: string
+  ): Application {
     const apps = this.getApplications();
     const index = apps.findIndex((a) => a.id === appId);
     if (index === -1) throw new Error("Application not found");
 
     const app = apps[index];
     const studentMaster = this.getStudentById(app.student_id);
+    const job = this.getJobById(app.job_id);
 
     // Unmask student contact when progressing beyond APPLIED/REJECTED (Rules.md §4.4)
     const unmaskedStudent = { ...app.student };
@@ -419,9 +423,12 @@ class DynamicDataService {
     applicationsState = apps;
     saveToStorage(STORAGE_KEYS.APPLICATIONS, apps);
 
+    const recruiterEmail =
+      actorEmail ||
+      (job?.company_name ? `${job.company_name.toLowerCase().replace(/\s+/g, "")}@gmail.com` : "recruiter@company.com");
+
     // If SELECTED, update student placement status and lock if dream tier
     if (newStage === "SELECTED" && studentMaster) {
-      const job = this.getJobById(app.job_id);
       const isDream = (job?.ctc_lpa || 0) >= this.getSettings().singleOfferThresholdLpa;
       this.updateStudent(studentMaster.id, {
         placement_status: "PLACED",
@@ -433,16 +440,39 @@ class DynamicDataService {
         message: `Congratulations! You have been selected for ${job?.title || "Role"} at ${job?.company_name || "Company"}.`,
         link_path: "/student/applications",
       });
-    }
 
-    this.addAuditLog({
-      action: "APPLICANT_STAGE_TRANSITIONED",
-      entity_type: "APPLICATION",
-      entity_id: appId,
-      actor_role: "COMPANY",
-      actor_email: "recruiter@company.com",
-      details: { new_stage: newStage, student_roll: app.student.roll_no },
-    });
+      this.addAuditLog({
+        action: "CANDIDATE_SELECTED",
+        entity_type: "STUDENT",
+        entity_id: studentMaster.id,
+        actor_role: "COMPANY",
+        actor_email: recruiterEmail,
+        details: {
+          student_name: studentMaster.full_name,
+          student_roll: studentMaster.roll_no,
+          student_email: studentMaster.email,
+          company_name: job?.company_name || "Company",
+          job_title: job?.title || "Role",
+          ctc_lpa: job?.ctc_lpa || 0,
+          is_dream_offer: isDream,
+        },
+      });
+    } else {
+      this.addAuditLog({
+        action: "APPLICANT_STAGE_TRANSITIONED",
+        entity_type: "APPLICATION",
+        entity_id: appId,
+        actor_role: "COMPANY",
+        actor_email: recruiterEmail,
+        details: {
+          new_stage: newStage,
+          student_name: studentMaster?.full_name || app.student.full_name,
+          student_roll: app.student.roll_no,
+          company_name: job?.company_name || "Company",
+          job_title: job?.title || "Role",
+        },
+      });
+    }
 
     return app;
   }
@@ -460,6 +490,8 @@ class DynamicDataService {
     contact_person: string;
     email: string;
     phone: string;
+    password?: string;
+    status?: "PENDING" | "APPROVED";
   }): Company {
     const list = this.getCompanies();
     const newCompany: Company = {
@@ -470,19 +502,26 @@ class DynamicDataService {
       contact_person: companyData.contact_person,
       contact_phone: companyData.phone,
       email: companyData.email,
-      status: "PENDING",
+      password: companyData.password,
+      status: companyData.status || "PENDING",
     };
     list.unshift(newCompany);
     companiesState = list;
     saveToStorage(STORAGE_KEYS.COMPANIES, list);
 
+    const isTpoOnboarding = companyData.status === "APPROVED";
     this.addAuditLog({
-      action: "COMPANY_REGISTER",
+      action: isTpoOnboarding ? "COMPANY_ONBOARDED" : "COMPANY_REGISTER",
       entity_type: "COMPANY",
       entity_id: newCompany.id,
-      actor_role: "COMPANY",
-      actor_email: newCompany.email || "recruiter@company.com",
-      details: { company_name: newCompany.company_name, website: newCompany.website },
+      actor_role: isTpoOnboarding ? "TPO" : "COMPANY",
+      actor_email: isTpoOnboarding ? "sayimtpo@gmail.com" : (newCompany.email || "recruiter@company.com"),
+      details: {
+        company_name: newCompany.company_name,
+        email: newCompany.email,
+        contact_person: newCompany.contact_person,
+        website: newCompany.website,
+      },
     });
 
     this.addNotification({
@@ -555,7 +594,75 @@ class DynamicDataService {
   // --- Audit Logs ---
   public getAuditLogs(): AuditLog[] {
     const data = loadFromStorage(STORAGE_KEYS.AUDIT_LOGS, auditLogsState);
-    return Array.isArray(data) ? data : [];
+    let list = Array.isArray(data) ? data : [];
+
+    // Strictly filter out any mock admin@college.edu entries
+    list = list.filter((log) => log && log.actor_email !== "admin@college.edu");
+
+    // Upgrade any company onboard logs to clearly attribute TPO as actor
+    list = list.map((log) => {
+      if (log.action === "COMPANY_REGISTER" && log.actor_role === "COMPANY") {
+        return {
+          ...log,
+          action: "COMPANY_ONBOARDED",
+          actor_role: "TPO" as const,
+          actor_email: "sayimtpo@gmail.com",
+          actor_id: "usr-tpo-01",
+          details: { ...log.details, email: log.actor_email },
+        };
+      }
+      return log;
+    });
+
+    let modified = false;
+
+    // Ensure foundational system audit record exists for Master Admin
+    const hasInitLog = list.some((l) => l.action === "SYSTEM_INITIALIZED");
+    if (!hasInitLog) {
+      list.push({
+        id: "aud-sys-init",
+        action: "SYSTEM_INITIALIZED",
+        entity_type: "GOVERNANCE",
+        entity_id: "cpms-master",
+        actor_role: "ADMIN",
+        actor_id: "usr-adm-01",
+        actor_email: "sayimmullick@gmail.com",
+        ip_address: "127.0.0.1",
+        created_at: new Date(Date.now() - 3600000).toISOString(),
+        details: { message: "Deterministic Role-Based Identity & Session Governance initialized by Super Admin." },
+      });
+      modified = true;
+    }
+
+    // Dynamically ensure any currently provisioned TPO has an immutable audit log entry
+    const currentStaff = this.getSettings().staff || [];
+    for (const tpo of currentStaff) {
+      const hasTpoLog = list.some(
+        (l) => l.action === "TPO_PROVISIONED" && (l.entity_id === tpo.id || l.details?.email === tpo.email)
+      );
+      if (!hasTpoLog) {
+        list.unshift({
+          id: `aud-tpo-${tpo.id}`,
+          action: "TPO_PROVISIONED",
+          entity_type: "STAFF",
+          entity_id: tpo.id,
+          actor_role: "ADMIN",
+          actor_id: "usr-adm-01",
+          actor_email: "sayimmullick@gmail.com",
+          ip_address: "127.0.0.1",
+          created_at: new Date().toISOString(),
+          details: { name: tpo.name, email: tpo.email, department: tpo.department },
+        });
+        modified = true;
+      }
+    }
+
+    if (modified || list.length !== (data?.length || 0)) {
+      auditLogsState = list;
+      saveToStorage(STORAGE_KEYS.AUDIT_LOGS, list);
+    }
+
+    return list;
   }
 
   public addAuditLog(log: Omit<AuditLog, "id" | "created_at" | "ip_address" | "actor_id"> & { ip_address?: string }): AuditLog {
@@ -576,12 +683,19 @@ class DynamicDataService {
   // --- System Settings ---
   public getSettings(): SystemSettings {
     const data = loadFromStorage(STORAGE_KEYS.SETTINGS, settingsState);
-    return data && typeof data === "object"
-      ? {
-          singleOfferThresholdLpa: data.singleOfferThresholdLpa || 8.0,
-          departments: Array.isArray(data.departments) ? data.departments : MOCK_DEPARTMENTS,
-        }
-      : { singleOfferThresholdLpa: 8.0, departments: MOCK_DEPARTMENTS };
+    if (data && typeof data === "object") {
+      const rawStaff = Array.isArray(data.staff) ? data.staff : [];
+      const validStaff = rawStaff.filter(
+        (s) => s && s.email !== "tpo@college.edu" && s.email !== "admin@college.edu"
+      );
+      return {
+        singleOfferThresholdLpa:
+          typeof data.singleOfferThresholdLpa === "number" ? data.singleOfferThresholdLpa : 8.0,
+        departments: Array.isArray(data.departments) ? data.departments : MOCK_DEPARTMENTS,
+        staff: validStaff,
+      };
+    }
+    return { singleOfferThresholdLpa: 8.0, departments: MOCK_DEPARTMENTS, staff: [] };
   }
 
   public updateSettings(updates: Partial<SystemSettings>): SystemSettings {
@@ -590,14 +704,20 @@ class DynamicDataService {
     settingsState = updated;
     saveToStorage(STORAGE_KEYS.SETTINGS, updated);
 
-    this.addAuditLog({
-      action: "SETTINGS_UPDATED",
-      entity_type: "SYSTEM_SETTING",
-      entity_id: "global-policy",
-      actor_role: "ADMIN",
-      actor_email: "admin@college.edu",
-      details: updates,
-    });
+    // Only log settings update when academic policies or thresholds change
+    if (updates.singleOfferThresholdLpa !== undefined || updates.departments !== undefined) {
+      this.addAuditLog({
+        action: "SETTINGS_UPDATED",
+        entity_type: "SYSTEM_SETTING",
+        entity_id: "global-policy",
+        actor_role: "ADMIN",
+        actor_email: "sayimmullick@gmail.com",
+        details: {
+          singleOfferThresholdLpa: updates.singleOfferThresholdLpa,
+          departmentsCount: updates.departments?.length,
+        },
+      });
+    }
 
     return updated;
   }

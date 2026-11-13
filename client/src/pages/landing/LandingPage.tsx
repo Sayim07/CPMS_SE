@@ -1,7 +1,6 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useTheme } from "../../context/ThemeContext";
-import { useAuth, type Role } from "../../context/AuthContext";
 import { useDynamicData } from "../../hooks/useDynamicData";
 import {
   ShieldCheck,
@@ -20,9 +19,7 @@ import {
 
 export const LandingPage: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
-  const { setRole } = useAuth();
   const { students, jobs, applications, companies } = useDynamicData();
-  const navigate = useNavigate();
 
   // Dynamic Telemetry Computed Strictly from Real-Time Store
   const totalStudents = students.length;
@@ -40,14 +37,6 @@ export const LandingPage: React.FC = () => {
 
   const activeRecruiters = companies.filter((c) => c.status === "APPROVED").length;
   const totalOffers = applications.filter((a) => a.stage === "SELECTED").length;
-
-  const firstStudent = students.length > 0 ? students[0] : null;
-  const firstCompany = companies.length > 0 ? companies[0] : null;
-
-  const handleRoleQuickStart = (role: Role, route: string) => {
-    setRole(role);
-    navigate(route);
-  };
 
   return (
     <div className="min-h-screen bg-[#F5EEDB] dark:bg-[#141418] text-black dark:text-white flex flex-col font-sans neo-grid-pattern transition-colors duration-200">
@@ -169,73 +158,23 @@ export const LandingPage: React.FC = () => {
                   to="/login"
                   className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-neo bg-[#FFE600] text-black border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff] hover:translate-x-[1px] hover:translate-y-[1px] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none font-black text-xs sm:text-sm uppercase tracking-wider transition-all"
                 >
-                  <span>Enter Institutional Portal</span>
+                  <span>Sign In to Portal</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
 
                 <Link
-                  to="/register/company"
+                  to="/register/student"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-neo bg-[#FF70A6] text-black border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff] hover:translate-x-[1px] hover:translate-y-[1px] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none font-black text-xs sm:text-sm uppercase tracking-wider transition-all"
+                >
+                  <span>Student Registration</span>
+                </Link>
+
+                <Link
+                  to="/login"
                   className="inline-flex items-center justify-center px-5 py-3.5 rounded-neo bg-white dark:bg-zinc-800 text-black dark:text-white border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff] hover:translate-x-[1px] hover:translate-y-[1px] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none font-black text-xs sm:text-sm uppercase tracking-wider transition-all"
                 >
-                  Recruiter Registration
+                  Sign In to Portal
                 </Link>
-              </div>
-
-              {/* One-Click Quick Role Switchers */}
-              <div className="pt-4 border-t-2 border-black/10 dark:border-white/10 flex flex-col sm:flex-row items-start sm:items-center gap-2 text-xs">
-                <span className="font-mono uppercase tracking-wider font-black text-black/60 dark:text-white/60 text-[11px]">
-                  // 1-Click Role Access:
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {firstStudent ? (
-                    <button
-                      type="button"
-                      onClick={() => handleRoleQuickStart("STUDENT", "/student")}
-                      className="px-2.5 py-1 rounded-neo bg-white dark:bg-zinc-800 text-black dark:text-white border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff] hover:bg-[#FFE600] hover:text-black font-bold transition-all text-xs"
-                    >
-                      Student ({firstStudent.full_name})
-                    </button>
-                  ) : (
-                    <Link
-                      to="/register/student"
-                      className="px-2.5 py-1 rounded-neo bg-[#FFE600] text-black border-2 border-black shadow-[2px_2px_0px_0px_#000] font-black transition-all text-xs"
-                    >
-                      + Register Student
-                    </Link>
-                  )}
-
-                  {firstCompany ? (
-                    <button
-                      type="button"
-                      onClick={() => handleRoleQuickStart("COMPANY", "/company")}
-                      className="px-2.5 py-1 rounded-neo bg-white dark:bg-zinc-800 text-black dark:text-white border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff] hover:bg-[#7DD3FC] hover:text-black font-bold transition-all text-xs"
-                    >
-                      Company ({firstCompany.company_name})
-                    </button>
-                  ) : (
-                    <Link
-                      to="/register/company"
-                      className="px-2.5 py-1 rounded-neo bg-[#7DD3FC] text-black border-2 border-black shadow-[2px_2px_0px_0px_#000] font-black transition-all text-xs"
-                    >
-                      + Register Company
-                    </Link>
-                  )}
-
-                  <button
-                    type="button"
-                    onClick={() => handleRoleQuickStart("TPO", "/tpo")}
-                    className="px-2.5 py-1 rounded-neo bg-white dark:bg-zinc-800 text-black dark:text-white border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff] hover:bg-[#86EFAC] hover:text-black font-bold transition-all text-xs"
-                  >
-                    TPO Officer
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleRoleQuickStart("ADMIN", "/admin")}
-                    className="px-2.5 py-1 rounded-neo bg-white dark:bg-zinc-800 text-black dark:text-white border-2 border-black dark:border-white shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff] hover:bg-[#FF70A6] hover:text-black font-bold transition-all text-xs"
-                  >
-                    Admin
-                  </button>
-                </div>
               </div>
             </div>
 
@@ -559,10 +498,10 @@ export const LandingPage: React.FC = () => {
               </div>
               <div className="pt-6">
                 <Link
-                  to="/student"
+                  to="/login"
                   className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-neo bg-[#FFE600] text-black border-2 border-black font-black text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] transition-all"
                 >
-                  <span>Student Access</span>
+                  <span>Student Sign In</span>
                   <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -583,10 +522,10 @@ export const LandingPage: React.FC = () => {
               </div>
               <div className="pt-6">
                 <Link
-                  to="/company"
+                  to="/login"
                   className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-neo bg-[#7DD3FC] text-black border-2 border-black font-black text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] transition-all"
                 >
-                  <span>Recruiter Access</span>
+                  <span>Recruiter Sign In</span>
                   <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -607,10 +546,10 @@ export const LandingPage: React.FC = () => {
               </div>
               <div className="pt-6">
                 <Link
-                  to="/tpo"
+                  to="/login"
                   className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-neo bg-[#86EFAC] text-black border-2 border-black font-black text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] transition-all"
                 >
-                  <span>TPO Console</span>
+                  <span>TPO Sign In</span>
                   <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -631,10 +570,10 @@ export const LandingPage: React.FC = () => {
               </div>
               <div className="pt-6">
                 <Link
-                  to="/admin"
+                  to="/login"
                   className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-neo bg-[#FF70A6] text-black border-2 border-black font-black text-xs uppercase tracking-wider shadow-[2px_2px_0px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] transition-all"
                 >
-                  <span>Admin Console</span>
+                  <span>Admin Sign In</span>
                   <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>
@@ -677,10 +616,10 @@ export const LandingPage: React.FC = () => {
               </p>
               <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
                 <Link
-                  to="/register/company"
+                  to="/login"
                   className="px-4 py-2.5 rounded-neo bg-[#7DD3FC] text-black border-2 border-black font-black text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_#000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
                 >
-                  Register as Recruiter & Post Drive
+                  Recruiter Sign In
                 </Link>
                 <Link
                   to="/register/student"
@@ -751,8 +690,8 @@ export const LandingPage: React.FC = () => {
               <Link to="/register/student" className="hover:underline">
                 Student Intake
               </Link>
-              <Link to="/register/company" className="hover:underline">
-                Recruiter Intake
+              <Link to="/login" className="hover:underline">
+                Portal Access
               </Link>
               <a href="#architecture" className="hover:underline">
                 Rules & Governance

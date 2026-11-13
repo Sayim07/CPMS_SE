@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDynamicData } from "../../hooks/useDynamicData";
 import { Badge } from "../../components/ui/Badge";
 import { Button } from "../../components/ui/Button";
+import { Modal } from "../../components/ui/Modal";
 import {
   Building2,
   Briefcase,
@@ -12,16 +14,71 @@ import {
   AlertTriangle,
   Clock,
   Layers,
+  Plus,
 } from "lucide-react";
 
 export const TpoApprovalsPage: React.FC = () => {
-  const { companies, jobs, updateCompanyStatus, updateJobStatus } = useDynamicData();
-  const [activeTab, setActiveTab] = useState<"companies" | "jobs">("companies");
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const { companies, jobs, updateCompanyStatus, updateJobStatus, registerCompany } = useDynamicData();
+  const activeTab: "companies" | "jobs" = location.pathname.includes("/jobs") ? "jobs" : "companies";
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const handleTabChange = (tab: "companies" | "jobs") => {
+    navigate(tab === "jobs" ? "/tpo/jobs" : "/tpo/companies");
+  };
+
+  const [onboardModalOpen, setOnboardModalOpen] = useState(false);
+  const [companyForm, setCompanyForm] = useState({
+    name: "",
+    website: "https://",
+    gst_tax_id: "",
+    contact_person: "",
+    email: "",
+    password: "",
+    phone: "",
+  });
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 4000);
+  };
+
+  const handleOnboardCompanySubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!companyForm.name.trim() || !companyForm.email.trim() || !companyForm.password.trim()) {
+      showToast("Please provide company name, recruiter email, and login password.");
+      return;
+    }
+    if (companyForm.password.trim().length < 4) {
+      showToast("Password must be at least 4 characters.");
+      return;
+    }
+
+    registerCompany({
+      name: companyForm.name.trim(),
+      website: companyForm.website.trim(),
+      gst_tax_id: companyForm.gst_tax_id.trim().toUpperCase() || "29AABCP1234F1Z1",
+      contact_person: companyForm.contact_person.trim() || "Campus Recruitment Team",
+      email: companyForm.email.trim().toLowerCase(),
+      password: companyForm.password.trim(),
+      phone: companyForm.phone.trim() || "+91 9876543210",
+      status: "APPROVED",
+    });
+
+    const companyName = companyForm.name.trim();
+    setOnboardModalOpen(false);
+    setCompanyForm({
+      name: "",
+      website: "https://",
+      gst_tax_id: "",
+      contact_person: "",
+      email: "",
+      password: "",
+      phone: "",
+    });
+    showToast(`Corporate partner "${companyName}" onboarded & approved. Recruiter password configured.`);
   };
 
   const handleApproveCompany = (id: string, name: string) => {
@@ -82,7 +139,7 @@ export const TpoApprovalsPage: React.FC = () => {
       {/* Tab Controls */}
       <div className="flex border-b border-slate-200 gap-6 text-sm">
         <button
-          onClick={() => setActiveTab("companies")}
+          onClick={() => handleTabChange("companies")}
           className={`pb-3 font-medium flex items-center gap-2 transition-colors relative ${
             activeTab === "companies"
               ? "text-indigo-600 border-b-2 border-indigo-600"
@@ -99,7 +156,7 @@ export const TpoApprovalsPage: React.FC = () => {
         </button>
 
         <button
-          onClick={() => setActiveTab("jobs")}
+          onClick={() => handleTabChange("jobs")}
           className={`pb-3 font-medium flex items-center gap-2 transition-colors relative ${
             activeTab === "jobs"
               ? "text-indigo-600 border-b-2 border-indigo-600"
@@ -120,14 +177,24 @@ export const TpoApprovalsPage: React.FC = () => {
       {activeTab === "companies" && (
         <div className="space-y-4">
           <div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
-            <div className="p-4 bg-slate-50/50 border-b border-slate-200 flex items-center justify-between">
+            <div className="p-4 bg-slate-50/50 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
                 <h3 className="text-sm font-semibold text-slate-900">Employer Registration Directory</h3>
                 <p className="text-xs text-slate-500">
-                  Verify employer identity and tax credentials before granting portal access
+                  Manage corporate recruitment entities and provision recruiter portal accounts
                 </p>
               </div>
-              <span className="text-xs font-mono text-slate-400">Total: {companies.length}</span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono text-slate-400">Total: {companies.length}</span>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={() => setOnboardModalOpen(true)}
+                >
+                  <Plus className="w-3.5 h-3.5 mr-1" />
+                  Onboard Corporate Recruiter
+                </Button>
+              </div>
             </div>
 
             <div className="divide-y divide-slate-100">
@@ -325,6 +392,133 @@ export const TpoApprovalsPage: React.FC = () => {
           </p>
         </div>
       </div>
+
+      {/* Onboard Recruiter Modal */}
+      {onboardModalOpen && (
+        <Modal
+          isOpen={onboardModalOpen}
+          onClose={() => setOnboardModalOpen(false)}
+          title="Onboard Corporate Partner & Recruiter"
+          subtitle="Provision portal login credentials for verified campus hiring partners"
+        >
+          <form onSubmit={handleOnboardCompanySubmit} className="space-y-4 pt-2">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                Company Name *
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. Google India / Microsoft"
+                value={companyForm.name}
+                onChange={(e) => setCompanyForm((p) => ({ ...p, name: e.target.value }))}
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded border border-slate-300 focus:outline-none focus:border-indigo-600"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Corporate Website
+                </label>
+                <input
+                  type="text"
+                  placeholder="https://company.com"
+                  value={companyForm.website}
+                  onChange={(e) => setCompanyForm((p) => ({ ...p, website: e.target.value }))}
+                  className="w-full px-3 py-2 text-xs bg-slate-50 rounded border border-slate-300 focus:outline-none focus:border-indigo-600"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  GST / Corporate Tax ID
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. 29AABCG1234F1Z5"
+                  value={companyForm.gst_tax_id}
+                  onChange={(e) => setCompanyForm((p) => ({ ...p, gst_tax_id: e.target.value }))}
+                  className="w-full px-3 py-2 text-xs bg-slate-50 rounded border border-slate-300 focus:outline-none focus:border-indigo-600 font-mono"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  HR / Recruiter Full Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Sarah Jenkins (Talent Lead)"
+                  value={companyForm.contact_person}
+                  onChange={(e) => setCompanyForm((p) => ({ ...p, contact_person: e.target.value }))}
+                  className="w-full px-3 py-2 text-xs bg-slate-50 rounded border border-slate-300 focus:outline-none focus:border-indigo-600"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Recruiter Contact Phone
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. +91 9876543210"
+                  value={companyForm.phone}
+                  onChange={(e) => setCompanyForm((p) => ({ ...p, phone: e.target.value }))}
+                  className="w-full px-3 py-2 text-xs bg-slate-50 rounded border border-slate-300 focus:outline-none focus:border-indigo-600"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                Official Recruiter Login Email *
+              </label>
+              <input
+                type="email"
+                required
+                placeholder="e.g. campus.recruiter@company.com"
+                value={companyForm.email}
+                onChange={(e) => setCompanyForm((p) => ({ ...p, email: e.target.value }))}
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded border border-slate-300 focus:outline-none focus:border-indigo-600"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1">
+                Set Recruiter Login Password *
+              </label>
+              <input
+                type="password"
+                required
+                placeholder="Set secure login password for recruiter"
+                value={companyForm.password}
+                onChange={(e) => setCompanyForm((p) => ({ ...p, password: e.target.value }))}
+                className="w-full px-3 py-2 text-xs bg-slate-50 rounded border border-slate-300 focus:outline-none focus:border-indigo-600 font-mono"
+              />
+              <span className="text-[10px] text-slate-500 mt-1 block">
+                The corporate recruiter must use this exact password to sign in at /login.
+              </span>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => setOnboardModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" variant="primary" size="sm">
+                Onboard & Authorize Recruiter
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
     </div>
   );
 };

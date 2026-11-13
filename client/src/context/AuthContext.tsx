@@ -20,7 +20,11 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   token: string | null;
-  login: (email: string, password: string) => Promise<{ success: boolean; message?: string; locked?: boolean }>;
+  login: (
+    email: string,
+    password: string,
+    selectedRole?: Role
+  ) => Promise<{ success: boolean; message?: string; locked?: boolean }>;
   logout: () => void;
   setRole: (role: Role) => void;
   setUser: (user: MockUser | null) => void;
@@ -72,7 +76,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Real Dynamic Login Engine
   const login = async (
     email: string,
-    password: string
+    password: string,
+    selectedRole?: Role
   ): Promise<{ success: boolean; message?: string; locked?: boolean }> => {
     setIsLoading(true);
     try {
@@ -83,6 +88,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (res.ok && res.data?.token) {
         const u = res.data.user;
+        if (selectedRole && u.role !== selectedRole) {
+          setIsLoading(false);
+          return {
+            success: false,
+            message: `Account role mismatch: This account is registered as ${u.role}, but you selected ${selectedRole}.`,
+          };
+        }
         const mappedUser: MockUser = {
           id: u.id,
           email: u.email,
@@ -113,38 +125,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Dynamic local lookup from registered real-time stores
       const target = email.trim().toLowerCase();
 
-      // Check TPO officer
-      if (target === "tpo@college.edu" || target.includes("tpo")) {
-        const tpoUser: MockUser = {
-          id: "usr-tpo-01",
-          email: "tpo@college.edu",
-          fullName: "Dr. Arvind Sharma",
-          role: "TPO",
-        };
-        setUser(tpoUser);
-        setIsLoading(false);
-        return { success: true };
-      }
-
-      // Check Admin
-      if (target === "admin@college.edu" || target.includes("admin")) {
-        const adminUser: MockUser = {
-          id: "usr-adm-01",
-          email: "admin@college.edu",
-          fullName: "System Administrator",
-          role: "ADMIN",
-        };
-        setUser(adminUser);
-        setIsLoading(false);
-        return { success: true };
-      }
-
-      // Check real registered students
-      const registeredStudents = dynamicDataService.getStudents();
-      const matchedStudent = registeredStudents.find(
-        (s) => s.email.toLowerCase() === target || s.roll_no.toLowerCase() === target
-      );
-      if (matchedStudent) {
+      // 1. Role = STUDENT
+      if (selectedRole === "STUDENT") {
+        const registeredStudents = dynamicDataService.getStudents();
+        const matchedStudent = registeredStudents.find(
+          (s) =>
+            (s.email && s.email.toLowerCase() === target) ||
+            (s.roll_no && s.roll_no.toLowerCase() === target)
+        );
+        if (!matchedStudent) {
+          setIsLoading(false);
+          return {
+            success: false,
+            message: "No registered student found with this email or roll number. Please complete student registration first.",
+          };
+        }
+        const expectedPassword = matchedStudent.password || "Passw0rd!x";
+        if (password.trim() !== expectedPassword && password.trim().length < 4) {
+          setIsLoading(false);
+          return {
+            success: false,
+            message: "Incorrect password for this student account.",
+          };
+        }
         const studentUser: MockUser = {
           id: matchedStudent.id,
           email: matchedStudent.email,
@@ -155,18 +158,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           isVerified: matchedStudent.is_verified,
         };
         setUser(studentUser);
+        dynamicDataService.addAuditLog({
+          action: "STUDENT_LOGIN",
+          entity_type: "SESSION",
+          entity_id: matchedStudent.id,
+          actor_role: "STUDENT",
+          actor_email: matchedStudent.email,
+          details: { full_name: matchedStudent.full_name, roll_no: matchedStudent.roll_no },
+        });
         setIsLoading(false);
         return { success: true };
       }
 
-      // Check real registered companies
-      const registeredCompanies = dynamicDataService.getCompanies();
-      const matchedCompany = registeredCompanies.find(
-        (c) =>
-          (c.email && c.email.toLowerCase() === target) ||
-          c.company_name.toLowerCase() === target
-      );
-      if (matchedCompany) {
+      // 2. Role = COMPANY (Onboarded by TPO)
+      if (selectedRole === "COMPANY") {
+        const registeredCompanies = dynamicDataService.getCompanies();
+        const matchedCompany = registeredCompanies.find(
+          (c) =>
+            (c.email && c.email.toLowerCase() === target) ||
+            (c.company_name && c.company_name.toLowerCase() === target)
+        );
+        if (!matchedCompany) {
+          setIsLoading(false);
+          return {
+            success: false,
+            message: "No registered company found with this recruiter email. Corporate recruiters are onboarded by the TPO Office (/tpo).",
+          };
+        }
+
+        const expectedPassword = matchedCompany.password || "Passw0rd!x";
+        if (password.trim() !== expectedPassword) {
+          setIsLoading(false);
+          return {
+            success: false,
+            message: "Incorrect password for this corporate partner account. Please use the password set by TPO.",
+          };
+        }
+
         const companyUser: MockUser = {
           id: matchedCompany.id,
           email: matchedCompany.email || "recruiter@company.com",
@@ -175,6 +203,140 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           companyName: matchedCompany.company_name,
         };
         setUser(companyUser);
+        dynamicDataService.addAuditLog({
+          action: "RECRUITER_LOGIN",
+          entity_type: "SESSION",
+          entity_id: matchedCompany.id,
+          actor_role: "COMPANY",
+          actor_email: matchedCompany.email || target,
+          details: { company_name: matchedCompany.company_name, contact_person: matchedCompany.contact_person },
+        });
+        setIsLoading(false);
+        return { success: true };
+      }
+
+      // 3. Role = TPO (Provisioned by Super Admin)
+      if (selectedRole === "TPO") {
+        const staffList = dynamicDataService.getSettings().staff || [];
+        const matchedStaff = staffList.find(
+          (s) =>
+            s.role === "TPO" &&
+            s.is_active &&
+            s.email.toLowerCase() === target
+        );
+
+        if (!matchedStaff) {
+          setIsLoading(false);
+          return {
+            success: false,
+            message: "No active TPO account found with this email. TPO accounts are provisioned by the Administrator (/admin).",
+          };
+        }
+
+        const expectedPassword = matchedStaff.password || "Passw0rd!x";
+        if (password.trim() !== expectedPassword) {
+          setIsLoading(false);
+          return {
+            success: false,
+            message: "Incorrect password for TPO Officer credentials. Please use the password set by Administrator.",
+          };
+        }
+
+        const tpoUser: MockUser = {
+          id: matchedStaff.id,
+          email: matchedStaff.email,
+          fullName: matchedStaff.name,
+          role: "TPO",
+        };
+        setUser(tpoUser);
+        dynamicDataService.addAuditLog({
+          action: "TPO_LOGIN",
+          entity_type: "SESSION",
+          entity_id: matchedStaff.id,
+          actor_role: "TPO",
+          actor_email: matchedStaff.email,
+          details: { name: matchedStaff.name, role: "TPO" },
+        });
+        setIsLoading(false);
+        return { success: true };
+      }
+
+      // 4. Role = ADMIN (Strictly Super Admin Credentials Only)
+      if (selectedRole === "ADMIN") {
+        const isMasterAdminEmail =
+          target === "sayimmullick@gmail.com" ||
+          target === "sayimmullick2006@gmail.com";
+
+        if (!isMasterAdminEmail) {
+          setIsLoading(false);
+          return {
+            success: false,
+            message: "Invalid Administrator credentials. Only authorized Super Admin can sign in.",
+          };
+        }
+
+        const isCorrectPassword = password.trim() === "sayim007s";
+
+        if (!isCorrectPassword) {
+          setIsLoading(false);
+          return {
+            success: false,
+            message: "Incorrect password for Administrator account.",
+          };
+        }
+
+        const adminUser: MockUser = {
+          id: "usr-adm-01",
+          email: target,
+          fullName: "Sayim Mullick (Super Admin)",
+          role: "ADMIN",
+        };
+        setUser(adminUser);
+        dynamicDataService.addAuditLog({
+          action: "ADMIN_LOGIN",
+          entity_type: "SESSION",
+          entity_id: "usr-adm-01",
+          actor_role: "ADMIN",
+          actor_email: target,
+          details: { identity: "Sayim Mullick (Super Admin)" },
+        });
+        setIsLoading(false);
+        return { success: true };
+      }
+
+      // Fallback if no specific role was selected (detect by email)
+      const registeredStudents = dynamicDataService.getStudents();
+      const matchedStudent = registeredStudents.find(
+        (s) => s.email.toLowerCase() === target || s.roll_no.toLowerCase() === target
+      );
+      if (matchedStudent) {
+        setUser({
+          id: matchedStudent.id,
+          email: matchedStudent.email,
+          fullName: matchedStudent.full_name,
+          role: "STUDENT",
+          rollNo: matchedStudent.roll_no,
+          departmentCode: matchedStudent.department_code,
+          isVerified: matchedStudent.is_verified,
+        });
+        setIsLoading(false);
+        return { success: true };
+      }
+
+      const registeredCompanies = dynamicDataService.getCompanies();
+      const matchedCompany = registeredCompanies.find(
+        (c) =>
+          (c.email && c.email.toLowerCase() === target) ||
+          c.company_name.toLowerCase() === target
+      );
+      if (matchedCompany) {
+        setUser({
+          id: matchedCompany.id,
+          email: matchedCompany.email || "recruiter@company.com",
+          fullName: matchedCompany.contact_person || matchedCompany.company_name,
+          role: "COMPANY",
+          companyName: matchedCompany.company_name,
+        });
         setIsLoading(false);
         return { success: true };
       }
@@ -182,7 +344,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsLoading(false);
       return {
         success: false,
-        message: "No registered account found with this email. Please complete Student or Recruiter registration first.",
+        message: "No registered account found. Please check your credentials or register first.",
       };
     } catch {
       setIsLoading(false);
@@ -211,8 +373,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } else if (newRole === "ADMIN") {
       setUser({
         id: "usr-adm-01",
-        email: "admin@college.edu",
-        fullName: "System Administrator",
+        email: "sayimmullick@gmail.com",
+        fullName: "Sayim Mullick (Super Admin)",
         role: "ADMIN",
       });
     } else if (newRole === "STUDENT") {

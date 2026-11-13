@@ -28,6 +28,7 @@ export interface Student {
   is_verified: boolean;
   placement_status: "PLACED" | "UNPLACED";
   single_offer_locked: boolean;
+  password?: string;
 }
 
 export interface Company {
@@ -38,6 +39,7 @@ export interface Company {
   contact_person: string;
   contact_phone: string;
   email?: string;
+  password?: string;
   status: "PENDING" | "APPROVED" | "REJECTED";
 }
 

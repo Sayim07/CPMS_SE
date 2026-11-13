@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import { useDynamicData } from "../../hooks/useDynamicData";
 import { Modal } from "../../components/ui/Modal";
 import {
@@ -16,6 +17,7 @@ import {
 
 export const ApplicantKanbanPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
   const { jobs, applications, moveApplicationStage } = useDynamicData();
 
   const currentJob =
@@ -47,7 +49,7 @@ export const ApplicantKanbanPage: React.FC = () => {
   ];
 
   const moveStage = (appId: string, newStage: Application["stage"]) => {
-    moveApplicationStage(appId, newStage);
+    moveApplicationStage(appId, newStage, user?.email);
   };
 
   const handleScheduleRound = (e: React.FormEvent) => {
