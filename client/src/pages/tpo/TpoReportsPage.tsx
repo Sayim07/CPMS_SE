@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import { useDynamicData } from "../../hooks/useDynamicData";
 import { StatCard } from "../../components/ui/StatCard";
 import { Button } from "../../components/ui/Button";
 import { Badge } from "../../components/ui/Badge";
-import { MOCK_STUDENTS } from "../../mock/mockData";
 import {
   Download,
   Award,
@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 export const TpoReportsPage: React.FC = () => {
+  const { students, jobs, companies, settings } = useDynamicData();
   const [exportAlert, setExportAlert] = useState<string | null>(null);
 
   const handleExport = (format: "CSV" | "PDF") => {
@@ -21,15 +22,38 @@ export const TpoReportsPage: React.FC = () => {
     setTimeout(() => setExportAlert(null), 4000);
   };
 
-  const unplacedStudents = MOCK_STUDENTS.filter((s) => s.placement_status === "UNPLACED");
+  const unplacedStudents = students.filter((s) => s.placement_status === "UNPLACED");
+  const placedStudents = students.filter((s) => s.placement_status === "PLACED");
+  const overallRate = ((placedStudents.length / (students.length || 1)) * 100).toFixed(1);
+  const avgCtc = (jobs.reduce((a, j) => a + j.ctc_lpa, 0) / (jobs.length || 1)).toFixed(1);
+  const highestCtc = Math.max(...jobs.map((j) => j.ctc_lpa), 0).toFixed(1);
 
-  // Department Placement Breakdown
-  const deptBreakdown = [
-    { code: "CSE", name: "Computer Science & Engineering", rate: 89.4, placed: 42, total: 47, avgCtc: 11.2 },
-    { code: "IT", name: "Information Technology", rate: 82.3, placed: 28, total: 34, avgCtc: 9.8 },
-    { code: "ECE", name: "Electronics & Communication", rate: 71.4, placed: 15, total: 21, avgCtc: 8.4 },
-    { code: "MECH", name: "Mechanical Engineering", rate: 50.0, placed: 9, total: 18, avgCtc: 6.8 },
+  // Dynamic Department Placement Breakdown
+  const deptList = settings.departments || [
+    { code: "CSE", name: "Computer Science & Engineering" },
+    { code: "IT", name: "Information Technology" },
+    { code: "ECE", name: "Electronics & Communication" },
+    { code: "MECH", name: "Mechanical Engineering" },
   ];
+
+  const deptBreakdown = deptList.map((dept) => {
+    const deptStudents = students.filter((s) => s.department_code === dept.code);
+    const deptPlaced = deptStudents.filter((s) => s.placement_status === "PLACED");
+    const rate = deptStudents.length > 0 ? ((deptPlaced.length / deptStudents.length) * 100).toFixed(1) : "0.0";
+    const deptJobs = jobs.filter((j) => (j.department_codes || []).includes(dept.code));
+    const deptAvgCtc = deptJobs.length > 0
+      ? (deptJobs.reduce((a, j) => a + j.ctc_lpa, 0) / deptJobs.length).toFixed(1)
+      : "0.0";
+
+    return {
+      code: dept.code,
+      name: dept.name,
+      rate: parseFloat(rate),
+      placed: deptPlaced.length,
+      total: deptStudents.length || 1,
+      avgCtc: deptAvgCtc,
+    };
+  });
 
   return (
     <div className="space-y-6">
@@ -72,28 +96,28 @@ export const TpoReportsPage: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           label="Overall Placement Rate"
-          value="78.4%"
-          subtext="94 offers out of 120 eligible candidates"
+          value={`${overallRate}%`}
+          subtext={`${placedStudents.length} offers out of ${students.length} candidates`}
           icon={<Award className="w-4 h-4 text-emerald-600" />}
           trend={{ value: "+5.1% YoY", isPositive: true }}
         />
         <StatCard
           label="Average CTC Package"
-          value="9.4 LPA"
-          subtext="Median package: 8.2 LPA"
+          value={`${avgCtc} LPA`}
+          subtext="Computed across verified campus roles"
           icon={<TrendingUp className="w-4 h-4 text-indigo-600" />}
           trend={{ value: "+0.8 LPA", isPositive: true }}
         />
         <StatCard
           label="Highest CTC Package"
-          value="24.0 LPA"
-          subtext="Secured at Acme Technologies"
+          value={`${highestCtc} LPA`}
+          subtext="Premier / dream tier compensation"
           icon={<Briefcase className="w-4 h-4 text-sky-600" />}
         />
         <StatCard
           label="Participating Employers"
-          value="18 Companies"
-          subtext="4 premier / dream tier recruiters"
+          value={`${companies.length} Companies`}
+          subtext="Corporate campus recruitment partners"
           icon={<Building2 className="w-4 h-4 text-amber-600" />}
         />
       </div>
@@ -148,43 +172,63 @@ export const TpoReportsPage: React.FC = () => {
 
           <div className="py-6 flex flex-col items-center justify-center text-center">
             {/* SVG Circular Gauge */}
-            <div className="relative w-36 h-36 flex items-center justify-center">
-              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  stroke="currentColor"
-                  strokeWidth="8"
-                  fill="transparent"
-                  className="text-slate-100"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  stroke="currentColor"
-                  strokeWidth="8"
-                  fill="transparent"
-                  strokeDasharray="251.2"
-                  strokeDashoffset={251.2 * (1 - 0.784)}
-                  className="text-indigo-600 stroke-round"
-                />
-              </svg>
-              <div className="absolute flex flex-col items-center justify-center">
-                <span className="text-2xl font-bold font-mono text-slate-900">78.4%</span>
-                <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Placed</span>
-              </div>
-            </div>
+            {(() => {
+              const placedFraction = students.length > 0 ? placedStudents.length / students.length : 0;
+              return (
+                <>
+                  <div className="relative w-36 h-36 flex items-center justify-center">
+                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        stroke="currentColor"
+                        strokeWidth="8"
+                        fill="transparent"
+                        className="text-slate-100"
+                      />
+                      <circle
+                        cx="50"
+                        cy="50"
+                        r="40"
+                        stroke="currentColor"
+                        strokeWidth="8"
+                        fill="transparent"
+                        strokeDasharray="251.2"
+                        strokeDashoffset={251.2 * (1 - placedFraction)}
+                        className="text-indigo-600 stroke-round transition-all duration-500"
+                      />
+                    </svg>
+                    <div className="absolute flex flex-col items-center justify-center">
+                      <span className="text-2xl font-bold font-mono text-slate-900">
+                        {(placedFraction * 100).toFixed(1)}%
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Placed</span>
+                    </div>
+                  </div>
 
-            <p className="text-xs text-slate-600 mt-4 max-w-[200px]">
-              26 unplaced students remain in candidate pool with 4 active recruitment drives.
-            </p>
+                  <p className="text-xs text-slate-600 mt-4 max-w-[200px]">
+                    {unplacedStudents.length} unplaced {unplacedStudents.length === 1 ? "student remains" : "students remain"} in candidate pool with {jobs.filter((j) => j.status === "ACTIVE").length} active recruitment drives.
+                  </p>
+                </>
+              );
+            })()}
           </div>
 
           <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span>Next Drive: Google Cloud</span>
-            <span className="font-mono text-indigo-600 font-medium">Oct 24</span>
+            {(() => {
+              const nextDrive = jobs.find((j) => j.status === "ACTIVE");
+              return (
+                <>
+                  <span className="truncate max-w-[160px]">
+                    Next Drive: {nextDrive ? nextDrive.company_name : "None Scheduled"}
+                  </span>
+                  <span className="font-mono text-indigo-600 font-medium shrink-0">
+                    {nextDrive ? new Date(nextDrive.application_deadline).toLocaleDateString() : "—"}
+                  </span>
+                </>
+              );
+            })()}
           </div>
         </div>
       </div>

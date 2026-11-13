@@ -10,17 +10,17 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = "primary", size = "md", isLoading = false, children, disabled, ...props }, ref) => {
     const variantStyles = {
-      primary: "bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm border border-transparent",
-      secondary: "bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-sm",
-      destructive: "bg-red-600 hover:bg-red-700 text-white shadow-sm border border-transparent",
-      ghost: "hover:bg-slate-100 text-slate-700 border border-transparent",
-      outline: "bg-transparent hover:bg-slate-50 text-indigo-600 border border-indigo-200",
+      primary: "bg-[#FFE600] text-black border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_#000] dark:hover:shadow-[2px_2px_0px_0px_#fff] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none font-bold",
+      secondary: "bg-white dark:bg-zinc-800 text-black dark:text-white border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_#000] dark:hover:shadow-[2px_2px_0px_0px_#fff] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none font-bold",
+      destructive: "bg-[#FF70A6] text-black border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_#000] dark:hover:shadow-[2px_2px_0px_0px_#fff] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none font-bold",
+      ghost: "bg-transparent hover:bg-black/10 dark:hover:bg-white/10 text-on-surface border-2 border-transparent hover:border-black dark:hover:border-white font-bold",
+      outline: "bg-transparent text-black dark:text-white border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_0px_#000] dark:hover:shadow-[2px_2px_0px_0px_#fff] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none font-bold",
     };
 
     const sizeStyles = {
-      sm: "h-8 px-3 text-xs gap-1.5 rounded-md",
-      md: "h-9 px-4 text-sm gap-2 rounded-md",
-      lg: "h-11 px-6 text-base gap-2.5 rounded-lg",
+      sm: "h-8 px-3 text-xs gap-1.5 rounded-neo",
+      md: "h-9 px-4 text-xs gap-2 rounded-neo",
+      lg: "h-11 px-6 text-sm gap-2.5 rounded-neo",
     };
 
     return (
@@ -28,9 +28,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled || isLoading}
         className={cn(
-          "inline-flex items-center justify-center font-medium transition-colors duration-150",
-          "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1",
-          "active:scale-[0.99] disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100",
+          "inline-flex items-center justify-center transition-all duration-100 select-none",
+          "focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white",
+          "disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-[2px_2px_0px_0px_#000]",
           variantStyles[variant],
           sizeStyles[size],
           className

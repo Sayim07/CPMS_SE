@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { useDynamicData } from "../../hooks/useDynamicData";
 import { DataTable, type Column } from "../../components/ui/DataTable";
 import { Badge } from "../../components/ui/Badge";
 import { StageChip } from "../../components/ui/StageChip";
 import { Button } from "../../components/ui/Button";
 import { Modal } from "../../components/ui/Modal";
-import { MOCK_STUDENTS, type Student } from "../../mock/mockData";
+import { type Student } from "../../mock/mockData";
 import {
   Search,
   Filter,
@@ -17,7 +18,7 @@ import {
 } from "lucide-react";
 
 export const TpoStudentsPage: React.FC = () => {
-  const [students, setStudents] = useState<Student[]>(MOCK_STUDENTS);
+  const { students, setStudentVerification } = useDynamicData();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDept, setSelectedDept] = useState("ALL");
   const [selectedStatus, setSelectedStatus] = useState("ALL");
@@ -47,9 +48,7 @@ export const TpoStudentsPage: React.FC = () => {
 
   const handleConfirmVerification = (status: boolean) => {
     if (!selectedStudent) return;
-    setStudents((prev) =>
-      prev.map((s) => (s.id === selectedStudent.id ? { ...s, is_verified: status } : s))
-    );
+    setStudentVerification(selectedStudent.id, status);
     setVerifyModalOpen(false);
     setVerificationSuccessAlert(
       status

@@ -4,6 +4,8 @@ import cors from "cors";
 import { Role } from "@prisma/client";
 import { env } from "./config/env";
 import { healthRouter } from "./routes/health";
+import { authRouter } from "./routes/auth";
+import { studentsRouter } from "./routes/students";
 import { jobsRouter } from "./routes/jobs";
 import { tpoRouter } from "./routes/tpo";
 import { reportsRouter } from "./routes/reports";
@@ -30,6 +32,8 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // Route Mounts conforming to Schema.md §4 Base Path /api/v1
 app.use("/api/v1", healthRouter);
 app.use("/api/v1", departmentsRouter);
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/students", studentsRouter);
 app.use("/api/v1", jobsRouter);
 app.use("/api/v1", notificationsRouter);
 app.use("/api/v1", funnelRouter);

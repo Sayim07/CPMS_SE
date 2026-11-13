@@ -17,6 +17,14 @@ export function evaluateEligibility(
   singleOfferThreshold: number = 8.0,
   now: Date = new Date()
 ): EligibilityResult {
+  if (!student || !job) {
+    return {
+      eligible: false,
+      reasons: ["INVALID_DATA"],
+      messages: ["Student or Job data is not available."],
+    };
+  }
+
   const reasons: string[] = [];
   const messages: string[] = [];
 

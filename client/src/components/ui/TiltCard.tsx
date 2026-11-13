@@ -57,8 +57,10 @@ export const TiltCard: React.FC<TiltCardProps> = ({
       if (sheenRef.current) {
         const sheenX = (x / rect.width) * 100;
         const sheenY = (y / rect.height) * 100;
+        const isDark = document.documentElement.classList.contains("dark");
+        const opacity = isDark ? 0.08 : 0.4;
         gsap.to(sheenRef.current, {
-          background: `radial-gradient(circle at ${sheenX}% ${sheenY}%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 65%)`,
+          background: `radial-gradient(circle at ${sheenX}% ${sheenY}%, rgba(255, 255, 255, ${opacity}) 0%, rgba(255, 255, 255, 0) 65%)`,
           duration: 0.2,
           ease: "none",
         });
@@ -96,7 +98,7 @@ export const TiltCard: React.FC<TiltCardProps> = ({
     <div
       ref={cardRef}
       className={cn(
-        "relative rounded-lg bg-white border border-slate-200 shadow-sm transition-shadow hover:shadow-md will-change-transform overflow-hidden",
+        "relative rounded-neo bg-white dark:bg-zinc-900 border-2 border-black dark:border-white shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff] will-change-transform overflow-hidden text-black dark:text-white transition-all",
         className
       )}
     >

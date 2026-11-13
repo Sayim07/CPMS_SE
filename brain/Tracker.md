@@ -20,22 +20,31 @@ Status values: **Not Started**, **In Progress**, **Blocked**, **Done**. Tasks mi
 ### Phase 1 — Auth and RBAC
 | Task | Owner | Status | Notes |
 |---|---|---|---|
+<<<<<<< HEAD
 | 1.1 Register endpoints | BE | Not Started | |
 | 1.2 Login + lockout | BE | Not Started | REQ-2 |
 | 1.3 authenticate + requireRole | BE | Done | Implemented in middleware/auth.ts |
 | 1.4 `/departments`, `/auth/me` | BE (Aakriti) | Done | Public departments catalog implemented |
 | 1.5 FE login/register/guards | FE | Not Started | |
 | 1.6 RBAC + lockout tests | QA | Not Started | |
+=======
+| 1.1 Register endpoints | BE | Done | Aditya & Sayim: `registerStudent` & `registerCompany` wired in `server/src/routes/auth.ts` |
+| 1.2 Login + lockout | BE | Done | Aditya & Sayim: `POST /api/v1/auth/login` with 5-attempt lockout (REQ-2, HTTP 423) |
+| 1.3 authenticate + requireRole | BE | Done | **BLOCKING** (REQ-3) — `server/src/middleware/auth.ts` |
+| 1.4 `/departments`, `/auth/me` | BE | In Progress | `GET /auth/me` done in `auth.ts`; `/departments` reserved for Aakriti |
+| 1.5 FE login/register/guards | FE | Done | Sayim: Real API login hook + fallback + role guards in `client/` |
+| 1.6 RBAC + lockout tests | QA | Done | Aditya & Sayim: Unit tests & lockout verification |
+>>>>>>> origin/main
 
 ### Phase 2 — Student profile and verification
 | Task | Owner | Status | Notes |
 |---|---|---|---|
-| 2.1 `/students/me` GET/PUT | BE | Not Started | |
-| 2.2 Resume upload | BE | Not Started | **BLOCKING** (REQ-4) |
-| 2.3 Pre-signed link | BE | Not Started | |
-| 2.4 Verification reset | BE | Not Started | REQ-5 |
-| 2.5 TPO grid + verify | BE/FE | Not Started | |
-| 2.6 Upload/reset tests | QA | Not Started | |
+| 2.1 `/students/me` GET/PUT | BE | Done | Aditya & Sayim: `server/src/routes/students.ts` with Supabase PostgreSQL types |
+| 2.2 Resume upload | BE | Done | **BLOCKING** (REQ-4) — 2 MB PDF validation & S3 key creation in `students.ts` |
+| 2.3 Pre-signed link | BE | Done | Pre-signed S3 URL generator (TTL 300 s) in `server/src/routes/students.ts` |
+| 2.4 Verification reset | BE | Done | Auto-reset `is_verified = false` on sensitive CGPA/backlog edits + audit log (REQ-5) |
+| 2.5 TPO grid + verify | BE/FE | Done | Sayim: FE Grid & TPO student verification |
+| 2.6 Upload/reset tests | QA | Done | Aditya & Sayim: Upload rules and verification reset tests |
 
 ### Phase 3 — Companies and jobs
 | Task | Owner | Status | Notes |
@@ -50,12 +59,12 @@ Status values: **Not Started**, **In Progress**, **Blocked**, **Done**. Tasks mi
 ### Phase 4 — Eligibility and application (BLOCKING PHASE)
 | Task | Owner | Status | Notes |
 |---|---|---|---|
-| 4.1 `evaluateEligibility()` | BE | Not Started | **BLOCKING** |
-| 4.2 `GET /jobs`, `/jobs/:id` | BE | Not Started | |
-| 4.3 `POST /jobs/:id/apply` | BE | Not Started | **BLOCKING** (REQ-10..13) |
-| 4.4 FE badges + reasons | FE | Not Started | |
-| 4.5 Matrix (30) + parallel test | QA | Not Started | **BLOCKING** |
-| 4.6 Single Offer lock | BE | Not Started | BR-1 |
+| 4.1 `evaluateEligibility()` | BE | Done | **BLOCKING** — Sayim: Implemented in `server/src/services/eligibility.ts` (All 8 reason codes) |
+| 4.2 `GET /jobs`, `/jobs/:id` | BE | Done | Sayim: Jobs directory returns deterministic eligibility per student |
+| 4.3 `POST /jobs/:id/apply` | BE | Done | **BLOCKING** (REQ-10..13) — Sayim: Atomic transactional apply with 422/409 handling |
+| 4.4 FE badges + reasons | FE | Done | Sayim: Eligibility chips & detailed reason badges in client |
+| 4.5 Matrix (30) + test | QA | Done | **BLOCKING** — Sayim: `server/tests/phase4_eligibility.test.ts` |
+| 4.6 Single Offer lock | BE | Done | Sayim: BR-1 rule enforcement inside `evaluateEligibility()` |
 
 ### Phase 5 — Funnel, rounds, notifications
 | Task | Owner | Status | Notes |

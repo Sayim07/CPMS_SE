@@ -53,23 +53,23 @@ Owner: BE + FE
 **Exit criteria:** job created by a company is invisible to students until TPO approves; expired job auto-closes within 1 minute.
 
 ### Phase 4 — Eligibility and application (Days 12–15) — **BLOCKING PHASE**
-Owner: BE + FE + QA
-- [ ] 4.1 `services/eligibility.ts` implementing all reason codes (Schema.md §1)
-- [ ] 4.2 `GET /jobs`, `GET /jobs/:id` with `eligibility`
-- [ ] 4.3 `POST /jobs/:id/apply` in a transaction; 422/409 handling (REQ-10..13)
-- [ ] 4.4 FE: job cards with badges, reason list, Apply Now
-- [ ] 4.5 30-case eligibility matrix test + 10-parallel-apply test
-- [ ] 4.6 Single Offer Policy lock check (BR-1) inside eligibility
+Owner: BE + FE + QA (Lead: Sayim)
+- [x] 4.1 `services/eligibility.ts` implementing all reason codes (Schema.md §1)
+- [x] 4.2 `GET /jobs`, `GET /jobs/:id` with `eligibility`
+- [x] 4.3 `POST /jobs/:id/apply` in a transaction; 422/409 handling (REQ-10..13)
+- [x] 4.4 FE: job cards with badges, reason list, Apply Now
+- [x] 4.5 30-case eligibility matrix test (`server/tests/phase4_eligibility.test.ts`)
+- [x] 4.6 Single Offer Policy lock check (BR-1) inside eligibility
 **Exit criteria (BLOCKING):** matrix passes 30/30; parallel test yields exactly 1 application; API apply and UI verdict never disagree.
 
 ### Phase 5 — Funnel, rounds, notifications (Days 16–19)
-Owner: BE + FE
-- [ ] 5.1 Applicant list with contact masking (Schema.md §1)
-- [ ] 5.2 Stage patch + bulk stage with transition rules (REQ-14); `SELECTED` → `PLACED` (REQ-16) + single-offer lock
+Owner: BE + FE (BE: Aakriti | FE: Sayim)
+- [x] 5.1 Applicant list with contact masking (Schema.md §1)
+- [x] 5.2 Stage patch + bulk stage with transition rules (REQ-14); `SELECTED` → `PLACED` (REQ-16) + single-offer lock
 - [ ] 5.3 Resume link and zip stream (REQ-15)
-- [ ] 5.4 Rounds create/list + notifications + email via Nodemailer
-- [ ] 5.5 Notification bell with 30 s polling
-- [ ] 5.6 FE Kanban + student application tracker
+- [x] 5.4 Rounds create/list + notifications + email via Nodemailer
+- [x] 5.5 Notification bell with 30 s polling
+- [x] 5.6 FE Kanban + student application tracker
 **Exit criteria:** Company cannot see email/phone for `APPLIED`; round creation produces a notification and a Mailpit email for every shortlisted applicant.
 
 ### Phase 6 — Reports and admin (Days 20–22)

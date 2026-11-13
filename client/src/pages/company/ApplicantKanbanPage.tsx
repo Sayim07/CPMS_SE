@@ -1,333 +1,330 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Button } from "../../components/ui/Button";
+import { Link, useParams } from "react-router-dom";
+import { useDynamicData } from "../../hooks/useDynamicData";
 import { Modal } from "../../components/ui/Modal";
 import {
-  MOCK_JOBS,
-  MOCK_APPLICATIONS,
   type Application,
 } from "../../mock/mockData";
 import {
   ArrowLeft,
   Download,
-  FileText,
   CheckCircle2,
-  XCircle,
-  Video,
   Lock,
+  Calendar,
+  Building,
 } from "lucide-react";
 
 export const ApplicantKanbanPage: React.FC = () => {
-  const currentJob = MOCK_JOBS[0]; // Acme Technologies SDE
+  const { id } = useParams<{ id: string }>();
+  const { jobs, applications, moveApplicationStage } = useDynamicData();
 
-  const [applications, setApplications] = useState<Application[]>(MOCK_APPLICATIONS);
+  const currentJob =
+    (id && id !== "active" ? jobs.find((j) => j.id === id) : null) ||
+    (jobs.length > 0 ? jobs[0] : null);
+
+  // Applications for this drive
+  const jobApplications = currentJob
+    ? applications.filter((a) => a.job_id === currentJob.id)
+    : [];
+
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
   const [roundName, setRoundName] = useState("Technical Round 2 (System Architecture)");
   const [scheduledTime, setScheduledTime] = useState("2026-10-22T10:00");
   const [meetingLink, setMeetingLink] = useState("https://meet.example.com/acme-round2");
   const [roundCreatedAlert, setRoundCreatedAlert] = useState(false);
 
-  // 5 Kanban Columns
-  const STAGES: Array<"APPLIED" | "SHORTLISTED" | "IN_INTERVIEW" | "SELECTED" | "REJECTED"> = [
-    "APPLIED",
-    "SHORTLISTED",
-    "IN_INTERVIEW",
-    "SELECTED",
-    "REJECTED",
+  // 5 Kanban Columns (Stitch Spec & Rules.md §4.4)
+  const STAGES: Array<{
+    key: "APPLIED" | "SHORTLISTED" | "IN_INTERVIEW" | "SELECTED" | "REJECTED";
+    label: string;
+    bg: string;
+  }> = [
+    { key: "APPLIED", label: "Applied (Masked)", bg: "bg-[#FFE600]" },
+    { key: "SHORTLISTED", label: "Shortlisted", bg: "bg-[#7DD3FC]" },
+    { key: "IN_INTERVIEW", label: "Interviewing", bg: "bg-[#A388EE]" },
+    { key: "SELECTED", label: "Selected", bg: "bg-[#86EFAC]" },
+    { key: "REJECTED", label: "Rejected", bg: "bg-[#FF70A6]" },
   ];
 
   const moveStage = (appId: string, newStage: Application["stage"]) => {
-    setApplications((prev) =>
-      prev.map((app) => {
-        if (app.id !== appId) return app;
-        // Unmask contact details once moving past APPLIED (Rules.md §4.4)
-        const unmaskedStudent = { ...app.student };
-        if (newStage !== "APPLIED" && newStage !== "REJECTED") {
-          unmaskedStudent.email = unmaskedStudent.email || "student@college.edu";
-          unmaskedStudent.phone = unmaskedStudent.phone || "9876543210";
-        }
-        return {
-          ...app,
-          stage: newStage,
-          student: unmaskedStudent,
-        };
-      })
-    );
+    moveApplicationStage(appId, newStage);
   };
 
   const handleScheduleRound = (e: React.FormEvent) => {
     e.preventDefault();
     setScheduleModalOpen(false);
     setRoundCreatedAlert(true);
-    setTimeout(() => setRoundCreatedAlert(false), 4000);
+    setTimeout(() => setRoundCreatedAlert(false), 5000);
   };
 
+  if (!currentJob) {
+    return (
+      <div className="flex flex-col w-full space-y-5 text-black dark:text-white max-w-4xl">
+        <div className="bg-white dark:bg-zinc-900 border-2 border-black dark:border-white p-8 sm:p-12 rounded-neo shadow-[6px_6px_0px_0px_#000] dark:shadow-[6px_6px_0px_0px_#fff] text-center space-y-4">
+          <div className="w-14 h-14 mx-auto rounded-neo bg-[#FFE600] text-black border-2 border-black shadow-[3px_3px_0px_0px_#000] flex items-center justify-center font-black">
+            <Building className="w-7 h-7" />
+          </div>
+          <h2 className="font-black text-xl sm:text-2xl uppercase tracking-tight">
+            No Active Recruitment Drives Found
+          </h2>
+          <p className="text-xs sm:text-sm font-medium text-black/70 dark:text-white/70 max-w-md mx-auto">
+            You do not currently have any active recruitment drives. Create and submit a drive to start receiving candidate applications on your Kanban board.
+          </p>
+          <div className="pt-2">
+            <Link
+              to="/company/jobs/new"
+              className="inline-flex items-center gap-1.5 px-5 py-3 rounded-neo bg-[#FFE600] text-black border-2 border-black font-black text-xs uppercase tracking-wider shadow-[3px_3px_0px_0px_#000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
+            >
+              <span>+ Post New Recruitment Drive →</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
-      {/* Top Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-200">
+    <div className="flex flex-col w-full space-y-5 text-black dark:text-white">
+      {/* Top Header Card - Neobrutalism Style */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-zinc-900 border-2 border-black dark:border-white p-4 sm:p-5 rounded-neo shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff]">
         <div>
-          <Link
-            to="/company"
-            className="text-xs font-medium text-slate-500 hover:text-indigo-600 inline-flex items-center gap-1.5 transition-colors mb-1"
-          >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Corporate Console</span>
-          </Link>
-          <div className="flex items-center gap-2.5 mt-1">
-            <h1 className="text-2xl font-bold text-slate-900">{currentJob.title}</h1>
-            <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
-              {currentJob.ctc_lpa} LPA
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <Link
+              to="/company"
+              className="inline-flex items-center justify-center p-1.5 rounded-neo border-2 border-black dark:border-white bg-[#FFE600] text-black shadow-[2px_2px_0px_0px_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all"
+              title="Back to Overview"
+            >
+              <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
+            </Link>
+            <h1 className="font-black text-lg sm:text-xl tracking-tight text-black dark:text-white">
+              {currentJob.title}
+            </h1>
+            <span className="font-mono text-xs font-black px-2.5 py-0.5 rounded-neo bg-[#FFE600] text-black border-2 border-black shadow-[2px_2px_0px_0px_#000]">
+              ₹{currentJob.ctc_lpa} LPA
             </span>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
-            Min CGPA: {currentJob.min_cgpa} · Depts: {currentJob.department_codes.join(", ")} · {applications.length} Candidates in Pipeline
-          </p>
+
+          <div className="flex items-center gap-2 text-xs font-medium text-zinc-700 dark:text-zinc-300 mt-2 pl-0 sm:pl-9">
+            <Building className="w-3.5 h-3.5 text-zinc-600 dark:text-zinc-400" />
+            <span className="font-bold text-black dark:text-white">
+              {currentJob.company_name}
+            </span>
+            <span>·</span>
+            <span>Candidate Pool:</span>
+            <span className="font-mono font-black text-black dark:text-white bg-[#7DD3FC] text-black px-1.5 py-0.5 rounded border border-black text-[11px]">
+              {jobApplications.length} APPLICANTS
+            </span>
+          </div>
         </div>
 
-        {/* Global Pipeline Actions */}
-        <div className="flex items-center gap-2 self-start md:self-auto">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => alert("Simulating authenticated zip download of all shortlisted candidate resumes (REQ-15)...")}
-            className="gap-1.5 text-xs h-8"
-          >
-            <Download className="w-3.5 h-3.5 text-slate-600" />
-            <span>Download Resumes (ZIP)</span>
-          </Button>
-
-          <Button
-            variant="primary"
-            size="sm"
+        <div className="flex items-center gap-2.5 shrink-0">
+          <button
+            type="button"
             onClick={() => setScheduleModalOpen(true)}
-            className="gap-1.5 text-xs h-8"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-neo bg-[#FFE600] text-black border-2 border-black font-black text-xs shadow-[3px_3px_0px_0px_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all cursor-pointer"
           >
-            <Video className="w-3.5 h-3.5" />
+            <Calendar className="w-4 h-4 stroke-[2.5]" />
             <span>Schedule Round</span>
-          </Button>
+          </button>
+          <button
+            type="button"
+            onClick={() => alert("Applicant CSV exported successfully!")}
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-neo bg-white dark:bg-zinc-800 text-black dark:text-white border-2 border-black dark:border-white font-black text-xs shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all cursor-pointer"
+          >
+            <Download className="w-4 h-4 stroke-[2.5]" />
+            <span>Export CSV</span>
+          </button>
         </div>
       </div>
 
+      {/* Round Created Alert Notification */}
       {roundCreatedAlert && (
-        <div className="p-3.5 rounded-lg bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 font-medium flex items-center gap-2 animate-in fade-in">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span>Interview round scheduled! In-app notifications & calendar emails dispatched to all shortlisted applicants.</span>
+        <div className="p-3.5 rounded-neo bg-[#86EFAC] text-black border-2 border-black shadow-[4px_4px_0px_0px_#000] text-xs font-bold flex items-center justify-between animate-in fade-in slide-in-from-top-2">
+          <div className="flex items-center gap-2.5">
+            <CheckCircle2 className="w-4 h-4 stroke-[2.5] text-black shrink-0" />
+            <span>
+              New interview round scheduled! Automated notifications dispatched to shortlisted candidates.
+            </span>
+          </div>
+          <span className="font-mono text-[10px] uppercase bg-black text-white px-2 py-0.5 rounded">
+            Live
+          </span>
         </div>
       )}
 
-      {/* 5-Column Kanban Board (Design.md §2) */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-3.5 items-start">
-        {STAGES.map((colStage) => {
-          const colApps = applications.filter((a) => a.stage === colStage);
+      {/* 5-Column Kanban Board - Neobrutalism Design */}
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-3.5 items-start overflow-x-auto pb-6">
+        {STAGES.map((col) => {
+          const stageApps = jobApplications.filter((a) => a.stage === col.key);
 
           return (
             <div
-              key={colStage}
-              className="bg-slate-100/70 border border-slate-200/80 rounded-lg p-3 min-h-[500px] flex flex-col justify-between"
+              key={col.key}
+              className="bg-white dark:bg-zinc-900 border-2 border-black dark:border-white rounded-neo p-3 flex flex-col space-y-3 min-w-[240px] shadow-[4px_4px_0px_0px_#000] dark:shadow-[4px_4px_0px_0px_#fff]"
             >
-              <div>
-                {/* Column Header */}
-                <div className="flex items-center justify-between pb-2 mb-3 border-b border-slate-200/80">
-                  <span className="text-xs font-semibold text-slate-700 tracking-tight">
-                    {colStage === "IN_INTERVIEW" ? "In Interview" : colStage.charAt(0) + colStage.slice(1).toLowerCase()}
-                  </span>
-                  <span className="text-[11px] font-mono font-medium px-2 py-0.5 rounded-full bg-white text-slate-600 border border-slate-200 shadow-2xs">
-                    {colApps.length}
-                  </span>
-                </div>
+              {/* Column Header */}
+              <div className="flex items-center justify-between pb-2 border-b-2 border-black dark:border-white">
+                <span
+                  className={`${col.bg} text-black border-2 border-black text-[11px] font-black uppercase px-2 py-0.5 rounded shadow-[2px_2px_0px_0px_#000]`}
+                >
+                  {col.label}
+                </span>
+                <span className="font-mono text-xs font-black px-2 py-0.5 rounded-full border-2 border-black dark:border-white bg-[#F5EEDB] dark:bg-zinc-800 text-black dark:text-white">
+                  {stageApps.length}
+                </span>
+              </div>
 
-                {/* Candidate Cards */}
-                <div className="space-y-2.5">
-                  {colApps.map((app) => {
-                    const isMasked = app.stage === "APPLIED";
-
-                    return (
-                      <div
-                        key={app.id}
-                        className="bg-white rounded-md border border-slate-200 p-3 shadow-2xs hover:border-slate-300 transition-all space-y-2"
-                      >
-                        {/* Candidate Name & Dept */}
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <p className="text-xs font-semibold text-slate-900 leading-snug">
-                              {app.student.full_name}
-                            </p>
-                            <p className="text-[11px] font-mono text-slate-400">
-                              {app.student.roll_no} · {app.student.department_code}
-                            </p>
-                          </div>
-                          <span className="text-[11px] font-bold font-mono text-slate-700 bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100">
-                            {app.student.cgpa.toFixed(2)}
-                          </span>
+              {/* Cards Column List */}
+              <div className="flex flex-col space-y-2.5 min-h-[320px]">
+                {stageApps.length === 0 ? (
+                  <div className="p-6 text-center text-zinc-400 dark:text-zinc-500 text-xs font-mono font-medium border-2 border-dashed border-zinc-300 dark:border-zinc-700 rounded-neo">
+                    No candidates
+                  </div>
+                ) : (
+                  stageApps.map((app) => (
+                    <div
+                      key={app.id}
+                      className="bg-[#FAF7EE] dark:bg-zinc-800/90 border-2 border-black dark:border-white rounded-neo p-3 shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff] hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_0px_#000] dark:hover:shadow-[3px_3px_0px_0px_#fff] transition-all space-y-2.5"
+                    >
+                      <div className="flex items-start justify-between gap-1.5">
+                        <div>
+                          <p className="text-xs font-black text-black dark:text-white leading-tight">
+                            {app.student.full_name}
+                          </p>
+                          <p className="font-mono text-[10px] font-semibold text-zinc-600 dark:text-zinc-400 mt-0.5">
+                            {app.student.roll_no} · {app.student.department_code}
+                          </p>
                         </div>
+                        <span className="font-mono text-[10px] font-black bg-[#FFE600] text-black border border-black px-1.5 py-0.5 rounded shadow-[1px_1px_0px_0px_#000] shrink-0">
+                          {app.student.cgpa.toFixed(1)} CGPA
+                        </span>
+                      </div>
 
-                        {/* Privacy Contact Masking (Rules.md §4.4) */}
-                        <div className="text-[11px] pt-1 border-t border-slate-100">
-                          {isMasked ? (
-                            <span className="text-slate-400 italic flex items-center gap-1 font-mono">
-                              <Lock className="w-3 h-3 text-slate-300" />
-                              Hidden until shortlisted
-                            </span>
-                          ) : (
-                            <div className="space-y-0.5 font-mono text-[10px] text-slate-600">
-                              <p className="truncate">{app.student.email}</p>
-                              <p>{app.student.phone}</p>
-                            </div>
-                          )}
+                      {/* Contact Details Privacy Shield (Rules.md §4.4) */}
+                      {col.key === "APPLIED" ? (
+                        <div className="flex items-center gap-1.5 py-1 px-2 rounded border border-black/40 bg-zinc-200/80 dark:bg-zinc-700/80 text-[10px] text-zinc-700 dark:text-zinc-300 font-mono">
+                          <Lock className="w-3 h-3 text-zinc-600 dark:text-zinc-400 shrink-0" />
+                          <span className="italic truncate font-medium">Hidden until shortlisted</span>
                         </div>
+                      ) : (
+                        <div className="text-[10px] font-mono bg-emerald-50 dark:bg-emerald-950/40 border border-black dark:border-white/40 rounded p-1.5 space-y-0.5 text-zinc-800 dark:text-zinc-200">
+                          <p className="truncate font-semibold">{app.student.email}</p>
+                          <p className="font-medium">{app.student.phone}</p>
+                        </div>
+                      )}
 
-                        {/* Resume preview trigger */}
-                        <div className="flex items-center justify-between pt-1 text-[11px]">
+                      {/* Quick Move Action Buttons */}
+                      <div className="pt-2 border-t border-black/20 dark:border-white/20 flex items-center justify-between gap-1">
+                        {col.key !== "REJECTED" && col.key !== "SELECTED" && (
                           <button
                             type="button"
-                            onClick={() => alert(`Opening 300s pre-signed S3 URL for ${app.student.full_name}'s resume...`)}
-                            className="text-indigo-600 hover:underline flex items-center gap-1 font-medium"
+                            onClick={() => moveStage(app.id, "REJECTED")}
+                            className="text-[10px] font-black text-rose-600 dark:text-rose-400 hover:underline cursor-pointer"
                           >
-                            <FileText className="w-3 h-3" />
-                            <span>View Resume</span>
+                            Reject
                           </button>
-                        </div>
-
-                        {/* Stage Transition Control Bar (AppFlow.md §5 State Machine) */}
-                        <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-1">
-                          {app.stage === "APPLIED" && (
-                            <>
-                              <button
-                                type="button"
-                                onClick={() => moveStage(app.id, "SHORTLISTED")}
-                                className="flex-1 py-1 rounded text-[10px] font-semibold bg-sky-50 text-sky-700 border border-sky-200 hover:bg-sky-100 transition-colors"
-                              >
-                                Shortlist &rarr;
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => moveStage(app.id, "REJECTED")}
-                                className="px-2 py-1 rounded text-[10px] font-semibold bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-colors"
-                              >
-                                Reject
-                              </button>
-                            </>
+                        )}
+                        <div className="flex items-center gap-1.5 ml-auto">
+                          {col.key === "APPLIED" && (
+                            <button
+                              type="button"
+                              onClick={() => moveStage(app.id, "SHORTLISTED")}
+                              className="px-2 py-1 rounded bg-[#7DD3FC] text-black border border-black text-[10px] font-black shadow-[2px_2px_0px_0px_#000] hover:translate-x-0.5 active:shadow-none transition-all cursor-pointer"
+                            >
+                              Shortlist →
+                            </button>
                           )}
-
-                          {app.stage === "SHORTLISTED" && (
-                            <>
-                              <button
-                                type="button"
-                                onClick={() => moveStage(app.id, "IN_INTERVIEW")}
-                                className="flex-1 py-1 rounded text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200 hover:bg-indigo-100 transition-colors"
-                              >
-                                Interview &rarr;
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => moveStage(app.id, "REJECTED")}
-                                className="px-2 py-1 rounded text-[10px] font-semibold bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-colors"
-                              >
-                                Reject
-                              </button>
-                            </>
+                          {col.key === "SHORTLISTED" && (
+                            <button
+                              type="button"
+                              onClick={() => moveStage(app.id, "IN_INTERVIEW")}
+                              className="px-2 py-1 rounded bg-[#A388EE] text-black border border-black text-[10px] font-black shadow-[2px_2px_0px_0px_#000] hover:translate-x-0.5 active:shadow-none transition-all cursor-pointer"
+                            >
+                              Interview →
+                            </button>
                           )}
-
-                          {app.stage === "IN_INTERVIEW" && (
-                            <>
-                              <button
-                                type="button"
-                                onClick={() => moveStage(app.id, "SELECTED")}
-                                className="flex-1 py-1 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-colors"
-                              >
-                                Select (Offer)
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => moveStage(app.id, "REJECTED")}
-                                className="px-2 py-1 rounded text-[10px] font-semibold bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-colors"
-                              >
-                                Reject
-                              </button>
-                            </>
-                          )}
-
-                          {app.stage === "SELECTED" && (
-                            <span className="text-[10px] text-emerald-700 font-semibold flex items-center gap-1 w-full justify-center">
-                              <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                              Offer Extended
-                            </span>
-                          )}
-
-                          {app.stage === "REJECTED" && (
-                            <span className="text-[10px] text-red-600 font-medium flex items-center gap-1 w-full justify-center">
-                              <XCircle className="w-3 h-3 text-red-500" />
-                              Archived
-                            </span>
+                          {col.key === "IN_INTERVIEW" && (
+                            <button
+                              type="button"
+                              onClick={() => moveStage(app.id, "SELECTED")}
+                              className="px-2 py-1 rounded bg-[#86EFAC] text-black border border-black text-[10px] font-black shadow-[2px_2px_0px_0px_#000] hover:translate-x-0.5 active:shadow-none transition-all cursor-pointer"
+                            >
+                              Select Offer ★
+                            </button>
                           )}
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Schedule Interview Round Modal */}
-      <Modal
-        isOpen={scheduleModalOpen}
-        onClose={() => setScheduleModalOpen(false)}
-        title="Schedule Interview Round"
-        subtitle={`${currentJob.title} · ${currentJob.company_name}`}
-        maxWidth="md"
-      >
-        <form onSubmit={handleScheduleRound} className="space-y-4 text-xs">
-          <div>
-            <label className="block font-medium text-slate-700 mb-1">Interview Round Title</label>
-            <input
-              type="text"
-              required
-              value={roundName}
-              onChange={(e) => setRoundName(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          <div>
-            <label className="block font-medium text-slate-700 mb-1">Scheduled Date & Time (IST)</label>
-            <input
-              type="datetime-local"
-              required
-              value={scheduledTime}
-              onChange={(e) => setScheduledTime(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          <div>
-            <label className="block font-medium text-slate-700 mb-1">Meeting Link or Campus Venue</label>
-            <input
-              type="text"
-              required
-              value={meetingLink}
-              onChange={(e) => setMeetingLink(e.target.value)}
-              className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-md font-mono focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-          </div>
-
-          <p className="text-[11px] text-slate-400">
-            Broadcasting round will send in-app alerts and Nodemailer emails to all applicants in stage SHORTLISTED and IN_INTERVIEW.
-          </p>
-
-          <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-            <Button type="button" variant="secondary" size="sm" onClick={() => setScheduleModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button type="submit" variant="primary" size="md">
-              Confirm & Dispatch Broadcast
-            </Button>
-          </div>
-        </form>
-      </Modal>
+      {/* Schedule Interview Modal */}
+      {scheduleModalOpen && (
+        <Modal
+          isOpen={scheduleModalOpen}
+          onClose={() => setScheduleModalOpen(false)}
+          title="Schedule Interview Round"
+        >
+          <form onSubmit={handleScheduleRound} className="space-y-4 text-xs font-sans">
+            <div>
+              <label className="block font-black text-black dark:text-white uppercase tracking-wider text-[11px] mb-1">
+                Round Title
+              </label>
+              <input
+                type="text"
+                required
+                value={roundName}
+                onChange={(e) => setRoundName(e.target.value)}
+                className="w-full px-3 py-2 rounded-neo bg-white dark:bg-zinc-800 border-2 border-black dark:border-white font-mono text-xs text-black dark:text-white focus:outline-none shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff]"
+              />
+            </div>
+            <div>
+              <label className="block font-black text-black dark:text-white uppercase tracking-wider text-[11px] mb-1">
+                Date & Time
+              </label>
+              <input
+                type="datetime-local"
+                required
+                value={scheduledTime}
+                onChange={(e) => setScheduledTime(e.target.value)}
+                className="w-full px-3 py-2 rounded-neo bg-white dark:bg-zinc-800 border-2 border-black dark:border-white font-mono text-xs text-black dark:text-white focus:outline-none shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff]"
+              />
+            </div>
+            <div>
+              <label className="block font-black text-black dark:text-white uppercase tracking-wider text-[11px] mb-1">
+                Meeting / Venue URL
+              </label>
+              <input
+                type="url"
+                required
+                value={meetingLink}
+                onChange={(e) => setMeetingLink(e.target.value)}
+                className="w-full px-3 py-2 rounded-neo bg-white dark:bg-zinc-800 border-2 border-black dark:border-white font-mono text-xs text-black dark:text-white focus:outline-none shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff]"
+              />
+            </div>
+            <div className="pt-2 flex justify-end gap-2.5">
+              <button
+                type="button"
+                onClick={() => setScheduleModalOpen(false)}
+                className="px-3.5 py-2 rounded-neo bg-white dark:bg-zinc-800 text-black dark:text-white border-2 border-black dark:border-white font-bold text-xs shadow-[2px_2px_0px_0px_#000] dark:shadow-[2px_2px_0px_0px_#fff] hover:translate-x-0.5 hover:translate-y-0.5 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 rounded-neo bg-[#FFE600] text-black border-2 border-black font-black text-xs shadow-[3px_3px_0px_0px_#000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all cursor-pointer"
+              >
+                Confirm & Dispatch Alerts
+              </button>
+            </div>
+          </form>
+        </Modal>
+      )}
     </div>
   );
 };
