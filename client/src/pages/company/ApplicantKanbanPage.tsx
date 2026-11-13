@@ -202,11 +202,11 @@ export const ApplicantKanbanPage: React.FC = () => {
                         </span>
                       </div>
 
-                      {/* Contact Details Privacy Shield (Rules.md §4.4) */}
+                      {/* Contact Details */}
                       {col.key === "APPLIED" ? (
-                        <div className="flex items-center gap-1.5 py-1 px-2 rounded border border-black/40 bg-zinc-200/80 dark:bg-zinc-700/80 text-[10px] text-zinc-700 dark:text-zinc-300 font-mono">
+                        <div className="flex items-center gap-1.5 py-1 px-2 rounded border border-black/40 bg-zinc-200/80 dark:bg-zinc-700/80 text-[10px] text-zinc-700 dark:text-zinc-300 font-sans">
                           <Lock className="w-3 h-3 text-zinc-600 dark:text-zinc-400 shrink-0" />
-                          <span className="italic truncate font-medium">Hidden until shortlisted</span>
+                          <span className="truncate font-medium">Visible after shortlist</span>
                         </div>
                       ) : (
                         <div className="text-[10px] font-mono bg-emerald-50 dark:bg-emerald-950/40 border border-black dark:border-white/40 rounded p-1.5 space-y-0.5 text-zinc-800 dark:text-zinc-200">

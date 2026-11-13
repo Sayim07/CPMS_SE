@@ -114,10 +114,10 @@ export const AdminUsersPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-3 border-b border-outline-variant/40">
         <div>
           <h1 className="font-headline-lg text-xl sm:text-2xl font-bold tracking-tight text-on-surface">
-            Institutional User Management
+            TPO Officers & Staff Management
           </h1>
           <p className="text-xs text-on-surface-variant mt-1">
-            Provision and manage authorized Training & Placement Officers with dedicated portal credentials
+            Add and manage placement cell officers who verify student profiles and coordinate placement drives
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -145,7 +145,7 @@ export const AdminUsersPage: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="p-4 rounded-neo bg-white dark:bg-zinc-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff]">
           <span className="text-[10px] font-mono font-bold uppercase text-black/60 dark:text-white/60">
-            Provisioned TPO Staff
+            Registered TPO Officers
           </span>
           <div className="flex items-baseline justify-between mt-1">
             <span className="font-mono text-2xl font-black">{staffUsers.length}</span>
@@ -169,12 +169,12 @@ export const AdminUsersPage: React.FC = () => {
 
         <div className="p-4 rounded-neo bg-white dark:bg-zinc-800 border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff]">
           <span className="text-[10px] font-mono font-bold uppercase text-black/60 dark:text-white/60">
-            Onboarding Protocol
+            Role Hierarchy
           </span>
           <div className="flex items-baseline justify-between mt-1">
             <span className="font-mono text-xs font-bold">Admin → TPO → Company</span>
             <span className="text-[10px] font-mono font-bold bg-[#86EFAC] text-black px-1.5 py-0.5 rounded border border-black">
-              STRICT RBAC
+              ROLE BASED
             </span>
           </div>
         </div>
@@ -256,9 +256,9 @@ export const AdminUsersPage: React.FC = () => {
       <div className="bg-surface-container-low border border-outline-variant/40 rounded-md p-3.5 flex items-start gap-3 text-xs text-on-surface-variant">
         <Lock className="w-4 h-4 text-outline shrink-0 mt-0.5" />
         <div>
-          <span className="font-semibold text-on-surface">RBAC Governance Protocol:</span>
+          <span className="font-semibold text-on-surface">Officer Permissions:</span>
           <p className="text-[11px] text-on-surface-variant mt-0.5">
-            TPO Officers have elevated access to verify student credentials, onboard corporate partners, and authorize campus placement schedules. Account provisioning is immutably logged in the audit trail.
+            TPO Officers have access to verify student profiles, register recruiter companies, and approve placement drives. All accounts are managed securely.
           </p>
         </div>
       </div>
@@ -268,8 +268,8 @@ export const AdminUsersPage: React.FC = () => {
         <Modal
           isOpen={addStaffModalOpen}
           onClose={() => setAddStaffModalOpen(false)}
-          title="Provision TPO Officer Account"
-          subtitle="Provision authorized Training & Placement Officer for campus placement management"
+          title="Add New TPO Officer"
+          subtitle="Create a login account for a placement cell officer"
         >
           <form onSubmit={handleAddStaffSubmit} className="space-y-4 pt-2">
             <div>

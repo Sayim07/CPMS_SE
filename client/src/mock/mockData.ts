@@ -83,6 +83,10 @@ export interface NotificationItem {
   link_path: string;
   read_at: string | null;
   created_at: string;
+  target_role?: "STUDENT" | "COMPANY" | "TPO" | "ADMIN" | "ALL";
+  target_user_id?: string;
+  target_email?: string;
+  is_global?: boolean;
 }
 
 export const MOCK_DEPARTMENTS: Department[] = [
@@ -357,6 +361,7 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
     link_path: "/student/applications",
     read_at: null,
     created_at: "2026-10-09T10:00:00Z",
+    target_role: "STUDENT",
   },
   {
     id: "notif-2",
@@ -365,14 +370,26 @@ export const MOCK_NOTIFICATIONS: NotificationItem[] = [
     link_path: "/tpo/jobs",
     read_at: null,
     created_at: "2026-10-08T15:30:00Z",
+    target_role: "TPO",
   },
   {
     id: "notif-3",
     type: "VERIFICATION_RESET",
-    message: "Your profile has been verified by TPO Dr. Arvind Sharma.",
+    message: "Your profile marks and documents have been verified by the Placement Cell.",
     link_path: "/student/profile",
     read_at: null,
     created_at: "2026-10-07T09:00:00Z",
+    target_role: "STUDENT",
+  },
+  {
+    id: "notif-4",
+    type: "GLOBAL_ALERT",
+    message: "Campus Placement Season 2024–25 is officially active. Review your details and keep your resume updated.",
+    link_path: "/notifications",
+    read_at: null,
+    created_at: "2026-10-01T08:00:00Z",
+    target_role: "ALL",
+    is_global: true,
   },
 ];
 

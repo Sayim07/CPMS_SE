@@ -182,7 +182,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setIsLoading(false);
           return {
             success: false,
-            message: "No registered company found with this recruiter email. Corporate recruiters are onboarded by the TPO Office (/tpo).",
+            message: "No registered company found with this email. Please contact the Placement Cell (TPO) to register.",
           };
         }
 
@@ -191,7 +191,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setIsLoading(false);
           return {
             success: false,
-            message: "Incorrect password for this corporate partner account. Please use the password set by TPO.",
+            message: "Incorrect password for this company account.",
           };
         }
 
@@ -229,7 +229,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setIsLoading(false);
           return {
             success: false,
-            message: "No active TPO account found with this email. TPO accounts are provisioned by the Administrator (/admin).",
+            message: "No active TPO account found with this email. Please contact the Administrator.",
           };
         }
 
@@ -238,7 +238,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setIsLoading(false);
           return {
             success: false,
-            message: "Incorrect password for TPO Officer credentials. Please use the password set by Administrator.",
+            message: "Incorrect password for this TPO Officer account.",
           };
         }
 
@@ -271,7 +271,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setIsLoading(false);
           return {
             success: false,
-            message: "Invalid Administrator credentials. Only authorized Super Admin can sign in.",
+            message: "Invalid email for Admin access.",
           };
         }
 
@@ -281,7 +281,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setIsLoading(false);
           return {
             success: false,
-            message: "Incorrect password for Administrator account.",
+            message: "Incorrect password for Admin account.",
           };
         }
 

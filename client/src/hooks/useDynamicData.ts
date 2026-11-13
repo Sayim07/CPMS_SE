@@ -18,7 +18,7 @@ export function useDynamicData() {
   const jobs = dynamicDataService.getJobs();
   const applications = dynamicDataService.getApplications();
   const companies = dynamicDataService.getCompanies();
-  const notifications = dynamicDataService.getNotifications();
+  const notifications = dynamicDataService.getNotifications(user?.role, user?.email);
   const auditLogs = dynamicDataService.getAuditLogs();
   const settings = dynamicDataService.getSettings();
 

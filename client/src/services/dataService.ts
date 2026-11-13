@@ -157,6 +157,7 @@ class DynamicDataService {
       type: "VERIFICATION_RESET",
       message: `New student registration: ${newStudent.full_name} (${newStudent.roll_no}) awaiting TPO verification.`,
       link_path: "/tpo/students",
+      target_role: "TPO",
     });
 
     return newStudent;
@@ -215,8 +216,11 @@ class DynamicDataService {
 
     this.addNotification({
       type: "VERIFICATION_UPDATE",
-      message: `Academic profile of ${list[index].full_name} (${list[index].roll_no}) has been ${is_verified ? "verified" : "flagged"} by TPO.`,
+      message: `Academic profile of ${list[index].full_name} (${list[index].roll_no}) has been ${is_verified ? "verified" : "updated"} by the Placement Cell.`,
       link_path: "/student/profile",
+      target_role: "STUDENT",
+      target_user_id: list[index].id,
+      target_email: list[index].email,
     });
 
     return list[index];
@@ -262,8 +266,9 @@ class DynamicDataService {
 
     this.addNotification({
       type: "JOB_PENDING",
-      message: `New campus drive "${newJob.title}" posted by ${newJob.company_name} is awaiting TPO verification.`,
+      message: `New campus drive "${newJob.title}" posted by ${newJob.company_name} is awaiting TPO approval.`,
       link_path: "/tpo/approvals",
+      target_role: "TPO",
     });
 
     return newJob;
@@ -298,6 +303,8 @@ class DynamicDataService {
         type: "JOB_APPROVED",
         message: `Campus recruitment drive "${list[index].title}" (${list[index].company_name}) is now live for student applications.`,
         link_path: "/student/jobs",
+        target_role: "ALL",
+        is_global: true,
       });
     }
 
@@ -390,8 +397,10 @@ class DynamicDataService {
 
     this.addNotification({
       type: "APPLICATION_RECEIVED",
-      message: `New applicant (${student.roll_no}) applied for ${job.title}.`,
+      message: `New applicant (${student.roll_no} - ${student.full_name}) applied for ${job.title}.`,
       link_path: "/company/jobs/active",
+      target_role: "COMPANY",
+      target_email: job?.company_name ? `${job.company_name.toLowerCase().replace(/\s+/g, "")}@gmail.com` : undefined,
     });
 
     return { success: true, message: "Application submitted successfully!", application: newApp };
@@ -439,6 +448,9 @@ class DynamicDataService {
         type: "OFFER_EXTENDED",
         message: `Congratulations! You have been selected for ${job?.title || "Role"} at ${job?.company_name || "Company"}.`,
         link_path: "/student/applications",
+        target_role: "STUDENT",
+        target_user_id: studentMaster.id,
+        target_email: studentMaster.email,
       });
 
       this.addAuditLog({
@@ -525,9 +537,10 @@ class DynamicDataService {
     });
 
     this.addNotification({
-      type: "JOB_PENDING",
-      message: `Corporate partner registration submitted: ${newCompany.company_name} awaiting TPO approval.`,
+      type: "COMPANY_REGISTER",
+      message: `Corporate partner registration: ${newCompany.company_name} ${isTpoOnboarding ? "onboarded by Placement Cell" : "awaiting TPO approval"}.`,
       link_path: "/tpo/approvals",
+      target_role: "TPO",
     });
 
     return newCompany;
@@ -555,9 +568,34 @@ class DynamicDataService {
   }
 
   // --- Notifications ---
-  public getNotifications(): NotificationItem[] {
+  public getNotifications(userRole?: string, userEmail?: string): NotificationItem[] {
     const data = loadFromStorage(STORAGE_KEYS.NOTIFICATIONS, notificationsState);
-    return Array.isArray(data) ? data : [];
+    const list: NotificationItem[] = Array.isArray(data) ? data : [];
+    if (!userRole) return list;
+
+    const normalizedEmail = (userEmail || "").trim().toLowerCase();
+
+    return list.filter((n) => {
+      // 1. Global announcements are visible to every role
+      if (n.target_role === "ALL" || n.is_global) return true;
+
+      // 2. Explicit target_role checking
+      if (n.target_role) {
+        if (n.target_role !== userRole) return false;
+        if (n.target_email && normalizedEmail && n.target_email.toLowerCase() !== normalizedEmail) {
+          return false;
+        }
+        return true;
+      }
+
+      // 3. Fallback inference based on link path for legacy records
+      if (n.link_path.startsWith("/student") && userRole === "STUDENT") return true;
+      if (n.link_path.startsWith("/tpo") && (userRole === "TPO" || userRole === "ADMIN")) return true;
+      if (n.link_path.startsWith("/company") && userRole === "COMPANY") return true;
+      if (n.link_path.startsWith("/admin") && userRole === "ADMIN") return true;
+
+      return false;
+    });
   }
 
   public addNotification(item: Omit<NotificationItem, "id" | "created_at" | "read_at">): NotificationItem {

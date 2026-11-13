@@ -110,10 +110,10 @@ export const TpoApprovalsPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-slate-200">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">
-            Corporate & Drive Governance Approvals
+            Company & Drive Approvals
           </h1>
           <p className="text-xs text-slate-500 mt-1">
-            Institutional vetting for employer entities and campus recruitment schedules
+            Review registered corporate recruiters and approve job drives before they go live
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -398,8 +398,8 @@ export const TpoApprovalsPage: React.FC = () => {
         <Modal
           isOpen={onboardModalOpen}
           onClose={() => setOnboardModalOpen(false)}
-          title="Onboard Corporate Partner & Recruiter"
-          subtitle="Provision portal login credentials for verified campus hiring partners"
+          title="Add Company Recruiter"
+          subtitle="Create login credentials for campus recruitment partners"
         >
           <form onSubmit={handleOnboardCompanySubmit} className="space-y-4 pt-2">
             <div>

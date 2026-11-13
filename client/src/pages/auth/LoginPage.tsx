@@ -150,7 +150,7 @@ export const LoginPage: React.FC = () => {
           College Placement Portal
         </h1>
         <p className="mt-1 text-xs font-mono font-bold text-black/70 dark:text-white/70">
-          Deterministic Role-Based Identity & Session Governance
+          Training & Placement Management System
         </p>
       </div>
 
@@ -162,7 +162,7 @@ export const LoginPage: React.FC = () => {
                 Sign In to Account
               </h2>
               <p className="text-[11px] font-mono text-black/60 dark:text-white/60">
-                Enter your credentials and select your authorized role
+                Enter your credentials and select your role to continue
               </p>
             </div>
             <span className="font-mono text-[10px] px-2 py-0.5 rounded-neo bg-[#FFE600] text-black border-2 border-black font-black shadow-[2px_2px_0px_0px_#000]">
@@ -189,12 +189,12 @@ export const LoginPage: React.FC = () => {
                   required
                   placeholder={
                     selectedRole === "STUDENT"
-                      ? "Enter college email or roll number"
+                      ? "Enter roll number or email"
                       : selectedRole === "COMPANY"
-                      ? "Enter corporate recruiter email"
+                      ? "Enter recruiter email"
                       : selectedRole === "TPO"
-                      ? "tpo@college.edu"
-                      : "admin@college.edu"
+                      ? "Enter TPO email"
+                      : "Enter Admin email"
                   }
                   value={email}
                   disabled={isLocked || isLoading}
@@ -209,9 +209,6 @@ export const LoginPage: React.FC = () => {
                 <label className="block text-xs font-black uppercase tracking-wider text-black dark:text-white">
                   Password
                 </label>
-                <span className="text-[10px] text-black/60 dark:text-white/60 font-mono font-bold">
-                  {selectedRole === "ADMIN" ? "(Master: sayim007s)" : ""}
-                </span>
               </div>
               <div className="relative">
                 <Lock className="w-4 h-4 text-black dark:text-white absolute left-3 top-1/2 -translate-y-1/2" />

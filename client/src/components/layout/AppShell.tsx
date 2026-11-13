@@ -57,11 +57,11 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
         return [
           { name: "Overview", path: "/company", icon: <Building2 className="w-4 h-4" /> },
           { name: "Post Drive", path: "/company/jobs/new", icon: <Briefcase className="w-4 h-4" /> },
-          { name: "Applicant Pipeline", path: "/company/jobs/active", icon: <Users className="w-4 h-4" />, badge: "Kanban" },
+          { name: "Candidate Pipeline", path: "/company/jobs/active", icon: <Users className="w-4 h-4" />, badge: "Kanban" },
         ];
       case "TPO":
         return [
-          { name: "Command Queue", path: "/tpo", icon: <CheckCircle2 className="w-4 h-4" /> },
+          { name: "Dashboard", path: "/tpo", icon: <CheckCircle2 className="w-4 h-4" /> },
           { name: "Verify Students", path: "/tpo/students", icon: <Users className="w-4 h-4" />, badge: `${pendingStudentsCount} Pending` },
           { name: "Recruiter Approvals", path: "/tpo/companies", icon: <Building2 className="w-4 h-4" /> },
           { name: "Drive Approvals", path: "/tpo/jobs", icon: <Briefcase className="w-4 h-4" /> },
@@ -69,10 +69,10 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
         ];
       case "ADMIN":
         return [
-          { name: "User Management", path: "/admin/users", icon: <Users className="w-4 h-4" /> },
-          { name: "System Settings", path: "/admin/settings", icon: <Settings className="w-4 h-4" /> },
-          { name: "Audit Trail", path: "/admin/audit", icon: <ShieldAlert className="w-4 h-4" /> },
-          { name: "Institutional Reports", path: "/tpo/reports", icon: <BarChart3 className="w-4 h-4" /> },
+          { name: "TPO Officers", path: "/admin/users", icon: <Users className="w-4 h-4" /> },
+          { name: "Placement Policies", path: "/admin/settings", icon: <Settings className="w-4 h-4" /> },
+          { name: "Activity Logs", path: "/admin/audit", icon: <ShieldAlert className="w-4 h-4" /> },
+          { name: "Placement Reports", path: "/tpo/reports", icon: <BarChart3 className="w-4 h-4" /> },
         ];
     }
   };
@@ -103,7 +103,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
                 </span>
               </div>
               <span className="text-[11px] font-bold text-black/80 truncate">
-                Placement Command
+                Placement Portal
               </span>
             </div>
           </Link>

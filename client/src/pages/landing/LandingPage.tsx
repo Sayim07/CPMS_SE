@@ -44,10 +44,10 @@ export const LandingPage: React.FC = () => {
       <div className="bg-black text-[#FFE600] font-mono font-bold text-xs py-2 px-4 border-b-2 border-black flex items-center justify-center gap-2 text-center select-none">
         <span className="w-2 h-2 rounded-full bg-[#FFE600] inline-block animate-ping"></span>
         <span>
-          AY 2024–25 REAL-TIME COHORT: {totalStudents} REGISTERED CANDIDATES • {activeJobs.length} ACTIVE DRIVES
+          CAMPUS PLACEMENT PORTAL 2024–25: {totalStudents} REGISTERED CANDIDATES • {activeJobs.length} ACTIVE DRIVES
         </span>
         <Link to="/login" className="underline cursor-pointer ml-1 font-black">
-          ENTER PORTAL →
+          SIGN IN →
         </Link>
       </div>
 
@@ -77,16 +77,16 @@ export const LandingPage: React.FC = () => {
           {/* Center Navigation Links */}
           <nav className="hidden md:flex items-center gap-6 text-xs font-black uppercase tracking-wider text-black dark:text-white font-mono">
             <a href="#metrics" className="hover:text-[#7C3AED] dark:hover:text-[#A78BFA] transition-colors">
-              // Telemetry
+              // Highlights
             </a>
             <a href="#architecture" className="hover:text-[#7C3AED] dark:hover:text-[#A78BFA] transition-colors">
-              // Policy
+              // Policies
             </a>
             <a href="#portals" className="hover:text-[#7C3AED] dark:hover:text-[#A78BFA] transition-colors">
               // Portals
             </a>
             <a href="#drives" className="hover:text-[#7C3AED] dark:hover:text-[#A78BFA] transition-colors">
-              // Live Drives
+              // Active Drives
             </a>
           </nav>
 
@@ -134,12 +134,12 @@ export const LandingPage: React.FC = () => {
               {/* Sticker Pill */}
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-neo bg-white dark:bg-zinc-800 text-black dark:text-white border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff] text-xs font-black uppercase tracking-wider">
                 <span className="w-2 h-2 rounded-full bg-[#FF70A6] inline-block"></span>
-                <span>Real-Time Deterministic Verification</span>
+                <span>Automated Placement Management</span>
               </div>
 
               {/* Massive Retro Headline */}
               <h1 className="font-headline-lg text-4xl sm:text-6xl font-black text-black dark:text-white tracking-tight leading-[1.08]">
-                Understand your cohort. <br />
+                Empower your students. <br />
                 <span className="bg-[#FFE600] text-black px-3 py-0.5 border-2 border-black shadow-[4px_4px_0px_0px_#000] inline-block my-1 rotate-[0.5deg]">
                   Grow
                 </span>{" "}
@@ -148,8 +148,7 @@ export const LandingPage: React.FC = () => {
 
               {/* Subtitle */}
               <p className="text-sm sm:text-base font-medium text-black/80 dark:text-white/80 max-w-xl leading-relaxed">
-                Deterministic placement operating system that answers the questions that matter:
-                who is eligible, what credentials were audited, and whether corporate offers comply with single-offer policies.
+                A simple and transparent college placement platform: check student eligibility, coordinate interview rounds, and manage placement drives seamlessly.
               </p>
 
               {/* Primary Buttons */}
@@ -167,13 +166,6 @@ export const LandingPage: React.FC = () => {
                   className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-neo bg-[#FF70A6] text-black border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff] hover:translate-x-[1px] hover:translate-y-[1px] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none font-black text-xs sm:text-sm uppercase tracking-wider transition-all"
                 >
                   <span>Student Registration</span>
-                </Link>
-
-                <Link
-                  to="/login"
-                  className="inline-flex items-center justify-center px-5 py-3.5 rounded-neo bg-white dark:bg-zinc-800 text-black dark:text-white border-2 border-black dark:border-white shadow-[3px_3px_0px_0px_#000] dark:shadow-[3px_3px_0px_0px_#fff] hover:translate-x-[1px] hover:translate-y-[1px] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none font-black text-xs sm:text-sm uppercase tracking-wider transition-all"
-                >
-                  Sign In to Portal
                 </Link>
               </div>
             </div>
@@ -302,13 +294,13 @@ export const LandingPage: React.FC = () => {
       {/* 4. Neobrutalist Ticker Banner */}
       <div className="bg-[#FFE600] text-black border-b-2 border-black py-2.5 overflow-hidden select-none">
         <div className="flex items-center justify-around gap-6 font-mono font-black text-xs uppercase tracking-widest whitespace-nowrap">
-          <span>★ {placementRate}% Cohort Placed</span>
+          <span>★ {placementRate}% Students Placed</span>
           <span>•</span>
           <span>₹{highestCtc} LPA Highest Active Offer</span>
           <span>•</span>
-          <span>Single Offer Policy Enforced</span>
+          <span>Fair Dream Offer Policy</span>
           <span>•</span>
-          <span>Cryptographic TPO Verification</span>
+          <span>Verified Student Profiles</span>
           <span>•</span>
           <span>{activeRecruiters} Corporate Partners Approved</span>
           <span>•</span>
@@ -322,10 +314,10 @@ export const LandingPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-8">
             <div>
               <span className="font-mono text-xs uppercase tracking-wider text-black/60 dark:text-white/60 font-black">
-                // Live Telemetry
+                // Placement Overview
               </span>
               <h2 className="font-headline-sm text-2xl font-black text-black dark:text-white uppercase">
-                AY 2024–25 Placement Telemetry
+                2024–25 Placement Highlights
               </h2>
             </div>
             <span className="font-mono text-xs px-3 py-1 rounded-neo bg-[#86EFAC] text-black font-black border-2 border-black shadow-[2px_2px_0px_0px_#000]">
@@ -408,13 +400,13 @@ export const LandingPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
             <span className="font-mono text-xs uppercase tracking-wider text-black/60 dark:text-white/60 font-black">
-              // Engineering Architecture
+              // Transparent Policies
             </span>
             <h2 className="font-headline-lg text-3xl sm:text-4xl font-black text-black dark:text-white uppercase tracking-tight">
-              Rigid Rules. Zero Manual Bypasses.
+              Fair Rules. Transparent Placements.
             </h2>
             <p className="text-sm font-medium text-black/70 dark:text-white/70">
-              Every stage of recruitment is codified into rigid deterministic validation checks.
+              Clear rules ensure equal opportunities and smooth recruitment for all students.
             </p>
           </div>
 
@@ -424,10 +416,10 @@ export const LandingPage: React.FC = () => {
                 <CheckCircle2 className="w-5 h-5" />
               </div>
               <h3 className="font-headline-sm text-base font-black uppercase">
-                Deterministic Eligibility
+                Instant Eligibility
               </h3>
               <p className="text-xs font-medium leading-relaxed text-black/80">
-                Live CGPA cutoffs, active backlogs, secondary schooling marks, and eligible branches evaluated to the exact millisecond.
+                Checks CGPA cutoffs, backlogs, 10th/12th marks, and allowed branches automatically so only eligible candidates can apply.
               </p>
             </div>
 
@@ -436,10 +428,10 @@ export const LandingPage: React.FC = () => {
                 <Lock className="w-5 h-5" />
               </div>
               <h3 className="font-headline-sm text-base font-black uppercase">
-                Single-Offer Governance
+                Dream Offer Policy
               </h3>
               <p className="text-xs font-medium leading-relaxed text-black/80">
-                Automated locking prevents candidates from hoarding standard offers while permitting Dream Tier opportunities above cutoff.
+                Students who secure a high-package Dream Offer cannot block regular opportunities, ensuring more students get placed.
               </p>
             </div>
 
@@ -448,10 +440,10 @@ export const LandingPage: React.FC = () => {
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <h3 className="font-headline-sm text-base font-black uppercase">
-                Contact Data Masking
+                Student Privacy Protected
               </h3>
               <p className="text-xs font-medium leading-relaxed text-black/80">
-                Student email and phone numbers remain cryptographically masked from corporate recruiters until advancement beyond applied stage.
+                Student phone numbers and emails are kept safe and shared with recruiters only after candidates are shortlisted.
               </p>
             </div>
 
@@ -460,10 +452,10 @@ export const LandingPage: React.FC = () => {
                 <FileCheck className="w-5 h-5" />
               </div>
               <h3 className="font-headline-sm text-base font-black uppercase">
-                Audit Trail Integrity
+                Complete Activity Tracking
               </h3>
               <p className="text-xs font-medium leading-relaxed text-black/80">
-                Immutable audit ledger tracks every status change, credential verification, and offer extension with actor signatures.
+                Every drive creation, candidate application, interview status, and final offer is recorded cleanly for full transparency.
               </p>
             </div>
           </div>

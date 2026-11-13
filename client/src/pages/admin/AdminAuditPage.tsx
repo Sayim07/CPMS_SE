@@ -133,14 +133,14 @@ export const AdminAuditPage: React.FC = () => {
     },
     {
       key: "details",
-      header: "Audit Payload",
+      header: "Details",
       render: (log) => (
         <button
           onClick={() => setSelectedLog(log)}
           className="inline-flex items-center gap-1 text-xs text-primary hover:underline font-medium"
         >
           <Eye className="w-3.5 h-3.5" />
-          View JSON
+          View Details
         </button>
       ),
     },
@@ -152,16 +152,16 @@ export const AdminAuditPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-3 border-b border-outline-variant/40">
         <div>
           <h1 className="font-headline-lg text-xl sm:text-2xl font-bold tracking-tight text-on-surface">
-            Immutable System Audit Trail
+            System Activity Log
           </h1>
           <p className="text-xs text-on-surface-variant mt-1">
-            Cryptographically stamped append-only event log · Governed by Rules.md §5
+            Detailed record of all placement activities, candidate selections, and administrative updates
           </p>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-xs font-data-mono text-on-surface-variant bg-surface-container-low border border-outline-variant/40 px-3 py-1.5 rounded-md flex items-center gap-1.5">
             <Terminal className="w-3.5 h-3.5 text-outline" />
-            Audit Records: <span className="font-bold text-primary">{logs.length}</span>
+            Total Logs: <span className="font-bold text-primary">{logs.length}</span>
           </span>
         </div>
       </div>
@@ -171,10 +171,10 @@ export const AdminAuditPage: React.FC = () => {
         <div className="flex items-center gap-2.5">
           <ShieldAlert className="w-4 h-4 text-tertiary shrink-0" />
           <span className="text-on-surface-variant">
-            Tamper-Resistant Logging Enabled: All database mutations, verifications, and policy updates are permanently logged.
+            Live Activity Tracking: All logins, offers, approvals, and policy updates are recorded for full transparency.
           </span>
         </div>
-        <span className="text-[11px] font-data-mono text-outline hidden sm:inline">Retention: 7 Years</span>
+        <span className="text-[11px] font-data-mono text-outline hidden sm:inline">Active Record</span>
       </div>
 
       {/* Filter and Search */}
@@ -223,7 +223,7 @@ export const AdminAuditPage: React.FC = () => {
         <Modal
           isOpen={!!selectedLog}
           onClose={() => setSelectedLog(null)}
-          title={`Audit Payload: ${selectedLog.action}`}
+          title={`Log Details: ${selectedLog.action}`}
           maxWidth="md"
         >
           <div className="space-y-3">
@@ -244,7 +244,7 @@ export const AdminAuditPage: React.FC = () => {
 
             <div className="mt-3">
               <label className="text-xs font-semibold text-slate-700 block mb-1">
-                Raw JSON Payload:
+                Event Payload Data:
               </label>
               <pre className="p-3 bg-slate-900 text-slate-100 rounded-md text-xs font-mono overflow-x-auto max-h-60">
                 {JSON.stringify(selectedLog.details, null, 2)}
@@ -256,7 +256,7 @@ export const AdminAuditPage: React.FC = () => {
                 onClick={() => setSelectedLog(null)}
                 className="px-3 py-1.5 text-xs font-medium bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md"
               >
-                Close Inspector
+                Close Details
               </button>
             </div>
           </div>
