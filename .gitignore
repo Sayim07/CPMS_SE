@@ -29,3 +29,15 @@ ui_global.md
 # Local tools
 .tools/
 
+# Python cache & report generation scripts
+__pycache__/
+*.py[cod]
+*$py.class
+build_full_report.py
+test_helpers.py
+
+# Project reports, presentations, and documents
+*.docx
+*.pptx
+
+
